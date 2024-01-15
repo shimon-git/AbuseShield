@@ -1,3 +1,0 @@
-training.cloud.yonatan-master 194.36.91.72 Yonata2023!@!@!@
-training.cloud.yonatan-node01 194.36.91.62 Yonata2023!@!@!@
-training.cloud.yonatan-node02 91.228.127.27 Yonata2023!@!@!@

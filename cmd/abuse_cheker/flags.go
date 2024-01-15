@@ -5,16 +5,12 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+
+	"github.com/shimon-git/abuse_checker/internal/types"
 )
 
-type UserData struct {
-	IPFilePath string
-	CSF        bool
-	APIKey     string
-}
-
-func getUserData() UserData {
-	var u UserData
+func getUserData() types.UserData {
+	var u types.UserData
 	flag.StringVar(&u.IPFilePath, "ip-file", "", "Path to the IP file to check")
 	flag.StringVar(&u.IPFilePath, "i", "", "Alias for --ip-file")
 

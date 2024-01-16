@@ -3,16 +3,17 @@ package helpers
 import (
 	"bufio"
 	"fmt"
+	"log"
 	"os"
 
 	e "github.com/shimon-git/abuse_checker/internal/errors"
 	"github.com/shimon-git/abuse_checker/internal/types"
 )
 
-func IPFileProcessor(u types.UserData, dataChannel chan string) error {
+func IPFileProcessor(u types.UserData, dataChannel chan string) {
 	readFile, err := os.Open(u.IPFilePath)
 	if err != nil {
-		return e.MakeErr(fmt.Sprintf("%s: %s\n", e.OPEN_FILE_ERR, u.IPFilePath), err)
+		log.Fatal(e.MakeErr(fmt.Sprintf("%s: %s\n", e.FILE_SCANNER_ERROR, u.IPFilePath), err))
 	}
 
 	fileScanner := bufio.NewScanner(readFile)
@@ -21,11 +22,11 @@ func IPFileProcessor(u types.UserData, dataChannel chan string) error {
 		dataChannel <- fmt.Sprintf("%s\n", fileScanner.Text())
 	}
 
+	close(dataChannel)
+
 	if err := fileScanner.Err(); err != nil {
-		return e.MakeErr(fmt.Sprintf("%s: %s\n", e.FILE_SCANNER_ERROR, u.IPFilePath), err)
+		log.Fatal(e.MakeErr(fmt.Sprintf("%s: %s\n", e.FILE_SCANNER_ERROR, u.IPFilePath), err))
 	}
 
 	defer readFile.Close()
-
-	return nil
 }

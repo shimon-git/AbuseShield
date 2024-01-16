@@ -15,10 +15,12 @@ func getUserData() types.UserData {
 	flag.StringVar(&u.IPFilePath, "i", "", "Alias for --ip-file")
 
 	flag.BoolVar(&u.CSF, "csf", false, "Enable CSF integration for automating blocking of malicious IPs")
-	flag.BoolVar(&u.CSF, "c", false, "Alias for --csf")
 
 	flag.StringVar(&u.APIKey, "api-key", "", "Set API key to use")
-	flag.StringVar(&u.APIKey, "a", "", "Alias for --api-key")
+
+	flag.StringVar(&u.Config, "config", "", "Path to config file")
+	flag.StringVar(&u.Config, "c", "", "Alias for --config")
+
 	flag.Parse()
 
 	// Check ip file path has been given

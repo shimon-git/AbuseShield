@@ -1,0 +1,61 @@
+global:
+  # ip version support
+  ipv6: true
+  ipv4: true
+  # ips file
+  ips_file:
+    - "ip_file-1"
+    - "ip-file-2"
+  # time to wait between api requests in seconds
+  interval: 200
+
+  # log settings
+  log_enable: true
+  log_file: "log-file-path"
+  # max log size in bytes
+  max_log_size: 3000
+
+
+abuse_db_ip:
+  enable: true
+  # limit ips file to check
+  limit: 1000
+
+  results_file: "path-to-results-file" 
+
+  # API keys to use for abuse dbIP
+  api_keys:
+    - "api-key-1"
+    - "api-key-2"
+
+  # override global
+  #  ipv6: true
+  #  ipv4: true
+  #  interval: "seconds"
+
+
+
+# csf integration
+csf:
+  enable: false
+  csf_file: "csf_deny_file_path"
+  # backup the original file before making any changes
+  backup: true
+  # override global
+  #  ipv6: true
+  #  ipv4: true
+  #  interval: "seconds"  
+
+# sophos integration
+sophos:
+  enable: false
+  host: "5.100.12.54"
+  port: 4444
+  user: "admin"
+  password: "pass"
+  group_name: "new-group-name"
+  comment: "set-a-comment"
+  # override global
+  #  ipv6: true
+  #  ipv4: true
+  #  interval: "seconds"

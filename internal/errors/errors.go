@@ -8,8 +8,10 @@ import (
 )
 
 const (
-	OPEN_FILE_ERR      = "Failed to open the file"
-	FILE_SCANNER_ERROR = "An error occurred while scanning the file"
+	OPEN_FILE_ERR       = "Failed to open the file"
+	FILE_SCANNER_ERROR  = "An error occurred while scanning the file"
+	CONFIG_READER_ERROR = "Failed to read the config file"
+	UNMARSHAL_ERROR     = "Failed to unmarshal"
 )
 
 // MakeErr - return formatted error message with caller information

@@ -8,22 +8,21 @@ import (
 	abuseipdb "github.com/shimon-git/AbuseShield/internal/abuse-IP-DB"
 	"github.com/shimon-git/AbuseShield/internal/config"
 	"github.com/shimon-git/AbuseShield/internal/helpers"
-	"github.com/shimon-git/AbuseShield/internal/types"
 )
 
 var (
 	wg   sync.WaitGroup
-	conf types.Config
+	conf config.Config
 	err  error
-	s    types.T
+	s    abuseipdb.T
 )
 
 func main() {
 
 	data := getUserData()
 	if data.Config == "" {
-		conf = types.Config{
-			Global: types.GlobalConfigurations{
+		conf = config.Config{
+			Global: config.GlobalConfigurations{
 				IPsFiles: []string{data.IPFilePath},
 			},
 		}

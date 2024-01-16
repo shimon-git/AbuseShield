@@ -4,8 +4,10 @@ import (
 	"bufio"
 	"fmt"
 	"log"
+	"math/rand"
 	"os"
 	"sync"
+	"time"
 
 	e "github.com/shimon-git/AbuseShield/internal/errors"
 )
@@ -28,4 +30,18 @@ func IPFileProcessor(ipFile string, dataChannel chan string, wg *sync.WaitGroup)
 
 	defer readFile.Close()
 	wg.Done()
+}
+
+func GenerateDummyIP() string {
+	// Create a new random number generator with a custom seed
+	source := rand.NewSource(time.Now().UnixNano())
+	rand := rand.New(source)
+
+	// Generate random values for each octet
+	octet1 := rand.Intn(224)
+	octet2 := rand.Intn(256)
+	octet3 := rand.Intn(256)
+	octet4 := rand.Intn(256)
+
+	return fmt.Sprintf("%d.%d.%d.%d", octet1, octet2, octet3, octet4)
 }

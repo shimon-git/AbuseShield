@@ -6,7 +6,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/shimon-git/abuse_checker/internal/types"
+	"github.com/shimon-git/AbuseShield/internal/types"
 )
 
 func getUserData() types.UserData {
@@ -24,7 +24,7 @@ func getUserData() types.UserData {
 	flag.Parse()
 
 	// Check ip file path has been given
-	if u.IPFilePath == "" {
+	if u.IPFilePath == "" && u.Config == "" {
 		fmt.Printf("Usage: %s --ip-file [ip-file-to-check]\n", filepath.Base(os.Args[0]))
 		os.Exit(1)
 	}

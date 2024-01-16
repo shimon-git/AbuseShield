@@ -59,3 +59,7 @@ type UserData struct {
 	APIKey     string
 	Config     string
 }
+
+type T struct {
+	M []string
+}

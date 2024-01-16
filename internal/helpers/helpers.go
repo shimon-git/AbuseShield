@@ -5,15 +5,15 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"sync"
 
-	e "github.com/shimon-git/abuse_checker/internal/errors"
-	"github.com/shimon-git/abuse_checker/internal/types"
+	e "github.com/shimon-git/AbuseShield/internal/errors"
 )
 
-func IPFileProcessor(u types.UserData, dataChannel chan string) {
-	readFile, err := os.Open(u.IPFilePath)
+func IPFileProcessor(ipFile string, dataChannel chan string, wg *sync.WaitGroup) {
+	readFile, err := os.Open(ipFile)
 	if err != nil {
-		log.Fatal(e.MakeErr(fmt.Sprintf("%s: %s\n", e.FILE_SCANNER_ERROR, u.IPFilePath), err))
+		log.Fatal(e.MakeErr(fmt.Sprintf("%s: %s\n", e.FILE_SCANNER_ERROR, ipFile), err))
 	}
 
 	fileScanner := bufio.NewScanner(readFile)
@@ -22,11 +22,10 @@ func IPFileProcessor(u types.UserData, dataChannel chan string) {
 		dataChannel <- fmt.Sprintf("%s\n", fileScanner.Text())
 	}
 
-	close(dataChannel)
-
 	if err := fileScanner.Err(); err != nil {
-		log.Fatal(e.MakeErr(fmt.Sprintf("%s: %s\n", e.FILE_SCANNER_ERROR, u.IPFilePath), err))
+		log.Fatal(e.MakeErr(fmt.Sprintf("%s: %s\n", e.FILE_SCANNER_ERROR, ipFile), err))
 	}
 
 	defer readFile.Close()
+	wg.Done()
 }

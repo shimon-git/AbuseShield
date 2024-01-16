@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	e "github.com/shimon-git/abuse_checker/internal/errors"
-	"github.com/shimon-git/abuse_checker/internal/types"
+	e "github.com/shimon-git/AbuseShield/internal/errors"
+	"github.com/shimon-git/AbuseShield/internal/types"
 	"gopkg.in/yaml.v3"
 )
 

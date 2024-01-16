@@ -4,8 +4,8 @@ global:
   ipv4: true
   # ips file
   ips_file:
-    - "ip_file-1"
-    - "ip-file-2"
+    - "/Users/shimonyaniv/Desktop/github_projects/AbuseShield/ip.txt"
+    - "/Users/shimonyaniv/Desktop/github_projects/AbuseShield/ip.txt"
   # time to wait between api requests in seconds
   interval: 200
 

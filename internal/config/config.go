@@ -30,6 +30,10 @@ type GlobalConfigurations struct {
 	MaxLogSize int      `yaml:"max_log_size"`
 }
 
+func Init() (Config, error) {
+
+}
+
 // parse the yaml config file
 func ParseConfig(configFile string) (Config, error) {
 	var config Config

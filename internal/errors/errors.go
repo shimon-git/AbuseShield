@@ -14,6 +14,7 @@ const (
 	UNMARSHAL_ERR          = "Failed to unmarshal"
 	RETRIEVE_FILE_INFO_ERR = "An error occurred while tying to retrieve the info of the file"
 	IP_IS_NOT_VALID        = "The given IP is not valid"
+	INVALID_PHONE_NUMBER   = "The provided phone number is invalid"
 )
 
 // MakeErr - return formatted error message with caller information

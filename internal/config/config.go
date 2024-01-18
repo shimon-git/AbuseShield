@@ -39,7 +39,7 @@ func ParseConfig(configFile string) (Config, error) {
 	var config Config
 	configReader, err := os.ReadFile(configFile)
 	if err != nil {
-		return config, e.MakeErr(fmt.Sprintf("%s: %s", e.CONFIG_READER_ERROR, configFile), err)
+		return config, e.MakeErr(fmt.Sprintf("%s: %s", e.CONFIG_READER_ERR, configFile), err)
 	}
 
 	if err := yaml.Unmarshal(configReader, &config); err != nil {

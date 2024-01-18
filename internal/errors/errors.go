@@ -1,4 +1,4 @@
-package abuse_checker_errors
+package abuse_shield_errors
 
 import (
 	"fmt"
@@ -8,10 +8,12 @@ import (
 )
 
 const (
-	OPEN_FILE_ERR       = "Failed to open the file"
-	FILE_SCANNER_ERROR  = "An error occurred while scanning the file"
-	CONFIG_READER_ERROR = "Failed to read the config file"
-	UNMARSHAL_ERROR     = "Failed to unmarshal"
+	OPEN_FILE_ERR          = "Failed to open the file"
+	FILE_SCANNER_ERR       = "An error occurred while scanning the file"
+	CONFIG_READER_ERR      = "Failed to read the config file"
+	UNMARSHAL_ERR          = "Failed to unmarshal"
+	RETRIEVE_FILE_INFO_ERR = "An error occurred while tying to retrieve the info of the file"
+	IP_IS_NOT_VALID        = "The given IP is not valid"
 )
 
 // MakeErr - return formatted error message with caller information

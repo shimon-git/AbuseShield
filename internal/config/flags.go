@@ -3,9 +3,14 @@ package config
 import (
 	"flag"
 	"fmt"
+	"net"
 	"os"
 	"path/filepath"
 	"strings"
+	"sync"
+
+	e "github.com/shimon-git/AbuseShield/internal/errors"
+	"github.com/shimon-git/AbuseShield/internal/helpers"
 )
 
 type Flags struct {
@@ -46,11 +51,42 @@ func getFlags() Flags {
 	return f
 }
 
-func (Flags) isValidIPFile(ipFile string) bool {
-	return true
+func (f Flags) isValidIPFile() (bool, error) {
+	var wg sync.WaitGroup
+	var err error
+	_, err = os.Stat(f.IPFilePath)
+	if err != nil {
+		return false, fmt.Errorf("%s", e.MakeErr(fmt.Sprintf("%s: %s", e.RETRIEVE_FILE_INFO_ERR, f.IPFilePath), err))
+	}
+	wg.Add(1)
+	dataChan := make(chan string, 10)
+	// check later the error package MakeErr func - its not provide the func name in the err
+	go func(c chan string, fname string, err *error) {
+		var counter int
+		for ip := range c {
+			if !isValidIP(ip) {
+				counter++
+				*err = e.MakeErr(nil, fmt.Errorf("%s - ip: %s- file: %s line: %s", e.IP_IS_NOT_VALID, ip, fname, counter))
+			}
+		}
+	}(dataChan, f.IPFilePath, &err)
+	helpers.IPFileReader(f.IPFilePath, dataChan, &wg)
+	wg.Wait()
+	close(dataChan)
+	if err != nil {
+		return false, err
+	}
+	return true, nil
 }
 
-func (Flags) isValidPhoneNumber(num string) bool {}
+func isValidIP(ip string) bool {
+	parsedIP := net.ParseIP(ip)
+	return parsedIP != nil && parsedIP.IsGlobalUnicast()
+}
+
+func (f Flags) isValidPhoneNumber(num string) bool {
+
+}
 
 func (Flags) isValidEmail() bool {}
 

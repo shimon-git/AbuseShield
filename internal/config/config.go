@@ -12,15 +12,15 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-type Config struct {
-	Global    GlobalConfigurations `yaml:"global"`
+type configurations struct {
+	Global    globalConfigurations `yaml:"global"`
 	AbuseDBIP abuseipdb.AbuseDBIP  `yaml:"abuse_db_ip"`
 	Cpanel    cpanel.Cpanel        `yaml:"cpanel"`
 	CSF       csf.CSF              `yaml:"csf"`
 	Sophos    sophos.Sophos        `yaml:"sophos"`
 }
 
-type GlobalConfigurations struct {
+type globalConfigurations struct {
 	Ipv6       bool     `yaml:"ipv6"`
 	Ipv4       bool     `yaml:"ipv4"`
 	IPsFiles   []string `yaml:"ips_file"`
@@ -30,21 +30,20 @@ type GlobalConfigurations struct {
 	MaxLogSize int      `yaml:"max_log_size"`
 }
 
-func Init() (Config, error) {
-
-}
+//func Init() (Config, error) {
+//}
 
 // parse the yaml config file
-func ParseConfig(configFile string) (Config, error) {
-	var config Config
-	configReader, err := os.ReadFile(configFile)
+func (c Config) parseConfigFile() error {
+	var conf configurations
+	configReader, err := os.ReadFile(c.ConfigFile)
 	if err != nil {
-		return config, e.MakeErr(fmt.Sprintf("%s: %s", e.CONFIG_READER_ERR, configFile), err)
+		return e.MakeErr(fmt.Sprintf("%s: %s", e.CONFIG_READER_ERR, c.ConfigFile), err)
 	}
 
-	if err := yaml.Unmarshal(configReader, &config); err != nil {
-		return Config{}, e.MakeErr(nil, err)
+	if err := yaml.Unmarshal(configReader, &conf); err != nil {
+		e.MakeErr(nil, err)
 	}
 
-	return config, nil
+	return nil
 }

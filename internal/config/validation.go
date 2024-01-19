@@ -15,14 +15,14 @@ import (
 )
 
 // isValidIPFile - validate the ip file is exist and the format is valid
-func (f Flags) isValidIPFile() (bool, error) {
+func (c Config) isValidIPFile() (bool, error) {
 	var wg sync.WaitGroup
 	var err error
 
 	// check the ip file exist
-	_, err = os.Stat(f.IPFilePath)
+	_, err = os.Stat(c.IPFilePath)
 	if err != nil {
-		return false, fmt.Errorf("%s", e.MakeErr(fmt.Sprintf("%s: %s", e.RETRIEVE_FILE_INFO_ERR, f.IPFilePath), err))
+		return false, fmt.Errorf("%s", e.MakeErr(fmt.Sprintf("%s: %s", e.RETRIEVE_FILE_INFO_ERR, c.IPFilePath), err))
 	}
 
 	// create a data channel
@@ -31,9 +31,9 @@ func (f Flags) isValidIPFile() (bool, error) {
 	wg.Add(1)
 
 	// start goroutine to validate the ip file format
-	go ipFormatValidation(dataChan, &wg, filepath.Base(f.IPFilePath), &err)
+	go ipFormatValidation(dataChan, &wg, filepath.Base(c.IPFilePath), &err)
 	// start goroutine to read the ip file
-	go helpers.IPFileReader(f.IPFilePath, dataChan)
+	go helpers.IPFileReader(c.IPFilePath, dataChan)
 	// wait the job(the goroutine job will ended)
 	wg.Wait()
 	// check for errors(in case of ip file format error the goroutine ipFormatValidation will set an error)
@@ -77,12 +77,12 @@ func isValidIP(ip string) bool {
 }
 
 // isValidPhoneNumber - validate the given phone number
-func (f Flags) isValidPhoneNumber() (bool, error) {
+func (c Config) isValidPhoneNumber() (bool, error) {
 	// Parse the phone number "ZZ" for unknown region
-	phone, err := phonenumbers.Parse(f.SMS, "ZZ")
+	phone, err := phonenumbers.Parse(c.SMS, "ZZ")
 	// Check for errors
 	if err != nil {
-		return false, e.MakeErr(fmt.Sprintf("%s - %s", e.INVALID_PHONE_NUMBER, f.SMS), err)
+		return false, e.MakeErr(fmt.Sprintf("%s - %s", e.INVALID_PHONE_NUMBER, c.SMS), err)
 	}
 	// get the country code
 	countryCode := phonenumbers.GetRegionCodeForNumber(phone)
@@ -91,13 +91,13 @@ func (f Flags) isValidPhoneNumber() (bool, error) {
 }
 
 // isValidEmail - validate the given email address
-func (f Flags) isValidEmail() (bool, error) {
+func (c Config) isValidEmail() (bool, error) {
 	// validate the mx record of the domain
-	if err := checkmail.ValidateMX(f.Email); err != nil {
+	if err := checkmail.ValidateMX(c.Email); err != nil {
 		return false, e.MakeErr(nil, err)
 	}
 	// validate the email format
-	if err := checkmail.ValidateFormat(f.Email); err != nil {
+	if err := checkmail.ValidateFormat(c.Email); err != nil {
 		return false, e.MakeErr(nil, err)
 	}
 	// return the results
@@ -105,11 +105,11 @@ func (f Flags) isValidEmail() (bool, error) {
 }
 
 // isValidMode - check if the provided mode is valid
-func (f Flags) isValidMode() bool {
+func (c Config) isValidMode() bool {
 	// possible modes - (cp - cpanel mode),(a - abuseDBIP mode), (s - sophos mode), (c - csf mode)
 	validModes := map[string]bool{"cp": true, "a": true, "s": true, "c": true}
 	// split the modes(in case of multiply modes)
-	modes := strings.Split(f.Mode, ",")
+	modes := strings.Split(c.Mode, ",")
 	// loop over the given modes and validate each mode
 	for _, m := range modes {
 		if _, ok := validModes[m]; !ok {

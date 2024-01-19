@@ -2,7 +2,6 @@ package abuse_shield_errors
 
 import (
 	"fmt"
-	"reflect"
 	"runtime"
 	"strings"
 )
@@ -15,14 +14,24 @@ const (
 	RETRIEVE_FILE_INFO_ERR = "An error occurred while tying to retrieve the info of the file"
 	IP_IS_NOT_VALID        = "The given IP is not valid"
 	INVALID_PHONE_NUMBER   = "The provided phone number is invalid"
+	MISSING_IP_FILE        = "Missing IP file, IP file must be provided"
+	INVALID_MODE           = "Invalid mode"
+	MISSING_MODE           = "Missing mode"
 )
 
 // MakeErr - return formatted error message with caller information
 func MakeErr(message any, err error) error {
-	if message == nil || reflect.TypeOf(message).Kind() != reflect.String {
-		return fmt.Errorf("%s - %s", getCallerInfo(2), err)
+	callerInfo := getCallerInfo(2)
+	if message == nil && err != nil {
+		return fmt.Errorf("%s - %s", callerInfo, err.Error())
 	}
-	return fmt.Errorf("%s - %s: %s\n", getCallerInfo(2), message, err)
+	if err == nil && message != nil {
+		return fmt.Errorf("%s - %v", callerInfo, message)
+	}
+	if err == nil && message == nil {
+		return fmt.Errorf("%s", callerInfo)
+	}
+	return fmt.Errorf("%s - %v: %s\n", callerInfo, message, err.Error())
 }
 
 // getCallerInfo - return details about the function which the error was occurred - format: filename:lineno:function

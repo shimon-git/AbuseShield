@@ -12,11 +12,10 @@ import (
 )
 
 type Config struct {
-	IPFilePath string
-	ConfigFile string
-	Mode       string
-	Email      string
-	SMS        string
+	IPFilePath string // f
+	ConfigFile string // f
+	Email      string // f
+	SMS        string // f
 	Sophos     sophos.Sophos
 	Cpanel     cpanel.Cpanel
 	CSF        csf.CSF
@@ -40,36 +39,66 @@ const (
 var (
 	tempApiKeys  string
 	tempUsers    string
+	tempMode     string
 	usageMessage = fmt.Sprintf("Usage: %s ", os.Args[0])
 )
 
 func getConfig() Config {
 	var c Config
 	// get the all flags and parse them
-	c.GetFilesFlags()
-	c.GetEmailAndSMSFlags()
-	c.GetModeFlags()
+	c.GetFilesFlags()       // check
+	c.GetEmailAndSMSFlags() // check
+	c.GetModeFlags()        // check
 	c.getSophosFlags()
 	c.getCsfAndCpanelFlags()
 	c.GetAbuseDBFlags()
 	c.getGlobalFlags()
 	flag.Parse()
 
+	// config file validation
 	if c.ConfigFile != "" {
 		if err := c.parseConfigFile(); err != nil {
-			fmt.Printf("%s\n%s", err.Error())
-			printUsage()
-			os.Exit(1)
+			printUsageAndExit(err)
 		}
 		return c
+	}
+
+	// ip file validation
+	if err := c.isValidIPFile(); err != nil {
+		printUsageAndExit(err)
+	}
+
+	// email validation
+	if c.Email != "" {
+		if err := c.isValidEmail(); err != nil {
+			printUsageAndExit(err)
+		}
+	}
+
+	// sms validation
+	if c.SMS != "" {
+		if err := c.isValidPhoneNumber(); err != nil {
+			printUsageAndExit(err)
+		}
+	}
+
+	// mode validation and setter(its will set the Enable field for the modes(sophos,csf,cpanel,abuseDBIP))
+	if err := c.isValidMode(tempMode); err != nil {
+		printUsageAndExit(err)
+	}
+
+	if c.Sophos.Enable {
+
 	}
 
 	return c
 }
 
-func printUsage() {
+func printUsageAndExit(err error) {
+	fmt.Println(err.Error())
 	fmt.Fprintf(flag.CommandLine.Output(), "Usage: %s [options]\n", os.Args[0])
 	flag.PrintDefaults()
+	os.Exit(1)
 }
 
 func (c Config) getSophosFlags() {
@@ -117,18 +146,11 @@ func (c Config) GetFilesFlags() {
 }
 
 func (c Config) GetModeFlags() {
-	flag.StringVar(&c.Mode, "mode", "a", "Enable modes(s(sophos),a(abuseDBIP),cp(Cpanel))")
-	flag.StringVar(&c.Mode, "m", "", "Alias for --mode")
+	flag.StringVar(&tempMode, "mode", "a", "Enable modes(s(sophos),a(abuseDBIP),cp(Cpanel))")
+	flag.StringVar(&tempMode, "m", "", "Alias for --mode")
 }
 
 func (c Config) GetEmailAndSMSFlags() {
 	flag.StringVar(&c.Email, "email", "", "Send an email to the provided address when finished")
 	flag.StringVar(&c.SMS, "sms", "", "Send SMS message to the provided phone number when finished")
 }
-
-/*
-	// Check ip file path has been given
-	if f.IPFilePath == "" && f.Config == "" || f.Mode == "" {
-		fmt.Printf("Usage: %s --ip-file [ip-file-to-check]\n", filepath.Base(os.Args[0]))
-		os.Exit(1)
-	} */

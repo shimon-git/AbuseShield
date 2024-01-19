@@ -1,6 +1,6 @@
 package cpanel
 
 type Cpanel struct {
-	enable bool     `yaml:"enable"`
+	Enable bool     `yaml:"enable"`
 	Users  []string `yaml:"users"`
 }

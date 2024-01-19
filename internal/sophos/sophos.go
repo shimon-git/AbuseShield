@@ -12,3 +12,9 @@ type Sophos struct {
 	GroupName string `yaml:"group_name"`
 	Comment   string `yaml:"comment"`
 }
+
+func New()
+
+func (s Sophos) verifyConnection() error {
+	return nil
+}

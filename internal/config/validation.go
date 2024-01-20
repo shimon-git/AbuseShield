@@ -10,11 +10,22 @@ import (
 
 	"github.com/badoux/checkmail"
 	"github.com/nyaruka/phonenumbers"
+	"github.com/shimon-git/AbuseShield/internal/cpanel"
+	"github.com/shimon-git/AbuseShield/internal/csf"
 	e "github.com/shimon-git/AbuseShield/internal/errors"
 	"github.com/shimon-git/AbuseShield/internal/helpers"
+	"github.com/shimon-git/AbuseShield/internal/sophos"
 )
 
-// isValidIPFile - validate the ip file is exist and the format is valid
+func isFileExist(f string) error {
+	_, err := os.Stat(f)
+	if err != nil {
+		return e.MakeErr(fmt.Sprintf("%s: %s", e.RETRIEVE_FILE_INFO_ERR, f), err)
+	}
+	return nil
+}
+
+// isValidIPFile - validate if the ip file exist and the format is valid
 func (c Config) isValidIPFile() error {
 	var wg sync.WaitGroup
 	var err error
@@ -24,11 +35,9 @@ func (c Config) isValidIPFile() error {
 	}
 
 	// check the ip file exist
-	_, err = os.Stat(c.IPFilePath)
-	if err != nil {
-		return e.MakeErr(fmt.Sprintf("%s: %s", e.RETRIEVE_FILE_INFO_ERR, c.IPFilePath), err)
+	if err := isFileExist(c.IPFilePath); err != nil {
+		return err
 	}
-
 	// create a data channel
 	dataChan := make(chan string, 10)
 	// add one job to the wait group
@@ -65,7 +74,10 @@ func ipFormatValidation(c chan string, wg *sync.WaitGroup, fname string, err *er
 		counter++
 		// check if the ip is valid
 		if !isValidIP(ip) {
-			*err = e.MakeErr(nil, fmt.Errorf("%s - ip: %s- file: %s line: %s", e.IP_IS_NOT_VALID, ip, fname, counter))
+			*err = e.MakeErr(nil, fmt.Errorf("%s - ip: %s- file: %s line: %d", e.IP_IS_NOT_VALID, ip, fname, counter))
+			// done the job
+			wg.Done()
+			return
 		}
 	}
 	// done the job
@@ -74,10 +86,30 @@ func ipFormatValidation(c chan string, wg *sync.WaitGroup, fname string, err *er
 
 // isValidIP - validate if the given ip is a valid ip
 func isValidIP(ip string) bool {
-	// parse the ip(return true if the ip is valid)
-	parsedIP := net.ParseIP(ip)
-	// return true if the ip is valid and normal(e.g. not special case such as: 0.0.0.0 ,etc)
-	return parsedIP != nil && parsedIP.IsGlobalUnicast()
+	ipParts := strings.Split(ip, "/")
+
+	// Check if CIDR part exists
+	if len(ipParts) > 1 {
+		ip = ipParts[0]
+		cidr := ipParts[1]
+
+		// parse the ip (return false if the ip is not valid)
+		parsedIP := net.ParseIP(ip)
+		if parsedIP == nil {
+			return false
+		}
+
+		_, ipNet, err := net.ParseCIDR(ip + "/" + cidr)
+		if err != nil {
+			return false
+		}
+
+		// Check if the IP is within the specified CIDR range
+		return ipNet.Contains(parsedIP)
+	}
+
+	// If there is no CIDR part, consider it a valid IP
+	return net.ParseIP(ip) != nil
 }
 
 // isValidPhoneNumber - validate the given phone number
@@ -112,9 +144,10 @@ func (c Config) isValidEmail() error {
 }
 
 // isValidMode - check if the provided mode is valid(possible modes - (cp - cpanel mode),(a - abuseDBIP mode), (s - sophos mode), (c - csf mode))
-func (c Config) isValidMode(mode string) error {
+func (c *Config) isValidMode(mode string) error {
 	// split the modes(in case of multiply modes)
 	modes := strings.Split(strings.TrimSpace(mode), ",")
+
 	if len(modes) == 0 {
 		return e.MakeErr(e.MISSING_MODE, nil)
 	}
@@ -141,6 +174,40 @@ func (c Config) isValidMode(mode string) error {
 	return nil
 }
 
-func (c Config) isSophosValid() error {
+func (c *Config) isSophosValid() error {
+	sophosClient := sophos.New(c.Sophos)
+	if err := sophosClient.VerifyConnection(); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (c *Config) isCpanelValid(cpanelUsers string) error {
+	users := strings.Split(strings.TrimSpace(cpanelUsers), ",")
+	if len(users) == 0 {
+		return e.MakeErr(e.MISSING_CPANEL_USERS, nil)
+	}
+	for _, user := range users {
+		c.Cpanel.Users = append(c.Cpanel.Users, user)
+	}
+	cpanelClient := cpanel.New(c.Cpanel)
+	if err := cpanelClient.IsAllUsersExists(); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (c Config) isCsfValid() error {
+	if err := isFileExist(c.CSF.CSFFile); err != nil {
+		return err
+	}
+	csfClient := csf.New(c.CSF)
+
+	if err := csfClient.CsfBackup(); err != nil {
+		return err
+	}
+	if err := csfClient.IsCsfServiceActive(); err != nil {
+		return err
+	}
 	return nil
 }

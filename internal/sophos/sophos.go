@@ -1,5 +1,14 @@
 package sophos
 
+import (
+	"fmt"
+	"io"
+	"net/http"
+
+	e "github.com/shimon-git/AbuseShield/internal/errors"
+	"github.com/shimon-git/AbuseShield/internal/helpers"
+)
+
 type Sophos struct {
 	Enable    bool   `yaml:"enable"`
 	Ipv6      bool   `yaml:"ipv6"`
@@ -13,8 +22,51 @@ type Sophos struct {
 	Comment   string `yaml:"comment"`
 }
 
-func New()
+type sophosClient struct {
+	sophosURL string
+	endpoint  map[string]string
+	client    *http.Client
+	sophos    Sophos
+}
 
-func (s Sophos) verifyConnection() error {
+func New(s Sophos) *sophosClient {
+	var sc sophosClient
+	sc.sophos = s
+	sc.sophosURL = fmt.Sprintf("https://%s:%d/api", s.Host, s.Port)
+	// Initialize the endpoint map
+	sc.endpoint = make(map[string]string)
+	sc.endpoint["version"] = fmt.Sprintf("%s/status/version", sc.sophosURL)
+
+	auth := helpers.BasicAuth{
+		User:     s.User,
+		Password: s.Password,
+	}
+	httpClient := helpers.HttpClient{
+		Headers: map[string]string{
+			"content-type": "application/json",
+		},
+		Auth: auth,
+	}
+
+	sc.client = httpClient.NewHttpClient()
+	return &sc
+}
+
+func (sc *sophosClient) VerifyConnection() error {
+	res, err := sc.client.Get(sc.endpoint["version"])
+	if err != nil {
+		return e.MakeErr(e.HTTP_GET_ERR, err)
+	}
+
+	defer res.Body.Close()
+
+	body, err := io.ReadAll(res.Body)
+	if err != nil {
+		return e.MakeErr(e.READ_RESPONSE_BODY_ERR, err)
+	}
+
+	if res.StatusCode != 200 {
+		e.MakeErr(fmt.Sprintf("%s got: %d while excepted response is: %d, ResponseBody: %s", e.INVALID_RESPONSE_CODE, http.StatusOK, res.StatusCode, string(body)), nil)
+	}
 	return nil
 }

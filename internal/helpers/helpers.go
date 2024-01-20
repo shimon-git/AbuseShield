@@ -2,9 +2,11 @@ package helpers
 
 import (
 	"bufio"
+	"crypto/tls"
 	"fmt"
 	"log"
 	"math/rand"
+	"net/http"
 	"os"
 	"time"
 
@@ -43,4 +45,36 @@ func GenerateDummyIP() string {
 	octet4 := rand.Intn(256)
 
 	return fmt.Sprintf("%d.%d.%d.%d", octet1, octet2, octet3, octet4)
+}
+
+type BasicAuth struct {
+	User     string
+	Password string
+}
+
+type HttpClient struct {
+	Headers map[string]string
+	Auth    BasicAuth
+}
+
+func (h *HttpClient) NewHttpClient() *http.Client {
+	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
+	client := &http.Client{
+		Transport: h,
+	}
+	return client
+}
+
+func (h *HttpClient) RoundTrip(req *http.Request) (*http.Response, error) {
+	if h.Headers != nil {
+		for k, v := range h.Headers {
+			req.Header.Add(k, v)
+		}
+	}
+
+	if h.Auth.User != "" || h.Auth.Password != "" {
+		req.SetBasicAuth(h.Auth.User, h.Auth.Password)
+	}
+
+	return http.DefaultTransport.RoundTrip(req)
 }

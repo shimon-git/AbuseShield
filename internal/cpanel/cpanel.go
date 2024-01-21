@@ -13,22 +13,23 @@ const (
 )
 
 type Cpanel struct {
-	Enable bool     `yaml:"enable"`
-	Users  []string `yaml:"users"`
+	Enable        bool     `yaml:"enable"`
+	Users         []string `yaml:"users"`
+	CheckAllUsers bool     `yaml:"checkAllUsers"`
 }
 
-type cp struct {
-	users []string
+type cpClient struct {
+	cpanel Cpanel
 }
 
-func New(c Cpanel) *cp {
-	var cpanel cp
-	cpanel.users = c.Users
-	return &cpanel
+func New(c Cpanel) *cpClient {
+	var cp cpClient
+	cp.cpanel = c
+	return &cp
 }
 
-func (c *cp) IsAllUsersExists() error {
-	for _, user := range c.users {
+func (c *cpClient) IsAllUsersExists() error {
+	for _, user := range c.cpanel.Users {
 		cmd := exec.Command("whmapi1", "accountsummary", fmt.Sprintf("user=%s", user))
 		output, err := cmd.CombinedOutput()
 		if err != nil {

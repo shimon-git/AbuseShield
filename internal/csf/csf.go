@@ -12,55 +12,47 @@ import (
 
 type CSF struct {
 	Enable  bool   `yaml:"enable"`
-	Ipv6    bool   `yaml:"ipv6"`
-	Ipv4    bool   `yaml:"ipv4"`
-	Backup  string `yaml:"backup"`
+	Backup  string `yaml:"backup_file"`
 	CSFFile string `yaml:"csf_file"`
+	Ipv6    bool
+	Ipv4    bool
 }
 
-type csf struct {
-	ipv6       bool
-	ipv4       bool
-	backupFile string
-	CSFFile    string
+type csfClient struct {
+	csf CSF
 }
 
-func New(csfConf CSF) *csf {
-	var c csf
-	c.ipv4 = csfConf.Ipv4
-	c.ipv6 = csfConf.Ipv6
-	c.backupFile = csfConf.Backup
-	c.CSFFile = csfConf.CSFFile
-
+func New(csfConf CSF) *csfClient {
+	var c csfClient
+	c.csf = csfConf
 	return &c
 }
 
-func (c csf) CsfBackup() error {
-	if err := os.Remove(c.backupFile); err != nil && !os.IsNotExist(err) {
-		return e.MakeErr(fmt.Sprintf("%s: %s", e.REMOVE_FILE_ERR, c.backupFile), err)
+func (c csfClient) CsfBackup() error {
+	if err := os.Remove(c.csf.Backup); err != nil && !os.IsNotExist(err) {
+		return e.MakeErr(fmt.Sprintf("%s: %s", e.REMOVE_FILE_ERR, c.csf.Backup), err)
 	}
-	csfDenyConf, err := os.Open(c.CSFFile)
+	csfDenyConf, err := os.Open(c.csf.CSFFile)
 	if err != nil {
-		return e.MakeErr(fmt.Sprintf("%s: %s", e.OPEN_FILE_ERR, c.CSFFile), err)
+		return e.MakeErr(fmt.Sprintf("%s: %s", e.OPEN_FILE_ERR, c.csf.CSFFile), err)
 	}
 	defer csfDenyConf.Close()
 
-	csfDenyConfBackup, err := os.Create(c.backupFile)
+	csfDenyConfBackup, err := os.Create(c.csf.Backup)
 	if err != nil {
-		return e.MakeErr(fmt.Sprintf("%s: %s", e.CREATE_FILE_ERR, c.backupFile), err)
+		return e.MakeErr(fmt.Sprintf("%s: %s", e.CREATE_FILE_ERR, c.csf.Backup), err)
 	}
 	defer csfDenyConfBackup.Close()
 
-	s, err := io.Copy(csfDenyConfBackup, csfDenyConf)
+	_, err = io.Copy(csfDenyConfBackup, csfDenyConf)
 	if err != nil {
-		return e.MakeErr(fmt.Sprintf("%s: %s, destination: %s", e.COPY_FILE_ERR, c.CSFFile, c.backupFile), err)
+		return e.MakeErr(fmt.Sprintf("%s: %s, destination: %s", e.COPY_FILE_ERR, c.csf.CSFFile, c.csf.Backup), err)
 	}
-	fmt.Println(c.backupFile)
-	fmt.Println(s)
+
 	return nil
 }
 
-func (c *csf) IsCsfServiceActive() error {
+func (c *csfClient) IsCsfServiceActive() error {
 	serviceName := "csf.service"
 	cmd := exec.Command("systemctl", "is-active", serviceName)
 	output, err := cmd.CombinedOutput()

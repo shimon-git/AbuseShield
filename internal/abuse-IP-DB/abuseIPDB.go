@@ -11,26 +11,22 @@ import (
 	"github.com/shimon-git/AbuseShield/internal/helpers"
 )
 
-type AbuseDBIP struct {
+type AbuseIPDB struct {
 	Enable      bool     `yaml:"enable"`
 	Limit       int      `yaml:"limit"`
-	Ipv6        bool     `yaml:"ipv6"`
-	Ipv4        bool     `yaml:"ipv4"`
 	Interval    int      `yaml:"interval"`
 	ResultsFile string   `yaml:"results_file"`
 	ApiKeys     []string `yaml:"api_keys"`
+	Score       int      `yaml:"score"`
+	Ipv6        bool
+	Ipv4        bool
 }
 
-type abuseDbIP struct {
-	limit         int
-	ipv6          bool
-	ipv4          bool
-	interval      int
-	results       string
-	apiKeys       []string
+type abuseIPDBClient struct {
+	abuseIPDB     AbuseIPDB
 	maxIPChecks   int
 	client        *http.Client
-	CurrentAPIKey string
+	currentAPIKey string
 }
 
 const (
@@ -39,46 +35,39 @@ const (
 	REMAINING_CHECKS_HEADER = "X-Ratelimit-Remaining"
 )
 
-func New(a AbuseDBIP) *abuseDbIP {
-	var abuseDB abuseDbIP
-	abuseDB.limit = a.Limit
-	abuseDB.ipv4 = a.Ipv4
-	abuseDB.ipv6 = a.Ipv6
-	abuseDB.interval = a.Interval
-	abuseDB.results = a.ResultsFile
-	abuseDB.apiKeys = a.ApiKeys
-
-	return &abuseDB
+func New(a AbuseIPDB) (*abuseIPDBClient, error) {
+	var abuseDB abuseIPDBClient
+	abuseDB.abuseIPDB = a
+	err := abuseDB.SetMaxIPCHecks()
+	return &abuseDB, err
 }
 
-func (a *abuseDbIP) setNewKey(apiKey string) {
+func (a *abuseIPDBClient) setNewKey(apiKey string) {
 	httpClient := helpers.HttpClient{
 		Headers: map[string]string{
 			"Accept": "application/json",
 			"Key":    apiKey,
 		},
 	}
-	a.CurrentAPIKey = apiKey
+	a.currentAPIKey = apiKey
 	a.client = httpClient.NewHttpClient()
 }
 
-func (a *abuseDbIP) SetMaxIPCHecks() error {
-	ip := helpers.GenerateDummyIP()
-	for _, key := range a.apiKeys {
+func (a *abuseIPDBClient) SetMaxIPCHecks() error {
+	dummyIP := helpers.GenerateDummyIP()
+	for _, key := range a.abuseIPDB.ApiKeys {
 		a.setNewKey(key)
-		_, err := a.checkIP(ip)
+		_, err := a.limitChecker(dummyIP)
 		if err != nil {
 			return err
 		}
 	}
-	fmt.Println("Remaining Abuse IP Checks:")
-	fmt.Println(a.maxIPChecks)
 	return nil
 }
 
-func (a *abuseDbIP) checkIP(ip string) (int, error) {
+func (a *abuseIPDBClient) limitChecker(dummyIP string) (int, error) {
 	params := url.Values{}
-	params.Add("ipAddress", ip)
+	params.Add("ipAddress", dummyIP)
 	params.Add("maxAgeInDays", "90")
 	params.Add("verbose", "")
 	url := ABUSE_DB_ENDPOINT + "?" + params.Encode()
@@ -102,7 +91,7 @@ func (a *abuseDbIP) checkIP(ip string) (int, error) {
 	remainingChecksStr := res.Header.Get(REMAINING_CHECKS_HEADER)
 
 	if remainingChecksStr == "" {
-		return 0, e.MakeErr(fmt.Sprintf("%s, api-key: %s", e.EMPTY_REMAINING_CHECKS_HEADER, a.CurrentAPIKey), nil)
+		return 0, e.MakeErr(fmt.Sprintf("%s, api-key: %s", e.EMPTY_REMAINING_CHECKS_HEADER, a.currentAPIKey), nil)
 	}
 
 	remainingChecks, err := strconv.Atoi(remainingChecksStr)
@@ -111,7 +100,6 @@ func (a *abuseDbIP) checkIP(ip string) (int, error) {
 	}
 
 	a.maxIPChecks += remainingChecks
-
 	return 0, nil
 
 }

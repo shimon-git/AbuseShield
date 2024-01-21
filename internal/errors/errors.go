@@ -30,6 +30,8 @@ const (
 	MISSING_API_KEYS              = "Missing API keys, API keys must be set"
 	INVALID_API_KEY               = "Invalid api key detected"
 	EMPTY_REMAINING_CHECKS_HEADER = "X-Ratelimit-Remaining header is empty, This may be occurred if the api key is not valid"
+	NO_MODULES_ENABLED            = "Modules are not enabled, At least one module must be enabled"
+	ABUSE_DB_IP_NOT_ENABLED       = "AbuseDBIP module must be enabled in order to run cpanel or csf mode"
 )
 
 // MakeErr - return formatted error message with caller information

@@ -12,34 +12,34 @@ import (
 )
 
 type Config struct {
-	IPFilePath string
 	ConfigFile string
-	Email      string
-	SMS        string
 	Sophos     sophos.Sophos
 	Cpanel     cpanel.Cpanel
 	CSF        csf.CSF
-	AbuseDBIP  abuseipdb.AbuseDBIP
+	AbuseIPDB  abuseipdb.AbuseIPDB
 	Global     globalConfigurations
 }
 
 const (
-	DEFAULT_SOPHOS_PORT = 4444
-	DEFAULT_SOPHOS_USER = "admin"
-	DEFAULT_INTERVAL    = 3
-	DEFAULT_LIMIT       = 0
-	DEFAULT_CSF_FILE    = "/etc/csf/csf.deny"
-	DEFAULT_CSF_BACKUP  = "/tmp/csf_backup.deny"
-	DEFAULT_RESULTS     = "./abuse_db_ip_results.txt"
-	DEFAULT_IPV4        = true
-	DEFAULT_IPV6        = false
-	INTERVAL_FORMAT     = "%s %d %s"
+	DEFAULT_SOPHOS_PORT     = 4444
+	DEFAULT_SOPHOS_USER     = "admin"
+	DEFAULT_INTERVAL        = 3
+	DEFAULT_LIMIT           = 0
+	DEFAULT_CSF_FILE        = "/etc/csf/csf.deny"
+	DEFAULT_CSF_BACKUP      = "/tmp/csf_backup.deny"
+	DEFAULT_RESULTS         = "./abuse_db_ip_results.txt"
+	DEFAULT_IPV4            = true
+	DEFAULT_IPV6            = false
+	INTERVAL_FORMAT         = "%s %d %s"
+	DEFAULT_SCORE           = 15
+	DEFAULT_CHECK_ALL_USERS = false
 )
 
 var (
 	tempApiKeys     string
 	tempCpanelUsers string
 	tempMode        string
+	tempIPFiles     string
 )
 
 func GetConfig() Config {
@@ -59,31 +59,31 @@ func GetConfig() Config {
 		if err := c.parseConfigFile(); err != nil {
 			printUsageAndExit(err)
 		}
+		c.adjustGlobalConfigurations()
+		c.validateAndSetConfigurations()
 		return c
 	}
 
 	c.validateAndSetConfigurations()
 	c.adjustGlobalConfigurations()
-
 	return c
 }
 
 func (c *Config) validateAndSetConfigurations() {
-
 	// ip file validation
-	if err := c.isValidIPFile(); err != nil {
+	if err := c.isValidIPFile(tempIPFiles); err != nil {
 		printUsageAndExit(err)
 	}
 
 	// email validation
-	if c.Email != "" {
+	if c.Global.Email != "" {
 		if err := c.isValidEmail(); err != nil {
 			printUsageAndExit(err)
 		}
 	}
 
 	// sms validation
-	if c.SMS != "" {
+	if c.Global.SMS != "" {
 		if err := c.isValidPhoneNumber(); err != nil {
 			printUsageAndExit(err)
 		}
@@ -115,7 +115,7 @@ func (c *Config) validateAndSetConfigurations() {
 	}
 
 	// abuseDBIP validation
-	if c.AbuseDBIP.Enable {
+	if c.AbuseIPDB.Enable {
 		if err := c.isValidAbuseDB(tempApiKeys); err != nil {
 			printUsageAndExit(err)
 		}
@@ -127,21 +127,36 @@ func (c *Config) adjustGlobalConfigurations() {
 	if !c.Global.Ipv4 {
 		c.Sophos.Ipv4 = c.Global.Ipv4
 		c.CSF.Ipv4 = c.Global.Ipv4
-		c.AbuseDBIP.Ipv4 = c.Global.Ipv4
+		c.AbuseIPDB.Ipv4 = c.Global.Ipv4
 	}
 	// if ipv6 is true which is not the default behavior then set the global modes flags
 	if c.Global.Ipv6 {
 		c.Sophos.Ipv6 = c.Global.Ipv6
 		c.CSF.Ipv6 = c.Global.Ipv6
-		c.AbuseDBIP.Ipv6 = c.Global.Ipv6
+		c.AbuseIPDB.Ipv6 = c.Global.Ipv6
 	}
 	// if the global interval is not the default then set the global modes flags
 	if c.Global.Interval != DEFAULT_INTERVAL {
 		if c.Sophos.Interval == DEFAULT_INTERVAL {
 			c.Sophos.Interval = c.Global.Interval
 		}
-		if c.AbuseDBIP.Interval == DEFAULT_INTERVAL {
-			c.AbuseDBIP.Interval = c.Global.Interval
+		if c.AbuseIPDB.Interval == DEFAULT_INTERVAL {
+			c.AbuseIPDB.Interval = c.Global.Interval
+		}
+	}
+
+	if c.ConfigFile != "" {
+		c.Sophos.Ipv4 = c.Global.Ipv4
+		c.CSF.Ipv4 = c.Global.Ipv4
+		c.AbuseIPDB.Ipv4 = c.Global.Ipv4
+		c.Sophos.Ipv6 = c.Global.Ipv6
+		c.CSF.Ipv6 = c.Global.Ipv6
+		c.AbuseIPDB.Ipv6 = c.Global.Ipv6
+		if c.Sophos.Interval == 0 {
+			c.Sophos.Interval = c.Global.Interval
+		}
+		if c.AbuseIPDB.Interval == 0 {
+			c.AbuseIPDB.Interval = c.Global.Interval
 		}
 	}
 }
@@ -177,6 +192,7 @@ func (c *Config) getSophosFlags() {
 
 func (c *Config) getCsfAndCpanelFlags() {
 	flag.StringVar(&tempCpanelUsers, "cpanel-users", "", "Cpanel users to collect the logs and check for abuse")
+	flag.BoolVar(&c.Cpanel.CheckAllUsers, "cpanel-all-users", DEFAULT_CHECK_ALL_USERS, "Set to true in case you want ti check abuse for all cpanel users")
 	flag.StringVar(&c.CSF.CSFFile, "csf-file", DEFAULT_CSF_FILE, fmt.Sprintf("%s %s", "Path to csf.deny file - default", DEFAULT_CSF_FILE))
 	flag.StringVar(&c.CSF.Backup, "csf-backup", DEFAULT_CSF_BACKUP, fmt.Sprintf("%s %s", "Path to csf backup file(in case csf backup file already exist then it will be recreated) - default", DEFAULT_CSF_BACKUP))
 }
@@ -188,15 +204,16 @@ func (c *Config) getGlobalFlags() {
 }
 
 func (c *Config) GetAbuseDBFlags() {
-	flag.IntVar(&c.AbuseDBIP.Limit, "limit", DEFAULT_LIMIT, "IP limit to check(limit can be set to check max number of ip addresses)")
-	flag.IntVar(&c.AbuseDBIP.Interval, "abusedb-interval", DEFAULT_INTERVAL, fmt.Sprintf("%s %d %s", "Interval between API requests to not be blocked by yhe abuse-db-ip - default is", DEFAULT_INTERVAL, "seconds"))
-	flag.StringVar(&c.AbuseDBIP.ResultsFile, "results", DEFAULT_RESULTS, fmt.Sprintf("%s %s", "Path to the results file of abuse-db-ip - default is", DEFAULT_RESULTS))
+	flag.IntVar(&c.AbuseIPDB.Limit, "limit", DEFAULT_LIMIT, "IP limit to check(limit can be set to check max number of ip addresses)")
+	flag.IntVar(&c.AbuseIPDB.Interval, "abusedb-interval", DEFAULT_INTERVAL, fmt.Sprintf("%s %d %s", "Interval between API requests to not be blocked by yhe abuse-db-ip - default is", DEFAULT_INTERVAL, "seconds"))
+	flag.StringVar(&c.AbuseIPDB.ResultsFile, "results", DEFAULT_RESULTS, fmt.Sprintf("%s %s", "Path to the results file of abuse-db-ip - default is", DEFAULT_RESULTS))
 	flag.StringVar(&tempApiKeys, "api-keys", "", "API keys to authenticate to abuse-db-ip")
+	flag.IntVar(&c.AbuseIPDB.Score, "score", DEFAULT_SCORE, fmt.Sprintf("%s: %d", "Minimum IP score to considered as malicious IP(score can be set from 1 - 100) - default is", DEFAULT_SCORE))
 }
 
 func (c *Config) GetFilesFlags() {
-	flag.StringVar(&c.IPFilePath, "ip-file", "", "Path to the IP file to check")
-	flag.StringVar(&c.IPFilePath, "I", "", "Alias for --ip-file")
+	flag.StringVar(&tempIPFiles, "ip-file", "", "Path to the IP file to check")
+	flag.StringVar(&tempIPFiles, "I", "", "Alias for --ip-file")
 
 	flag.StringVar(&c.ConfigFile, "config", "", "Path to config file")
 	flag.StringVar(&c.ConfigFile, "c", "", "Alias for --config")
@@ -208,6 +225,6 @@ func (c *Config) GetModeFlags() {
 }
 
 func (c *Config) GetEmailAndSMSFlags() {
-	flag.StringVar(&c.Email, "email", "", "Send an email to the provided address when finished")
-	flag.StringVar(&c.SMS, "sms", "", "Send SMS message to the provided phone number when finished")
+	flag.StringVar(&c.Global.Email, "email", "", "Send an email to the provided address when finished")
+	flag.StringVar(&c.Global.SMS, "sms", "", "Send SMS message to the provided phone number when finished")
 }

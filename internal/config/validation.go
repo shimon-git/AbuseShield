@@ -27,33 +27,41 @@ func isFileExist(f string) error {
 }
 
 // isValidIPFile - validate if the ip file exist and the format is valid
-func (c Config) isValidIPFile() error {
+func (c Config) isValidIPFile(ipFiles string) error {
 	var wg sync.WaitGroup
 	var err error
 
-	if c.IPFilePath == "" {
+	if len(c.Global.IPsFiles) == 0 && tempIPFiles == "" {
 		return e.MakeErr(e.MISSING_IP_FILE, nil)
 	}
 
-	// check the ip file exist
-	if err := isFileExist(c.IPFilePath); err != nil {
-		return err
+	if len(c.Global.IPsFiles) == 0 {
+		c.Global.IPsFiles = strings.Split(strings.TrimSpace(tempIPFiles), ",")
 	}
-	// create a data channel
-	dataChan := make(chan string, 10)
-	// add one job to the wait group
-	wg.Add(1)
 
-	// start goroutine to validate the ip file format
-	go ipFormatValidation(dataChan, &wg, filepath.Base(c.IPFilePath), &err)
-	// start goroutine to read the ip file
-	go helpers.IPFileReader(c.IPFilePath, dataChan)
-	// wait the job(the goroutine job will ended)
-	wg.Wait()
-	// check for errors(in case of ip file format error the goroutine ipFormatValidation will set an error)
-	if err != nil {
-		return err
+	// loop over the ip files and validate them
+	for _, file := range c.Global.IPsFiles {
+		// check the ip file exist
+		if err := isFileExist(file); err != nil {
+			return err
+		}
+		// create a data channel
+		dataChan := make(chan string, 10)
+		// add one job to the wait group
+		wg.Add(1)
+
+		// start goroutine to validate the ip file format
+		go ipFormatValidation(dataChan, &wg, filepath.Base(file), &err)
+		// start goroutine to read the ip file
+		go helpers.IPFileReader(file, dataChan)
+		// wait the job(the goroutine job will ended)
+		wg.Wait()
+		// check for errors(in case of ip file format error the goroutine ipFormatValidation will set an error)
+		if err != nil {
+			return err
+		}
 	}
+
 	// return the results(ip file and ip format is ok)
 	return nil
 }
@@ -116,10 +124,10 @@ func isValidIP(ip string) bool {
 // isValidPhoneNumber - validate the given phone number
 func (c Config) isValidPhoneNumber() error {
 	// Parse the phone number "ZZ" for unknown region
-	phone, err := phonenumbers.Parse(c.SMS, "ZZ")
+	phone, err := phonenumbers.Parse(c.Global.SMS, "ZZ")
 	// Check for errors
 	if err != nil {
-		return e.MakeErr(fmt.Sprintf("%s - %s", e.INVALID_PHONE_NUMBER, c.SMS), err)
+		return e.MakeErr(fmt.Sprintf("%s - %s", e.INVALID_PHONE_NUMBER, c.Global.SMS), err)
 	}
 	// get the country code
 	countryCode := phonenumbers.GetRegionCodeForNumber(phone)
@@ -133,11 +141,11 @@ func (c Config) isValidPhoneNumber() error {
 // isValidEmail - validate the given email address
 func (c Config) isValidEmail() error {
 	// validate the mx record of the domain
-	if err := checkmail.ValidateMX(c.Email); err != nil {
+	if err := checkmail.ValidateMX(c.Global.Email); err != nil {
 		return e.MakeErr(nil, err)
 	}
 	// validate the email format
-	if err := checkmail.ValidateFormat(c.Email); err != nil {
+	if err := checkmail.ValidateFormat(c.Global.Email); err != nil {
 		return e.MakeErr(nil, err)
 	}
 	// return the results
@@ -146,6 +154,16 @@ func (c Config) isValidEmail() error {
 
 // isValidMode - check if the provided mode is valid(possible modes - (cp - cpanel mode),(a - abuseDBIP mode), (s - sophos mode), (c - csf mode))
 func (c *Config) isValidMode(mode string) error {
+	if c.ConfigFile != "" {
+		if !c.AbuseIPDB.Enable && !c.CSF.Enable && !c.Cpanel.Enable && !c.Sophos.Enable {
+			return e.MakeErr(e.NO_MODULES_ENABLED, nil)
+		}
+		if (c.CSF.Enable || c.Cpanel.Enable) && !c.AbuseIPDB.Enable {
+			return e.MakeErr(e.ABUSE_DB_IP_NOT_ENABLED, nil)
+		}
+		return nil
+	}
+
 	// split the modes(in case of multiply modes)
 	modes := strings.Split(strings.TrimSpace(mode), ",")
 
@@ -160,7 +178,7 @@ func (c *Config) isValidMode(mode string) error {
 			c.Cpanel.Enable = true
 		// abuseDBIP mode
 		case "a":
-			c.AbuseDBIP.Enable = true
+			c.AbuseIPDB.Enable = true
 		// csf mode
 		case "c":
 			c.CSF.Enable = true
@@ -171,6 +189,9 @@ func (c *Config) isValidMode(mode string) error {
 		default:
 			return e.MakeErr(fmt.Sprintf("%s: %s", e.INVALID_MODE, modes[i]), nil)
 		}
+	}
+	if (c.CSF.Enable || c.Cpanel.Enable) && !c.AbuseIPDB.Enable {
+		return e.MakeErr(e.ABUSE_DB_IP_NOT_ENABLED, nil)
 	}
 	return nil
 }
@@ -212,17 +233,16 @@ func (c Config) isCsfValid() error {
 }
 
 func (c *Config) isValidAbuseDB(apiKeys string) error {
-	keys := strings.Split(strings.TrimSpace(apiKeys), ",")
-	if len(keys) == 0 {
+	if len(apiKeys) != 0 {
+		c.AbuseIPDB.ApiKeys = strings.Split(strings.TrimSpace(apiKeys), ",")
+	}
+
+	if len(c.AbuseIPDB.ApiKeys) == 0 {
 		return e.MakeErr(e.MISSING_API_KEYS, nil)
 	}
-	c.AbuseDBIP.ApiKeys = helpers.UniqSlice(keys)
+	c.AbuseIPDB.ApiKeys = helpers.UniqSlice(c.AbuseIPDB.ApiKeys)
 
-	abuseClient := abuseipdb.New(c.AbuseDBIP)
+	_, err := abuseipdb.New(c.AbuseIPDB)
 
-	if err := abuseClient.SetMaxIPCHecks(); err != nil {
-		return err
-	}
-
-	return nil
+	return err
 }

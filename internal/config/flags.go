@@ -40,7 +40,6 @@ var (
 	tempApiKeys     string
 	tempCpanelUsers string
 	tempMode        string
-	usageMessage    = fmt.Sprintf("Usage: %s ", os.Args[0])
 )
 
 func GetConfig() Config {
@@ -103,6 +102,13 @@ func GetConfig() Config {
 	// csf validation
 	if c.CSF.Enable {
 		if err := c.isCsfValid(); err != nil {
+			printUsageAndExit(err)
+		}
+	}
+
+	// abuseDBIP validation
+	if c.AbuseDBIP.Enable {
+		if err := c.isValidAbuseDB(tempApiKeys); err != nil {
 			printUsageAndExit(err)
 		}
 	}

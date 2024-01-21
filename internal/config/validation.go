@@ -10,6 +10,7 @@ import (
 
 	"github.com/badoux/checkmail"
 	"github.com/nyaruka/phonenumbers"
+	abuseipdb "github.com/shimon-git/AbuseShield/internal/abuse-IP-DB"
 	"github.com/shimon-git/AbuseShield/internal/cpanel"
 	"github.com/shimon-git/AbuseShield/internal/csf"
 	e "github.com/shimon-git/AbuseShield/internal/errors"
@@ -183,13 +184,11 @@ func (c *Config) isSophosValid() error {
 }
 
 func (c *Config) isCpanelValid(cpanelUsers string) error {
-	users := strings.Split(strings.TrimSpace(cpanelUsers), ",")
-	if len(users) == 0 {
+	c.Cpanel.Users = strings.Split(strings.TrimSpace(cpanelUsers), ",")
+	if len(c.Cpanel.Users) == 0 {
 		return e.MakeErr(e.MISSING_CPANEL_USERS, nil)
 	}
-	for _, user := range users {
-		c.Cpanel.Users = append(c.Cpanel.Users, user)
-	}
+
 	cpanelClient := cpanel.New(c.Cpanel)
 	if err := cpanelClient.IsAllUsersExists(); err != nil {
 		return err
@@ -209,5 +208,21 @@ func (c Config) isCsfValid() error {
 	if err := csfClient.IsCsfServiceActive(); err != nil {
 		return err
 	}
+	return nil
+}
+
+func (c *Config) isValidAbuseDB(apiKeys string) error {
+	keys := strings.Split(strings.TrimSpace(apiKeys), ",")
+	if len(keys) == 0 {
+		return e.MakeErr(e.MISSING_API_KEYS, nil)
+	}
+	c.AbuseDBIP.ApiKeys = helpers.UniqSlice(keys)
+
+	abuseClient := abuseipdb.New(c.AbuseDBIP)
+
+	if err := abuseClient.SetMaxIPCHecks(); err != nil {
+		return err
+	}
+
 	return nil
 }

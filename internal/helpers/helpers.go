@@ -78,3 +78,17 @@ func (h *HttpClient) RoundTrip(req *http.Request) (*http.Response, error) {
 
 	return http.DefaultTransport.RoundTrip(req)
 }
+
+func UniqSlice(slice []string) []string {
+	uniqMap := make(map[string]bool)
+	result := make([]string, 0, len(slice))
+
+	for _, v := range slice {
+		if !uniqMap[v] {
+			uniqMap[v] = true
+			result = append(result, v)
+		}
+	}
+
+	return result
+}

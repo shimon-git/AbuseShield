@@ -50,8 +50,8 @@ func GetConfig() Config {
 	c.GetModeFlags()         // check
 	c.getSophosFlags()       // check
 	c.getCsfAndCpanelFlags() //check
-	c.GetAbuseDBFlags()
-	c.getGlobalFlags()
+	c.GetAbuseDBFlags()      // check
+	c.getGlobalFlags()       // check
 	flag.Parse()
 
 	// config file validation
@@ -61,6 +61,14 @@ func GetConfig() Config {
 		}
 		return c
 	}
+
+	c.validateAndSetConfigurations()
+	c.adjustGlobalConfigurations()
+
+	return c
+}
+
+func (c *Config) validateAndSetConfigurations() {
 
 	// ip file validation
 	if err := c.isValidIPFile(); err != nil {
@@ -112,8 +120,30 @@ func GetConfig() Config {
 			printUsageAndExit(err)
 		}
 	}
+}
 
-	return c
+func (c *Config) adjustGlobalConfigurations() {
+	// if ipv4 is false which is not the default behavior then set the global modes flags
+	if !c.Global.Ipv4 {
+		c.Sophos.Ipv4 = c.Global.Ipv4
+		c.CSF.Ipv4 = c.Global.Ipv4
+		c.AbuseDBIP.Ipv4 = c.Global.Ipv4
+	}
+	// if ipv6 is true which is not the default behavior then set the global modes flags
+	if c.Global.Ipv6 {
+		c.Sophos.Ipv6 = c.Global.Ipv6
+		c.CSF.Ipv6 = c.Global.Ipv6
+		c.AbuseDBIP.Ipv6 = c.Global.Ipv6
+	}
+	// if the global interval is not the default then set the global modes flags
+	if c.Global.Interval != DEFAULT_INTERVAL {
+		if c.Sophos.Interval == DEFAULT_INTERVAL {
+			c.Sophos.Interval = c.Global.Interval
+		}
+		if c.AbuseDBIP.Interval == DEFAULT_INTERVAL {
+			c.AbuseDBIP.Interval = c.Global.Interval
+		}
+	}
 }
 
 func printUsageAndExit(err error) {

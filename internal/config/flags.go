@@ -2,8 +2,6 @@ package config
 
 import (
 	"flag"
-	"fmt"
-	"os"
 
 	abuseipdb "github.com/shimon-git/AbuseShield/internal/abuse-IP-DB"
 	"github.com/shimon-git/AbuseShield/internal/cpanel"
@@ -21,21 +19,6 @@ type Config struct {
 	Global     globalConfigurations //global conf
 }
 
-const (
-	DEFAULT_SOPHOS_PORT            = 4444                        //default sophos port
-	DEFAULT_SOPHOS_USER            = "admin"                     //default sophos user
-	DEFAULT_LIMIT                  = 0                           //default limit amount of ip to check
-	DEFAULT_CSF_FILE               = "/etc/csf/csf.deny"         //default csf.deny file path
-	DEFAULT_CSF_BACKUP             = "/tmp/csf_backup.deny"      //default csf.deny backup file path
-	DEFAULT_RESULTS                = "./abuse_db_ip_results.txt" //default abuse db ip results file path
-	DEFAULT_IPV4                   = true                        //default ipv4(true for enable || false for disable)
-	DEFAULT_IPV6                   = false                       //default ipv6(true for enable || false for disable)
-	DEFAULT_SCORE                  = 15                          //default minimum score for considering an ip as malicious
-	DEFAULT_CHECK_ALL_CPANEL_USERS = false                       //default value to check all cpanel users(true for enable || false to disable)
-	DEFAULT_INTERVAL               = 3                           //default interval between api requests to avoid overload
-	MINIMUM_INTERVAL               = 1                           //minimum interval that can be set
-)
-
 var (
 	tempApiKeys     string //temp variable to store api keys before parsing them
 	tempCpanelUsers string //temp variable to store cpanel users before parsing them
@@ -46,6 +29,11 @@ var (
 // GetConfig - return the configurations
 func GetConfig() Config {
 	var c Config // config to return
+
+	// override the default Usage message
+	flag.Usage = func() {
+		printUsageMessage()
+	}
 
 	// get all flags and parse them
 	c.GetFilesFlags()        // get the files - IP files and config file
@@ -189,43 +177,26 @@ func (c *Config) adjustGlobalConfigurations() {
 	}
 }
 
-// printUsageAndExit - print the usage and the error and exit
-func printUsageAndExit(err error) {
-	// print the usage
-	fmt.Printf("\n%s\n\n", "--------------- USAGE ---------------")
-	fmt.Fprintf(flag.CommandLine.Output(), "Usage: %s [options]\n", os.Args[0])
-	flag.PrintDefaults()
-	fmt.Printf("\n%s\n", "-------------------------------------")
-
-	// print the error
-	fmt.Printf("\n%s\n\n", "--------------- Error ---------------")
-	fmt.Println(err.Error())
-	fmt.Printf("%s\n", "-------------------------------------")
-
-	// exit with error code
-	os.Exit(1)
-}
-
 /*
 getSophosFlags - get the sophos flags:
 flags: --host && --port && --user && password && --sophos-interval && group-name && comment)
 aliases: -h for host, -p for port, -U for user, -P for password, -g for group name, -C for comment
 */
 func (c *Config) getSophosFlags() {
-	flag.StringVar(&c.Sophos.Host, "host", "", "Sophos fw host IP address")
-	flag.IntVar(&c.Sophos.Port, "port", DEFAULT_SOPHOS_PORT, fmt.Sprintf("%s %d", "Sophos fw port - default port is", DEFAULT_SOPHOS_PORT))
-	flag.StringVar(&c.Sophos.User, "user", DEFAULT_SOPHOS_USER, fmt.Sprintf("%s %s", "Username to connect to sophos fw - default is", DEFAULT_SOPHOS_USER))
-	flag.StringVar(&c.Sophos.Password, "password", "", "Password to connect to sophos fw")
-	flag.IntVar(&c.Sophos.Interval, "sophos-interval", DEFAULT_INTERVAL, fmt.Sprintf("%s %d %s", "Interval between API requests for avoiding overload on the sophos fw server - default is", DEFAULT_INTERVAL, "seconds"))
-	flag.StringVar(&c.Sophos.GroupName, "group-name", "", "Group name to add the ip addresses in sophos(new group will created if the group not exits)")
-	flag.StringVar(&c.Sophos.Comment, "comment", "", "Comment to set for each new object that will created on the sophos fw server")
+	flag.StringVar(&c.Sophos.Host, SOPHOS_HOST_FLAG, "", sophosHostUsageMessage)
+	flag.IntVar(&c.Sophos.Port, SOPHOS_PORT_FLAG, DEFAULT_SOPHOS_PORT, sophosPortUsageMessage)
+	flag.StringVar(&c.Sophos.User, SOPHOS_USER_FLAG, DEFAULT_SOPHOS_USER, sophosUserUsageMessage)
+	flag.StringVar(&c.Sophos.Password, SOPHOS_PASSWORD_FLAG, "", sophosPasswordUsageMessage)
+	flag.IntVar(&c.Sophos.Interval, SOPHOS_INTERVAL_FLAG, DEFAULT_INTERVAL, sophosIntervalUsageMessage)
+	flag.StringVar(&c.Sophos.GroupName, SOPHOS_GROUP_FLAG, "", sophosGroupUsageMessage)
+	flag.StringVar(&c.Sophos.Comment, SOPHOS_COMMENT_FLAG, "", sophosCommentUsageMessage)
 
-	flag.StringVar(&c.Sophos.Host, "h", "", "Alias for --host")
-	flag.IntVar(&c.Sophos.Port, "p", DEFAULT_SOPHOS_PORT, "Alias for --port")
-	flag.StringVar(&c.Sophos.User, "U", DEFAULT_SOPHOS_USER, "Alias for --user")
-	flag.StringVar(&c.Sophos.Password, "P", "", "Alias for --password")
-	flag.StringVar(&c.Sophos.GroupName, "g", "", "Alias for --group-name")
-	flag.StringVar(&c.Sophos.Comment, "C", "", "Alias for --comment")
+	flag.StringVar(&c.Sophos.Host, SOPHOS_HOST_ALIAS_FLAG, "", sophosHostAliasUsageMessage)
+	flag.IntVar(&c.Sophos.Port, SOPHOS_PORT_ALIAS_FLAG, DEFAULT_SOPHOS_PORT, sophosPortAliasUsageMessage)
+	flag.StringVar(&c.Sophos.User, SOPHOS_USER_ALIAS_FLAG, DEFAULT_SOPHOS_USER, sophosUserAliasUsageMessage)
+	flag.StringVar(&c.Sophos.Password, SOPHOS_PASSWORD_ALIAS_FLAG, "", sophosPasswordAliasUsageMessage)
+	flag.StringVar(&c.Sophos.GroupName, SOPHOS_GROUP_ALIAS_FLAG, "", sophosGroupAliasUsageMessage)
+	flag.StringVar(&c.Sophos.Comment, SOPHOS_COMMENT_ALIAS_FLAG, "", sophosCommentAliasUsageMessage)
 }
 
 /*
@@ -234,46 +205,66 @@ flags: --cpanel-users && --cpanel-all-users && --csf-file && --csf-backup
 aliases: None
 */
 func (c *Config) getCsfAndCpanelFlags() {
-	flag.StringVar(&tempCpanelUsers, "cpanel-users", "", "Cpanel users to collect the logs and check for abuse")
-	flag.BoolVar(&c.Cpanel.CheckAllUsers, "cpanel-all-users", DEFAULT_CHECK_ALL_CPANEL_USERS, "Set to true in case you want ti check abuse for all cpanel users")
-	flag.StringVar(&c.CSF.CSFFile, "csf-file", DEFAULT_CSF_FILE, fmt.Sprintf("%s %s", "Path to csf.deny file - default", DEFAULT_CSF_FILE))
-	flag.StringVar(&c.CSF.Backup, "csf-backup", DEFAULT_CSF_BACKUP, fmt.Sprintf("%s %s", "Path to csf backup file(in case csf backup file already exist then it will be recreated) - default", DEFAULT_CSF_BACKUP))
+	flag.StringVar(&tempCpanelUsers, CPANEL_USERS_FLAG, "", cpanelUsersUsageMessage)
+	flag.BoolVar(&c.Cpanel.CheckAllUsers, CPANEL_CHECK_ALL_USERS_FLAG, DEFAULT_CHECK_ALL_CPANEL_USERS, cpanelAllUsersUsageMessage)
+	flag.StringVar(&c.CSF.CSFFile, CSF_FILE_FLAG, DEFAULT_CSF_FILE, csfFileUsageMessage)
+	flag.StringVar(&c.CSF.Backup, CSF_BACKUP_FILE_FLAG, DEFAULT_CSF_BACKUP, csfBackupFileUsageMessage)
 }
 
 /*
 getGlobalFlags - get the global configuration flags:
 flags: --ipv4 && --ipv6 && --interval
-aliases: -i -- for the global interval
+aliases: -i for --interval
 */
 func (c *Config) getGlobalFlags() {
-	flag.BoolVar(&c.Global.Ipv4, "ipv4", DEFAULT_IPV4, fmt.Sprintf("%s %v", "Check ipv4(if is set to false ipv4 addresses will not be checked) - default is", DEFAULT_IPV4))
-	flag.BoolVar(&c.Global.Ipv6, "ipv6", DEFAULT_IPV6, fmt.Sprintf("%s %v", "Check ipv6(if is set to true ipv6 addresses will be checked) - default is", DEFAULT_IPV6))
-	flag.IntVar(&c.Global.Interval, "interval", DEFAULT_INTERVAL, fmt.Sprintf("%s %d %s", "Global interval between API requests to abusedb-ip or sophos fw - default is", DEFAULT_INTERVAL, "seconds"))
-	flag.IntVar(&c.Global.Interval, "i", DEFAULT_INTERVAL, "Alias for --interval")
+	flag.BoolVar(&c.Global.Ipv4, GLOBAL_IPV4_FLAG, DEFAULT_IPV4, globalIPv4UsageMessage)
+	flag.BoolVar(&c.Global.Ipv6, GLOBAL_IPV6_FLAG, DEFAULT_IPV6, globalIPv6UsageMessage)
+	flag.IntVar(&c.Global.Interval, GLOBAL_INTERVAL_FLAG, DEFAULT_INTERVAL, globalIntervalUsageMessage)
+	flag.IntVar(&c.Global.Interval, GLOBAL_INTERVAL_ALIAS_FLAG, DEFAULT_INTERVAL, globalIntervalAliasUsageMessage)
 }
 
+/*
+GetAbuseDBFlags - get the abuse  configuration flags:
+flags: --limit && --abuseipdb-interval && --results && --api-keys && --score
+aliases: None
+*/
 func (c *Config) GetAbuseDBFlags() {
-	flag.IntVar(&c.AbuseIPDB.Limit, "limit", DEFAULT_LIMIT, "IP limit to check(limit can be set to check max number of ip addresses)")
-	flag.IntVar(&c.AbuseIPDB.Interval, "abusedb-interval", DEFAULT_INTERVAL, fmt.Sprintf("%s %d %s", "Interval between API requests to not be blocked by yhe abuse-db-ip - default is", DEFAULT_INTERVAL, "seconds"))
-	flag.StringVar(&c.AbuseIPDB.ResultsFile, "results", DEFAULT_RESULTS, fmt.Sprintf("%s %s", "Path to the results file of abuse-db-ip - default is", DEFAULT_RESULTS))
-	flag.StringVar(&tempApiKeys, "api-keys", "", "API keys to authenticate to abuse-db-ip")
-	flag.IntVar(&c.AbuseIPDB.Score, "score", DEFAULT_SCORE, fmt.Sprintf("%s: %d", "Minimum IP score to considered as malicious IP(score can be set from 1 - 100) - default is", DEFAULT_SCORE))
+	flag.IntVar(&c.AbuseIPDB.Limit, ABUSE_DB_IP_LIMIT_FLAG, DEFAULT_LIMIT, abuseIPDBLimitUsageMessage)
+	flag.IntVar(&c.AbuseIPDB.Interval, ABUSE_DB_IP_INTERVAL_FLAG, DEFAULT_INTERVAL, abuseIPDBIntervalUsageMessage)
+	flag.StringVar(&c.AbuseIPDB.ResultsFile, ABUSE_DB_IP_RESULTS_FLAG, DEFAULT_RESULTS, abuseIPDBResultsUsageMessage)
+	flag.StringVar(&tempApiKeys, ABUSE_DB_IP_API_KEYS_FLAG, "", abuseIPDBAPIKeysUsageMessage)
+	flag.IntVar(&c.AbuseIPDB.Score, ABUSE_DB_IP_SCORE_FLAG, DEFAULT_SCORE, abuseIPDBScoreUsageMessage)
 }
 
+/*
+GetFilesFlags - get the config file and ip files flags:
+flags: --ip-file && --config
+aliases: -I for --ip-file
+*/
 func (c *Config) GetFilesFlags() {
-	flag.StringVar(&tempIPFiles, "ip-file", "", "Path to the IP file to check")
-	flag.StringVar(&tempIPFiles, "I", "", "Alias for --ip-file")
+	flag.StringVar(&tempIPFiles, IP_FILE_FLAG, "", ipFilesUsageMessage)
+	flag.StringVar(&tempIPFiles, IP_FILE_ALIAS_FLAG, "", ipFilesAliasUsageMessage)
 
-	flag.StringVar(&c.ConfigFile, "config", "", "Path to config file")
-	flag.StringVar(&c.ConfigFile, "c", "", "Alias for --config")
+	flag.StringVar(&c.ConfigFile, CONFIG_FILE_FLAG, "", configFileUsageMessage)
+	flag.StringVar(&c.ConfigFile, CONFIG_FILE_ALIAS_FLAG, "", configFileAliasUsageMessage)
 }
 
+/*
+GetModeFlags - get the modes(a - abuseIPDB, s - sophos, cp - cpanel, c - csf) configurations flags:
+flags: --mode
+aliases: -m for --mode
+*/
 func (c *Config) GetModeFlags() {
-	flag.StringVar(&tempMode, "mode", "a", "Enable modes(s(sophos),a(abuseDBIP),cp(Cpanel),c(csf))")
-	flag.StringVar(&tempMode, "m", "", "Alias for --mode")
+	flag.StringVar(&tempMode, MODE_FLAG, "", modeUsageMessage)
+	flag.StringVar(&tempMode, MODE_ALIAS_FLAG, "", modeAliasUsageMessage)
 }
 
+/*
+GetModeFlags - get email and phone flags:
+flags: --email --sms
+aliases: None
+*/
 func (c *Config) GetEmailAndSMSFlags() {
-	flag.StringVar(&c.Global.Email, "email", "", "Send an email to the provided address when finished")
-	flag.StringVar(&c.Global.SMS, "sms", "", "Send SMS message to the provided phone number when finished")
+	flag.StringVar(&c.Global.Email, EMAIL_FLAG, "", emailUsageMessage)
+	flag.StringVar(&c.Global.SMS, SMS_FLAG, "", smsUsageMessage)
 }

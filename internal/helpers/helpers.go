@@ -92,3 +92,11 @@ func UniqSlice(slice []string) []string {
 
 	return result
 }
+
+func IsFileExist(f string) error {
+	_, err := os.Stat(f)
+	if err != nil {
+		return e.MakeErr(fmt.Sprintf("%s: %s", e.RETRIEVE_FILE_INFO_ERR, f), err)
+	}
+	return nil
+}

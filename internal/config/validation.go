@@ -3,7 +3,6 @@ package config
 import (
 	"fmt"
 	"net"
-	"os"
 	"path/filepath"
 	"strings"
 	"sync"
@@ -18,21 +17,13 @@ import (
 	"github.com/shimon-git/AbuseShield/internal/sophos"
 )
 
-func isFileExist(f string) error {
-	_, err := os.Stat(f)
-	if err != nil {
-		return e.MakeErr(fmt.Sprintf("%s: %s", e.RETRIEVE_FILE_INFO_ERR, f), err)
-	}
-	return nil
-}
-
 // isValidIPFile - validate if the ip file exist and the format is valid
 func (c Config) isValidIPFile(ipFiles string) error {
 	var wg sync.WaitGroup
 	var err error
 
 	if len(c.Global.IPsFiles) == 0 && tempIPFiles == "" {
-		return e.MakeErr(e.MISSING_IP_FILE, nil)
+		return nil
 	}
 
 	if len(c.Global.IPsFiles) == 0 {
@@ -42,7 +33,7 @@ func (c Config) isValidIPFile(ipFiles string) error {
 	// loop over the ip files and validate them
 	for _, file := range c.Global.IPsFiles {
 		// check the ip file exist
-		if err := isFileExist(file); err != nil {
+		if err := helpers.IsFileExist(file); err != nil {
 			return err
 		}
 		// create a data channel
@@ -164,12 +155,13 @@ func (c *Config) isValidMode(mode string) error {
 		return nil
 	}
 
+	if len(mode) == 0 {
+		return e.MakeErr(e.MISSING_MODE, nil)
+	}
+
 	// split the modes(in case of multiply modes)
 	modes := strings.Split(strings.TrimSpace(mode), ",")
 
-	if len(modes) == 0 {
-		return e.MakeErr(e.MISSING_MODE, nil)
-	}
 	// loop over the given modes and validate each mode
 	for i := 0; i < len(modes); i++ {
 		switch modes[i] {
@@ -193,6 +185,12 @@ func (c *Config) isValidMode(mode string) error {
 	if (c.CSF.Enable || c.Cpanel.Enable) && !c.AbuseIPDB.Enable {
 		return e.MakeErr(e.ABUSE_DB_IP_NOT_ENABLED, nil)
 	}
+
+	// if cpanel is not enabled and ip files to check has not been provided then return an error
+	if !c.Cpanel.Enable && len(c.Global.IPsFiles) == 0 {
+		return e.MakeErr(e.MISSING_IP_FILE, nil)
+	}
+
 	return nil
 }
 
@@ -218,7 +216,7 @@ func (c *Config) isCpanelValid(cpanelUsers string) error {
 }
 
 func (c Config) isCsfValid() error {
-	if err := isFileExist(c.CSF.CSFFile); err != nil {
+	if err := helpers.IsFileExist(c.CSF.CSFFile); err != nil {
 		return err
 	}
 	csfClient := csf.New(c.CSF)

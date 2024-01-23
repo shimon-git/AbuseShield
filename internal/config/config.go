@@ -12,6 +12,7 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+// configurations - store the configurations for the app
 type configurations struct {
 	Global    globalConfigurations `yaml:"global"`
 	AbuseIPDB abuseipdb.AbuseIPDB  `yaml:"abuse_ip_db"`
@@ -20,6 +21,7 @@ type configurations struct {
 	Sophos    sophos.Sophos        `yaml:"sophos"`
 }
 
+// globalConfigurations - store the global configurations
 type globalConfigurations struct {
 	Ipv6       bool     `yaml:"ipv6"`
 	Ipv4       bool     `yaml:"ipv4"`
@@ -32,18 +34,21 @@ type globalConfigurations struct {
 	Email      string   `yaml:"email"`
 }
 
-// parse the yaml config file
+// parseConfigFile - parse a given config file(yaml format) and return an error(if ocurred)
 func (c *Config) parseConfigFile() error {
+	// configurations struct to store the configurations
 	var conf configurations
+	// read the config file and check for errors
 	configReader, err := os.ReadFile(c.ConfigFile)
 	if err != nil {
 		return e.MakeErr(fmt.Sprintf("%s: %s", e.CONFIG_READER_ERR, c.ConfigFile), err)
 	}
-
+	// extract the configurations from the config file into the configurations struct and check for errors
 	if err := yaml.Unmarshal(configReader, &conf); err != nil {
 		e.MakeErr(nil, err)
 	}
-	// Copy values from conf.Configurations to c
+
+	// Copy values from conf.Configurations to the config struct
 	c.Global = conf.Global
 	c.AbuseIPDB = conf.AbuseIPDB
 	c.Cpanel = conf.Cpanel

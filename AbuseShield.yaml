@@ -27,6 +27,18 @@ abuse_ip_db:
   limit: 1000  # Limit the number of IPs to check.
   results_file: "path-to-results-file"  # Specify the path for the results file.
 
+# Add this options
+#  exclude:
+#    crawlers: true
+#    domains:
+#      - "google.com"
+#      - "cloudflare.com"
+#    networks:
+#      - "172.16.0.4/24"
+#  
+#  blockTor: true
+
+
   # Interval between API requests in seconds minimum is 1 seconde (uncomment to override the global interval).
   # interval: 3 
 

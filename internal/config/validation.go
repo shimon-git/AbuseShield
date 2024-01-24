@@ -18,7 +18,7 @@ import (
 )
 
 // isValidIPFile - validate if the ip file exist and the format is valid
-func (c Config) isValidIPFile(ipFiles string) error {
+func (c *Config) isValidIPFile(ipFiles string) error {
 	var wg sync.WaitGroup
 	var err error
 
@@ -33,8 +33,8 @@ func (c Config) isValidIPFile(ipFiles string) error {
 	// loop over the ip files and validate them
 	for _, file := range c.Global.IPsFiles {
 		// check the ip file exist
-		if err := helpers.IsFileExist(file); err != nil {
-			return err
+		if !helpers.IsFileExist(file) {
+			return e.MakeErr(e.MISSING_IP_FILE, nil)
 		}
 		// create a data channel
 		dataChan := make(chan string, 10)
@@ -203,12 +203,22 @@ func (c *Config) isSophosValid() error {
 }
 
 func (c *Config) isCpanelValid(cpanelUsers string) error {
+	cpanelClient := cpanel.New(c.Cpanel)
+	if err := cpanelClient.IsCpanelInstalled(); err != nil {
+		return err
+	}
+
+	// if cpanel all users check is enabled
+	if c.Cpanel.CheckAllUsers {
+		// we don't need to check if cpanel users exist because we want to collect and check access log for all users
+		return nil
+	}
+
 	c.Cpanel.Users = strings.Split(strings.TrimSpace(cpanelUsers), ",")
 	if len(c.Cpanel.Users) == 0 {
 		return e.MakeErr(e.MISSING_CPANEL_USERS, nil)
 	}
 
-	cpanelClient := cpanel.New(c.Cpanel)
 	if err := cpanelClient.IsAllUsersExists(); err != nil {
 		return err
 	}
@@ -216,8 +226,8 @@ func (c *Config) isCpanelValid(cpanelUsers string) error {
 }
 
 func (c Config) isCsfValid() error {
-	if err := helpers.IsFileExist(c.CSF.CSFFile); err != nil {
-		return err
+	if !helpers.IsFileExist(c.CSF.CSFFile) {
+		return e.MakeErr(e.CSF_FILE_NOT_FOUND, nil)
 	}
 	csfClient := csf.New(c.CSF)
 

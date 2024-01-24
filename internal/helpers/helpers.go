@@ -8,6 +8,7 @@ import (
 	"math/rand"
 	"net/http"
 	"os"
+	"sync"
 	"time"
 
 	e "github.com/shimon-git/AbuseShield/internal/errors"
@@ -89,14 +90,40 @@ func UniqSlice(slice []string) []string {
 			result = append(result, v)
 		}
 	}
-
 	return result
 }
 
-func IsFileExist(f string) error {
-	_, err := os.Stat(f)
-	if err != nil {
-		return e.MakeErr(fmt.Sprintf("%s: %s", e.RETRIEVE_FILE_INFO_ERR, f), err)
+func IsFileExist(filename string) bool {
+	info, err := os.Stat(filename)
+	if os.IsNotExist(err) {
+		return false
 	}
-	return nil
+	return !info.IsDir()
+}
+
+func IPFileWriter(file string, override bool, c chan string, wg *sync.WaitGroup, e *error) {
+	if IsFileExist(file) && override {
+		if err := os.Remove(file); err != nil {
+			*e = err
+			return
+		}
+	}
+	f, err := os.Create(file)
+	defer f.Close()
+	if err != nil {
+		*e = err
+		return
+	}
+	// create a new writer
+	writer := bufio.NewWriter(f)
+	for line := range c {
+		_, err := writer.WriteString(line + "\n")
+		if err != nil {
+			*e = err
+			return
+		}
+	}
+	if err := writer.Flush(); err != nil {
+		*e = err
+	}
 }

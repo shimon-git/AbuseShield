@@ -8,18 +8,19 @@ import (
 )
 
 const (
-	DEFAULT_SOPHOS_PORT            = 4444                        //default sophos port
-	DEFAULT_SOPHOS_USER            = "admin"                     //default sophos user
-	DEFAULT_LIMIT                  = 0                           //default limit amount of ip to check
-	DEFAULT_CSF_FILE               = "/etc/csf/csf.deny"         //default csf.deny file path
-	DEFAULT_CSF_BACKUP             = "/tmp/csf_backup.deny"      //default csf.deny backup file path
-	DEFAULT_RESULTS                = "./abuse_db_ip_results.txt" //default abuse db ip results file path
-	DEFAULT_IPV4                   = true                        //default ipv4(true for enable || false for disable)
-	DEFAULT_IPV6                   = false                       //default ipv6(true for enable || false for disable)
-	DEFAULT_SCORE                  = 15                          //default minimum score for considering an ip as malicious
-	DEFAULT_CHECK_ALL_CPANEL_USERS = false                       //default value to check all cpanel users(true for enable || false to disable)
-	DEFAULT_INTERVAL               = 3                           //default interval between api requests to avoid overload
-	MINIMUM_INTERVAL               = 1                           //minimum interval that can be set
+	DEFAULT_SOPHOS_PORT            = 4444                   //default sophos port
+	DEFAULT_SOPHOS_USER            = "admin"                //default sophos user
+	DEFAULT_LIMIT                  = 0                      //default limit amount of ip to check
+	DEFAULT_CSF_FILE               = "/etc/csf/csf.deny"    //default csf.deny file path
+	DEFAULT_CSF_BACKUP             = "/tmp/csf_backup.deny" //default csf.deny backup file path
+	DEFAULT_BLACKLIST_FILE         = "./blacklist.txt"      //default abuse db ip results file path
+	DEFAULT_WHITELIST_FILE         = "./whitelist.txt"      //default abuse db ip results file path
+	DEFAULT_IPV4                   = true                   //default ipv4(true for enable || false for disable)
+	DEFAULT_IPV6                   = false                  //default ipv6(true for enable || false for disable)
+	DEFAULT_SCORE                  = 15                     //default minimum score for considering an ip as malicious
+	DEFAULT_CHECK_ALL_CPANEL_USERS = false                  //default value to check all cpanel users(true for enable || false to disable)
+	DEFAULT_INTERVAL               = 3                      //default interval between api requests to avoid overload
+	MINIMUM_INTERVAL               = 1                      //minimum interval that can be set
 )
 
 const (
@@ -49,11 +50,12 @@ const (
 	GLOBAL_INTERVAL_FLAG       = "interval"
 	GLOBAL_INTERVAL_ALIAS_FLAG = "i"
 	//abuse db ip  flags
-	ABUSE_DB_IP_LIMIT_FLAG    = "limit"
-	ABUSE_DB_IP_INTERVAL_FLAG = "abuse-ip-db-interval"
-	ABUSE_DB_IP_RESULTS_FLAG  = "results"
-	ABUSE_DB_IP_API_KEYS_FLAG = "api-keys"
-	ABUSE_DB_IP_SCORE_FLAG    = "score"
+	ABUSE_DB_IP_LIMIT_FLAG     = "limit"
+	ABUSE_DB_IP_INTERVAL_FLAG  = "abuse-ip-db-interval"
+	ABUSE_DB_IP_BLACKLIST_FLAG = "blacklist-file"
+	ABUSE_DB_IP_WHITELIST_FLAG = "whitelist-file"
+	ABUSE_DB_IP_API_KEYS_FLAG  = "api-keys"
+	ABUSE_DB_IP_SCORE_FLAG     = "score"
 	// ip files and config file flags
 	IP_FILE_FLAG           = "ip-file"
 	IP_FILE_ALIAS_FLAG     = "I"
@@ -94,11 +96,12 @@ var (
 	globalIntervalUsageMessage      = fmt.Sprintf("Global interval (in seconds) between API requests - default interval is: %d", DEFAULT_INTERVAL)
 	globalIntervalAliasUsageMessage = "Short alias for --interval"
 	// abuseDBIP usage messages
-	abuseIPDBLimitUsageMessage    = "Maximum number of IP addresses to check against the AbuseIPDB"
-	abuseIPDBIntervalUsageMessage = fmt.Sprintf("Time interval (in seconds) between requests to AbuseIPDB to avoid being blocked - default interval is: %d", DEFAULT_INTERVAL)
-	abuseIPDBResultsUsageMessage  = fmt.Sprintf("Path for the results file from AbuseIPDB queries - default interval is: %s", DEFAULT_RESULTS)
-	abuseIPDBAPIKeysUsageMessage  = "API keys for authenticating requests to AbuseIPDB"
-	abuseIPDBScoreUsageMessage    = fmt.Sprintf("Minimum score threshold to consider an IP as malicious (range 1-100) - default score is: %d", DEFAULT_SCORE)
+	abuseIPDBLimitUsageMessage     = "Maximum number of IP addresses to check against the AbuseIPDB"
+	abuseIPDBIntervalUsageMessage  = fmt.Sprintf("Time interval (in seconds) between requests to AbuseIPDB to avoid being blocked - default interval is: %d", DEFAULT_INTERVAL)
+	abuseIPDBBlacklistUsageMessage = fmt.Sprintf("Path for the blacklist file from AbuseIPDB queries - default interval is: %s", DEFAULT_BLACKLIST_FILE)
+	abuseIPDBWhitelistUsageMessage = fmt.Sprintf("Path for the whitelist file from AbuseIPDB queries - default interval is: %s", DEFAULT_WHITELIST_FILE)
+	abuseIPDBAPIKeysUsageMessage   = "API keys for authenticating requests to AbuseIPDB"
+	abuseIPDBScoreUsageMessage     = fmt.Sprintf("Minimum score threshold to consider an IP as malicious (range 1-100) - default score is: %d", DEFAULT_SCORE)
 	// mode flag usage messages
 	modeUsageMessage      = "Select operational modes: s (Sophos), a (AbuseIPDB), cp (cPanel), c (CSF)"
 	modeAliasUsageMessage = "Short alias for --mode"
@@ -185,7 +188,8 @@ func printUsageMessage() {
 	printFlagSection("Abuse DB Configuration Flags", []string{
 		formatFlag(ABUSE_DB_IP_LIMIT_FLAG, abuseIPDBLimitUsageMessage),
 		formatFlag(ABUSE_DB_IP_INTERVAL_FLAG, abuseIPDBIntervalUsageMessage),
-		formatFlag(ABUSE_DB_IP_RESULTS_FLAG, abuseIPDBResultsUsageMessage),
+		formatFlag(ABUSE_DB_IP_BLACKLIST_FLAG, abuseIPDBBlacklistUsageMessage),
+		formatFlag(ABUSE_DB_IP_WHITELIST_FLAG, abuseIPDBWhitelistUsageMessage),
 		formatFlag(ABUSE_DB_IP_API_KEYS_FLAG, abuseIPDBAPIKeysUsageMessage),
 		formatFlag(ABUSE_DB_IP_SCORE_FLAG, abuseIPDBScoreUsageMessage),
 	})

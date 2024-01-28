@@ -6,7 +6,8 @@ global:
   
   # Specify the paths to the IP files to check.
   ip_files:
-    - "/Users/shimonyaniv/Desktop/github_projects/AbuseShield/ip.txt"
+    - "C:\\Users\\shimony\\Desktop\\scripts\\AbuseShield\\ip.txt"
+    #- "/Users/shimonyaniv/Desktop/github_projects/AbuseShield/ip.txt"
     #- "/Users/shimonyaniv/Desktop/github_projects/AbuseShield/ip.txt"
   
   # Time to wait between API requests in seconds - minimum is 1 seconde.
@@ -26,7 +27,8 @@ global:
 abuse_ip_db:
   enable: true  # Set to 'true' to enable Abuse IP DB integration, 'false' to disable.
   limit: 1000  # Limit the number of IPs to check.
-  results_file: "AbuseShieldResults/results.txt"  # Specify the path for the results file.
+  blacklist_file: "AbuseShieldResults/blacklist.txt"  # Specify the path for the blacklist file.
+  whitelist_file: "AbuseShieldResults/whitelist.txt" # Specify the path for the whitelist file.
 
 # Add this options
 #  exclude:

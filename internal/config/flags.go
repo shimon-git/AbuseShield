@@ -231,7 +231,8 @@ aliases: None
 func (c *Config) GetAbuseDBFlags() {
 	flag.IntVar(&c.AbuseIPDB.Limit, ABUSE_DB_IP_LIMIT_FLAG, DEFAULT_LIMIT, abuseIPDBLimitUsageMessage)
 	flag.IntVar(&c.AbuseIPDB.Interval, ABUSE_DB_IP_INTERVAL_FLAG, DEFAULT_INTERVAL, abuseIPDBIntervalUsageMessage)
-	flag.StringVar(&c.AbuseIPDB.ResultsFile, ABUSE_DB_IP_RESULTS_FLAG, DEFAULT_RESULTS, abuseIPDBResultsUsageMessage)
+	flag.StringVar(&c.AbuseIPDB.BlackListFile, ABUSE_DB_IP_BLACKLIST_FLAG, DEFAULT_BLACKLIST_FILE, abuseIPDBBlacklistUsageMessage)
+	flag.StringVar(&c.AbuseIPDB.WhiteListFile, ABUSE_DB_IP_WHITELIST_FLAG, DEFAULT_WHITELIST_FILE, abuseIPDBWhitelistUsageMessage)
 	flag.StringVar(&tempApiKeys, ABUSE_DB_IP_API_KEYS_FLAG, "", abuseIPDBAPIKeysUsageMessage)
 	flag.IntVar(&c.AbuseIPDB.Score, ABUSE_DB_IP_SCORE_FLAG, DEFAULT_SCORE, abuseIPDBScoreUsageMessage)
 }

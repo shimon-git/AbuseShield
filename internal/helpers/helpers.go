@@ -16,6 +16,13 @@ import (
 	e "github.com/shimon-git/AbuseShield/internal/errors"
 )
 
+const (
+	Red           = "\033[31m"
+	Green         = "\033[32m"
+	RedBackground = "\033[41m"
+	Reset         = "\033[0m"
+)
+
 func IPFileReader(ipFile string, dataChannel chan string) {
 	readFile, err := os.Open(ipFile)
 	if err != nil {
@@ -183,4 +190,15 @@ func FormatIP(IP string) (string, error) {
 	}
 	// return invalid ip error
 	return "", e.MakeErr(fmt.Sprintf("%s ,ip: %s", e.IP_IS_NOT_VALID, IP), nil)
+}
+
+func ColorPrint(message string, color string) {
+	switch color {
+	case "red":
+		fmt.Println(Red + message + Reset)
+	case "green":
+		fmt.Println(Green + message + Reset)
+	case "error":
+		fmt.Println(RedBackground + message + Reset)
+	}
 }

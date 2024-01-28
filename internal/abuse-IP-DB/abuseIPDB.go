@@ -16,14 +16,15 @@ import (
 )
 
 type AbuseIPDB struct {
-	Enable      bool     `yaml:"enable"`
-	Limit       int      `yaml:"limit"`
-	Interval    int      `yaml:"interval"`
-	ResultsFile string   `yaml:"results_file"`
-	ApiKeys     []string `yaml:"api_keys"`
-	Score       int      `yaml:"score"`
-	Ipv6        bool
-	Ipv4        bool
+	Enable        bool     `yaml:"enable"`
+	Limit         int      `yaml:"limit"`
+	Interval      int      `yaml:"interval"`
+	BlackListFile string   `yaml:"blacklist_file"`
+	WhiteListFile string   `yaml:"whitelist_file"`
+	ApiKeys       []string `yaml:"api_keys"`
+	Score         int      `yaml:"score"`
+	Ipv6          bool
+	Ipv4          bool
 }
 
 type abuseIPDBClient struct {
@@ -79,6 +80,7 @@ func (a *abuseIPDBClient) setNewKey(apiKey string) {
 }
 
 func (a *abuseIPDBClient) SetMaxIPCHecks() error {
+	helpers.ColorPrint("[+] validating API keys for abuseipdb.com....", "green")
 	validApiKeys := make(map[string]int)
 	ip := helpers.GenerateDummyIP()
 	counter := 0
@@ -89,7 +91,12 @@ func (a *abuseIPDBClient) SetMaxIPCHecks() error {
 			return err
 		}
 		if data.limitRequestsNumber > 0 {
+			message := fmt.Sprintf("[+] API key is valid, available requests: %d  - %s", data.limitRequestsNumber, key)
+			helpers.ColorPrint(message, "green")
 			validApiKeys[key] = data.limitRequestsNumber
+		} else {
+			message := fmt.Sprintf("[+] API key cannot be used because daily rate limit exceeded - %s", key)
+			helpers.ColorPrint(message, "red")
 		}
 		counter += data.limitRequestsNumber
 	}
@@ -169,7 +176,7 @@ func (a *abuseIPDBClient) getNewKey() error {
 	return e.MakeErr(e.API_KEYS_LIMIT_HAS_BEEN_REACHED, nil)
 }
 
-func (a *abuseIPDBClient) CheckIPScore(dataChan chan string, writerChan chan string, errChan chan string, goRoutineNumber *int, wg *sync.WaitGroup) {
+func (a *abuseIPDBClient) CheckIPScore(dataChan chan string, blacklistWriterChan chan string, whitelistWriterChan chan string, errChan chan string, goRoutineNumber *int, wg *sync.WaitGroup) {
 	defer wg.Done()
 	defer func() { *goRoutineNumber-- }()
 
@@ -185,14 +192,19 @@ func (a *abuseIPDBClient) CheckIPScore(dataChan chan string, writerChan chan str
 		if err != nil {
 			errChan <- err.Error()
 			// Move to the next IP if there's an error in getting IP data
+			helpers.ColorPrint(fmt.Sprintf("[+] Error ocurred while trying to check the ip: %s", ip), "error")
 			continue
 		}
-		// Debugging or logging (replace fmt.Println with logging if needed)
-		fmt.Println("\033[32m", ipData)
 
 		// if the ip score is bigger then or equal to the minimum ip score then send it the writerChan channel
 		if ipData.Data.Score >= a.abuseIPDB.Score {
-			writerChan <- ip
+			message := fmt.Sprintf("[+] malicious IP: { ip: %s - country: %s - domain: %s - ISP: %s - score: %d }", ipData.Data.IPAddress, ipData.Data.CountryCode, ipData.Data.Domain, ipData.Data.ISP, ipData.Data.Score)
+			helpers.ColorPrint(message, "red")
+			blacklistWriterChan <- ip
+		} else {
+			message := fmt.Sprintf("[+] unmalicious IP: { ip: %s - country: %s - domain: %s - ISP: %s - score: %d }", ipData.Data.IPAddress, ipData.Data.CountryCode, ipData.Data.Domain, ipData.Data.ISP, ipData.Data.Score)
+			helpers.ColorPrint(message, "green")
+			whitelistWriterChan <- ip
 		}
 	}
 }

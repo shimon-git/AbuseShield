@@ -33,7 +33,7 @@ func (c *Config) isValidIPFile(ipFiles string) error {
 	// loop over the ip files and validate them
 	for _, file := range c.Global.IPsFiles {
 		// check the ip file exist
-		if !helpers.IsFileExist(file) {
+		if !helpers.IsExist(file, true) {
 			return e.MakeErr(e.MISSING_IP_FILE, nil)
 		}
 		// create a data channel
@@ -226,7 +226,7 @@ func (c *Config) isCpanelValid(cpanelUsers string) error {
 }
 
 func (c Config) isCsfValid() error {
-	if !helpers.IsFileExist(c.CSF.CSFFile) {
+	if !helpers.IsExist(c.CSF.CSFFile, true) {
 		return e.MakeErr(e.CSF_FILE_NOT_FOUND, nil)
 	}
 	csfClient := csf.New(c.CSF)

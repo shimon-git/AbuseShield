@@ -119,7 +119,7 @@ func (c *cpClient) SortAndUnifyLogs(ipFileOutput string) error {
 	if err := exec.Command("sh", "-c", cmd).Run(); err != nil {
 		return e.MakeErr(fmt.Sprintf("%s: %s", e.COMMAND_EXECUTE_ERR, cmd), err)
 	}
-	if !helpers.IsFileExist(ipFileOutput) {
+	if !helpers.IsExist(ipFileOutput, true) {
 		return e.MakeErr(e.CPANEL_IP_FILE_NOT_FOUND, nil)
 	}
 	return nil

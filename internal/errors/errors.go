@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"runtime"
 	"strings"
+	"sync"
 )
 
 const (
@@ -37,9 +38,31 @@ const (
 	CPANEL_GET_USERS_LIST_ERR       = "Failed to retrieve cpanel users list"
 	FILE_TYPE_CHECK_ERR             = "Failed to check the file type"
 	API_KEYS_LIMIT_HAS_BEEN_REACHED = "Api keys for abuse ip db checks has been reached to the limit"
-	CSF_FILE_NOT_FOUND              = "csf deny file not found"
-	CPANEL_IP_FILE_NOT_FOUND        = "ip file output not found"
+	CSF_FILE_NOT_FOUND              = "Csf deny file not found"
+	CPANEL_IP_FILE_NOT_FOUND        = "IP file output not found"
+	CREATE_FOLDER_ERR               = "Folder creation has been failed"
 )
+
+type SharedError struct {
+	err error
+	mu  sync.RWMutex
+}
+
+func NewSharedError() *SharedError {
+	return &SharedError{}
+}
+
+func (s *SharedError) GetError() error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	return s.err
+}
+
+func (s *SharedError) SetError(e error) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.err = e
+}
 
 // MakeErr - return formatted error message with caller information
 func MakeErr(message any, err error) error {

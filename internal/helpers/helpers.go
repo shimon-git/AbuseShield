@@ -6,8 +6,10 @@ import (
 	"fmt"
 	"log"
 	"math/rand"
+	"net"
 	"net/http"
 	"os"
+	"strings"
 	"sync"
 	"time"
 
@@ -19,6 +21,7 @@ func IPFileReader(ipFile string, dataChannel chan string) {
 	if err != nil {
 		log.Fatal(e.MakeErr(fmt.Sprintf("%s: %s\n", e.FILE_SCANNER_ERR, ipFile), err))
 	}
+	defer readFile.Close()
 
 	fileScanner := bufio.NewScanner(readFile)
 
@@ -30,8 +33,7 @@ func IPFileReader(ipFile string, dataChannel chan string) {
 		log.Fatal(e.MakeErr(fmt.Sprintf("%s: %s\n", e.FILE_SCANNER_ERR, ipFile), err))
 	}
 
-	defer readFile.Close()
-	close(dataChannel)
+	defer SafeChannelClose(dataChannel)
 }
 
 func GenerateDummyIP() string {
@@ -93,37 +95,92 @@ func UniqSlice(slice []string) []string {
 	return result
 }
 
-func IsFileExist(filename string) bool {
-	info, err := os.Stat(filename)
+// check whether file of folder are exist
+func IsExist(path string, isFile bool) bool {
+	info, err := os.Stat(path)
 	if os.IsNotExist(err) {
 		return false
 	}
-	return !info.IsDir()
+	if isFile {
+		return !info.IsDir()
+	}
+	return info.IsDir()
 }
 
-func IPFileWriter(file string, override bool, c chan string, wg *sync.WaitGroup, e *error) {
-	if IsFileExist(file) && override {
+func IPFileWriter(file string, override bool, c chan string, wg *sync.WaitGroup, sharedErr *e.SharedError) {
+	if IsExist(file, true) && override {
 		if err := os.Remove(file); err != nil {
-			*e = err
+			sharedErr.SetError(err)
+			wg.Done()
+			return
+		}
+	}
+	pathParts := strings.Split(file, "/")
+	folder := strings.Join(pathParts[0:len(pathParts)-1], "/")
+	if !IsExist(folder, false) {
+		if err := os.MkdirAll(folder, 0755); err != nil {
+			sharedErr.SetError(e.MakeErr(e.CREATE_FOLDER_ERR, err))
+			wg.Done()
 			return
 		}
 	}
 	f, err := os.Create(file)
-	defer f.Close()
 	if err != nil {
-		*e = err
+		sharedErr.SetError(err)
+		wg.Done()
 		return
 	}
+	defer f.Close()
+
 	// create a new writer
 	writer := bufio.NewWriter(f)
 	for line := range c {
 		_, err := writer.WriteString(line + "\n")
 		if err != nil {
-			*e = err
+			sharedErr.SetError(err)
+			wg.Done()
 			return
 		}
 	}
 	if err := writer.Flush(); err != nil {
-		*e = err
+		sharedErr.SetError(err)
 	}
+	wg.Done()
+}
+
+func SafeChannelClose(ch chan string) {
+	defer func() {
+		if recover() != nil {
+			fmt.Printf("Recovered from panic: %v\n", recover())
+		}
+	}()
+	close(ch)
+}
+
+func FormatIP(IP string) (string, error) {
+	// check if the given ip has a prefix
+	if !strings.Contains(IP, "/") {
+		return IP, nil
+	}
+	// parse the cidr
+	ip, _, err := net.ParseCIDR(IP)
+	if err != nil {
+		return "", err
+	}
+	// check if the ip is version 4
+	if ipv4 := ip.To4(); ipv4 != nil {
+		// if the given ip ends with /32 then return only the ip without the /32 suffix
+		if strings.HasSuffix(IP, "/32") {
+			return ipv4.String(), nil
+		}
+		// if the ip dose not have a suffix of /32 return the ip with the suffix
+		return IP, nil
+	} else if ipv6 := ip.To16(); ipv6 != nil {
+		if strings.HasSuffix(IP, "/128") {
+			return ipv6.String(), nil
+		}
+		return IP, nil
+	}
+	// return invalid ip error
+	return "", e.MakeErr(fmt.Sprintf("%s ,ip: %s", e.IP_IS_NOT_VALID, IP), nil)
 }

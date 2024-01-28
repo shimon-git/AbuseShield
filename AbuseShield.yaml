@@ -7,14 +7,15 @@ global:
   # Specify the paths to the IP files to check.
   ip_files:
     - "/Users/shimonyaniv/Desktop/github_projects/AbuseShield/ip.txt"
-    - "/Users/shimonyaniv/Desktop/github_projects/AbuseShield/ip.txt"
+    #- "/Users/shimonyaniv/Desktop/github_projects/AbuseShield/ip.txt"
   
   # Time to wait between API requests in seconds - minimum is 1 seconde.
-  interval: 2
+  interval: 1
 
   # Log settings.
   log_enable: true  # Set to 'true' to enable logging, 'false' to disable.
-  log_file: "log-file-path"  # Specify the path for the log file.
+  log_file: "AbuseShieldResults/abuseShield.log"  # Specify the path for the log file.
+  error_file: "AbuseShieldResults/errors.txt" # path to error file
   max_log_size: 3000  # Maximum log file size in bytes.
 
   # Notifications (Will be sent after the check has finished)
@@ -25,7 +26,7 @@ global:
 abuse_ip_db:
   enable: true  # Set to 'true' to enable Abuse IP DB integration, 'false' to disable.
   limit: 1000  # Limit the number of IPs to check.
-  results_file: "path-to-results-file"  # Specify the path for the results file.
+  results_file: "AbuseShieldResults/results.txt"  # Specify the path for the results file.
 
 # Add this options
 #  exclude:

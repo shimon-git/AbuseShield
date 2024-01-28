@@ -33,6 +33,7 @@ type abuseIPDBClient struct {
 	currentAPIKey              string
 	currentAPIKeyRequestsLimit int
 	validAPIKeys               map[string]int
+	mu                         sync.Mutex
 }
 
 type abuseIPDBResponse struct {
@@ -46,6 +47,11 @@ type abuseIPDBResponse struct {
 		UsageType   string `json:"usageType"`
 	} `json:"data"`
 	limitRequestsNumber int // Keep or adjust this field as needed
+}
+type abuseIPDBErrResponse struct {
+	Errors []struct {
+		Detail string `json:"detail"`
+	} `json:"errors"`
 }
 
 const (
@@ -93,7 +99,12 @@ func (a *abuseIPDBClient) SetMaxIPCHecks() error {
 }
 
 func (a *abuseIPDBClient) getIPData(ip string) (abuseIPDBResponse, error) {
-	var responseObj abuseIPDBResponse
+	// lock the function to run it synchronously for avoiding interval issues
+	a.mu.Lock()
+	defer a.mu.Unlock()
+
+	var response abuseIPDBResponse
+	var errResponse abuseIPDBErrResponse
 
 	params := url.Values{}
 	params.Add("ipAddress", ip)
@@ -103,37 +114,43 @@ func (a *abuseIPDBClient) getIPData(ip string) (abuseIPDBResponse, error) {
 
 	res, err := a.client.Get(url)
 	if err != nil {
-		return responseObj, e.MakeErr(e.HTTP_GET_ERR, err)
+		return response, e.MakeErr(e.HTTP_GET_ERR, err)
 	}
 
 	defer res.Body.Close()
 
 	body, err := io.ReadAll(res.Body)
 	if err != nil {
-		return responseObj, e.MakeErr(e.READ_RESPONSE_BODY_ERR, err)
+		return response, e.MakeErr(e.READ_RESPONSE_BODY_ERR, err)
 	}
 
 	if res.StatusCode != http.StatusOK {
-		return responseObj, e.MakeErr(fmt.Sprintf("%s, got:%d while excepted status code is: %d, Body: %s", e.INVALID_RESPONSE_CODE, res.StatusCode, http.StatusOK, string(body)), nil)
+		if err := json.Unmarshal(body, &errResponse); err != nil {
+			return response, e.MakeErr(fmt.Sprintf("%s \n%s, status code:%d while excepted status code is: %d, Body: %s, Current ip: %s", e.UNMARSHAL_ERR, e.INVALID_RESPONSE_CODE, res.StatusCode, http.StatusOK, string(body), ip), err)
+		}
+		return response, e.MakeErr(fmt.Sprintf("%s, status code:%d while excepted status code is: %d, error massage: %s, Current ip: %s", e.INVALID_RESPONSE_CODE, res.StatusCode, http.StatusOK, errResponse.Errors[0].Detail, ip), nil)
 	}
 
 	remainingChecksStr := res.Header.Get(REMAINING_CHECKS_HEADER)
 
 	if remainingChecksStr == "" {
-		return responseObj, e.MakeErr(fmt.Sprintf("%s, api-key: %s", e.EMPTY_REMAINING_CHECKS_HEADER, a.currentAPIKey), nil)
+		return response, e.MakeErr(fmt.Sprintf("%s, api-key: %s", e.EMPTY_REMAINING_CHECKS_HEADER, a.currentAPIKey), nil)
 	}
 
 	remainingChecks, err := strconv.Atoi(remainingChecksStr)
 	if err != nil {
-		return responseObj, e.MakeErr(nil, err)
+		return response, e.MakeErr(nil, err)
 	}
-	responseObj.limitRequestsNumber = remainingChecks
+	response.limitRequestsNumber = remainingChecks
 
-	if err := json.Unmarshal(body, &responseObj); err != nil {
+	if err := json.Unmarshal(body, &response); err != nil {
 		log.Fatalf("Failed to parse JSON: %s", err)
 	}
 
-	return responseObj, nil
+	// api requests interval
+	time.Sleep(time.Second * time.Duration(a.abuseIPDB.Interval))
+
+	return response, nil
 
 }
 
@@ -152,23 +169,30 @@ func (a *abuseIPDBClient) getNewKey() error {
 	return e.MakeErr(e.API_KEYS_LIMIT_HAS_BEEN_REACHED, nil)
 }
 
-func (a *abuseIPDBClient) CheckIPScore(dataChan chan string, writerChan chan string, goRoutineNumber *int, wg *sync.WaitGroup, err *error) {
-	for ip := range dataChan {
-		ipData, e := a.getIPData(ip)
-		if e != nil {
-			*err = e
-			wg.Done()
-			break
-		}
+func (a *abuseIPDBClient) CheckIPScore(dataChan chan string, writerChan chan string, errChan chan string, goRoutineNumber *int, wg *sync.WaitGroup) {
+	defer wg.Done()
+	defer func() { *goRoutineNumber-- }()
 
+	for ip := range dataChan {
+		formattedIP, err := helpers.FormatIP(ip)
+		if err != nil {
+			errChan <- err.Error()
+			// Move to the next IP if there's an error in formatting
+			continue
+		}
+		// Retrieve IP data
+		ipData, err := a.getIPData(formattedIP)
+		if err != nil {
+			errChan <- err.Error()
+			// Move to the next IP if there's an error in getting IP data
+			continue
+		}
+		// Debugging or logging (replace fmt.Println with logging if needed)
+		fmt.Println("\033[32m", ipData)
+
+		// if the ip score is bigger then or equal to the minimum ip score then send it the writerChan channel
 		if ipData.Data.Score >= a.abuseIPDB.Score {
 			writerChan <- ip
 		}
-		// api requests interval
-		time.Sleep(time.Second * time.Duration(a.abuseIPDB.Interval))
 	}
-	defer close(dataChan)
-	wg.Done()
-	*goRoutineNumber -=1
-	}()
 }

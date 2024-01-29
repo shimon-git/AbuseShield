@@ -58,3 +58,5 @@ func (c *Config) parseConfigFile() error {
 
 	return nil
 }
+
+// /func AddIPFile()

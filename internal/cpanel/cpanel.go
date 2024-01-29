@@ -114,13 +114,14 @@ func isItAsciiFile(file string) (bool, error) {
 	return strings.Contains(output.String(), "ASCII text"), nil
 }
 
-func (c *cpClient) SortAndUnifyLogs(ipFileOutput string) error {
-	cmd := fmt.Sprintf("cat %s | cut -d ' ' -f 1 | sort -n | uniq > %s", strings.Join(c.logFiles, "\x20"), ipFileOutput)
+func (c *cpClient) SortAndUnifyLogs() (string, error) {
+	ipFile := "/tmp/.ip.txt"
+	cmd := fmt.Sprintf("cat %s | cut -d ' ' -f 1 | sort -n | uniq > %s", strings.Join(c.logFiles, "\x20"), ipFile)
 	if err := exec.Command("sh", "-c", cmd).Run(); err != nil {
-		return e.MakeErr(fmt.Sprintf("%s: %s", e.COMMAND_EXECUTE_ERR, cmd), err)
+		return "", e.MakeErr(fmt.Sprintf("%s: %s", e.COMMAND_EXECUTE_ERR, cmd), err)
 	}
-	if !helpers.IsExist(ipFileOutput, true) {
-		return e.MakeErr(e.CPANEL_IP_FILE_NOT_FOUND, nil)
+	if !helpers.IsExist(ipFile, true) {
+		return "", e.MakeErr(e.CPANEL_IP_FILE_NOT_FOUND, nil)
 	}
-	return nil
+	return ipFile, nil
 }

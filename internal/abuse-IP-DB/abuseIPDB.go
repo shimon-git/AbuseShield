@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"net/url"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
 
@@ -190,10 +191,20 @@ func (a *abuseIPDBClient) CheckIPScore(dataChan chan string, blacklistWriterChan
 		// Retrieve IP data
 		ipData, err := a.getIPData(formattedIP)
 		if err != nil {
-			errChan <- err.Error()
-			// Move to the next IP if there's an error in getting IP data
-			helpers.ColorPrint(fmt.Sprintf("[+] Error ocurred while trying to check the ip: %s", ip), "error")
-			continue
+			if strings.Contains(err.Error(), e.DAILY_RATE_LIMIT_EXCEEDED_ABUSEIPDB) {
+				if err := a.getNewKey(); err != nil {
+					errChan <- err.Error()
+					return
+				}
+				a.setNewKey(a.currentAPIKey)
+				ipData, err = a.getIPData(formattedIP)
+			}
+			if err != nil {
+				errChan <- err.Error()
+				// Move to the next IP if there's an error in getting IP data
+				helpers.ColorPrint(fmt.Sprintf("[+] Error ocurred while trying to check the ip: %s", ip), "error")
+				continue
+			}
 		}
 
 		// if the ip score is bigger then or equal to the minimum ip score then send it the writerChan channel

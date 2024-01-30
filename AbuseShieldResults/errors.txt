@@ -1,0 +1,527 @@
+[30 Jan 2024 22:53:54] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 192.30.252.0/22
+[30 Jan 2024 22:53:56] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 185.199.108.0/22
+[30 Jan 2024 22:53:56] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 192.30.252.0/22
+[30 Jan 2024 22:53:56] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 140.82.112.0/20
+[30 Jan 2024 22:53:56] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 185.199.108.0/22
+[30 Jan 2024 22:53:58] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 140.82.112.0/20
+[30 Jan 2024 22:53:58] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 143.55.64.0/20
+[30 Jan 2024 22:54:00] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 143.55.64.0/20
+[30 Jan 2024 22:54:01] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2a0a:a440::/29
+[30 Jan 2024 22:54:01] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2a0a:a440::/29
+[30 Jan 2024 22:54:01] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2606:50c0::/32
+[30 Jan 2024 22:54:01] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2606:50c0::/32
+[30 Jan 2024 22:54:25] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 192.30.252.0/22
+[30 Jan 2024 22:54:25] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 192.30.252.0/22
+[30 Jan 2024 22:54:25] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 185.199.108.0/22
+[30 Jan 2024 22:54:25] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 185.199.108.0/22
+[30 Jan 2024 22:54:25] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 140.82.112.0/20
+[30 Jan 2024 22:54:26] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 140.82.112.0/20
+[30 Jan 2024 22:54:26] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 143.55.64.0/20
+[30 Jan 2024 22:54:26] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 143.55.64.0/20
+[30 Jan 2024 22:54:26] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2a0a:a440::/29
+[30 Jan 2024 22:54:26] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2a0a:a440::/29
+[30 Jan 2024 22:54:27] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2606:50c0::/32
+[30 Jan 2024 22:54:27] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2606:50c0::/32
+[30 Jan 2024 22:54:48] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 0.0.0.0/2
+[30 Jan 2024 22:54:49] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 0.0.0.0/2
+[30 Jan 2024 22:56:13] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 192.30.252.0/22
+[30 Jan 2024 22:56:13] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 185.199.108.0/22
+[30 Jan 2024 22:56:13] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 192.30.252.0/22
+[30 Jan 2024 22:56:13] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 140.82.112.0/20
+[30 Jan 2024 22:56:14] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 185.199.108.0/22
+[30 Jan 2024 22:56:15] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 140.82.112.0/20
+[30 Jan 2024 22:56:15] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 143.55.64.0/20
+[30 Jan 2024 22:56:17] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2a0a:a440::/29
+[30 Jan 2024 22:56:17] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 143.55.64.0/20
+[30 Jan 2024 22:56:17] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2606:50c0::/32
+[30 Jan 2024 22:56:17] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2a0a:a440::/29
+[30 Jan 2024 22:56:19] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2606:50c0::/32
+[30 Jan 2024 22:56:39] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 192.30.252.0/22
+[30 Jan 2024 22:56:40] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 185.199.108.0/22
+[30 Jan 2024 22:56:40] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 192.30.252.0/22
+[30 Jan 2024 22:56:41] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 140.82.112.0/20
+[30 Jan 2024 22:56:41] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 185.199.108.0/22
+[30 Jan 2024 22:56:41] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 143.55.64.0/20
+[30 Jan 2024 22:56:41] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 140.82.112.0/20
+[30 Jan 2024 22:56:41] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 143.55.64.0/20
+[30 Jan 2024 22:56:42] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2a0a:a440::/29
+[30 Jan 2024 22:56:42] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2a0a:a440::/29
+[30 Jan 2024 22:56:42] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2606:50c0::/32
+[30 Jan 2024 22:56:42] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2606:50c0::/32
+[30 Jan 2024 22:59:17] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 192.30.252.0/22
+[30 Jan 2024 22:59:17] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 192.30.252.0/22
+[30 Jan 2024 22:59:18] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 185.199.108.0/22
+[30 Jan 2024 22:59:18] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 185.199.108.0/22
+[30 Jan 2024 22:59:18] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 140.82.112.0/20
+[30 Jan 2024 22:59:18] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 140.82.112.0/20
+[30 Jan 2024 22:59:21] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 143.55.64.0/20
+[30 Jan 2024 22:59:21] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 143.55.64.0/20
+[30 Jan 2024 22:59:22] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2a0a:a440::/29
+[30 Jan 2024 22:59:22] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2a0a:a440::/29
+[30 Jan 2024 22:59:22] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2606:50c0::/32
+[30 Jan 2024 22:59:22] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2606:50c0::/32
+[30 Jan 2024 22:59:47] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 192.30.252.0/22
+[30 Jan 2024 22:59:47] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 192.30.252.0/22
+[30 Jan 2024 22:59:47] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 185.199.108.0/22
+[30 Jan 2024 22:59:47] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 185.199.108.0/22
+[30 Jan 2024 22:59:48] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 140.82.112.0/20
+[30 Jan 2024 22:59:48] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 140.82.112.0/20
+[30 Jan 2024 22:59:48] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 143.55.64.0/20
+[30 Jan 2024 22:59:48] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 143.55.64.0/20
+[30 Jan 2024 22:59:49] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2a0a:a440::/29
+[30 Jan 2024 22:59:49] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2a0a:a440::/29
+[30 Jan 2024 22:59:49] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2606:50c0::/32
+[30 Jan 2024 22:59:49] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2606:50c0::/32
+[30 Jan 2024 23:36:56] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 192.30.252.0/22
+[30 Jan 2024 23:36:56] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 192.30.252.0/22
+[30 Jan 2024 23:36:57] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 185.199.108.0/22
+[30 Jan 2024 23:36:57] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 185.199.108.0/22
+[30 Jan 2024 23:36:57] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 140.82.112.0/20
+[30 Jan 2024 23:36:57] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 140.82.112.0/20
+[30 Jan 2024 23:37:00] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 143.55.64.0/20
+[30 Jan 2024 23:37:00] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 143.55.64.0/20
+[30 Jan 2024 23:37:00] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2a0a:a440::/29
+[30 Jan 2024 23:37:01] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2a0a:a440::/29
+[30 Jan 2024 23:37:01] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2606:50c0::/32
+[30 Jan 2024 23:37:01] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2606:50c0::/32
+[30 Jan 2024 23:37:23] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 192.30.252.0/22
+[30 Jan 2024 23:37:25] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 185.199.108.0/22
+[30 Jan 2024 23:37:25] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 140.82.112.0/20
+[30 Jan 2024 23:37:25] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 192.30.252.0/22
+[30 Jan 2024 23:37:25] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 143.55.64.0/20
+[30 Jan 2024 23:37:26] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 185.199.108.0/22
+[30 Jan 2024 23:37:26] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2a0a:a440::/29
+[30 Jan 2024 23:37:26] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 140.82.112.0/20
+[30 Jan 2024 23:37:26] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2606:50c0::/32
+[30 Jan 2024 23:37:26] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 143.55.64.0/20
+[30 Jan 2024 23:37:28] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2a0a:a440::/29
+[30 Jan 2024 23:37:29] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2606:50c0::/32
+[30 Jan 2024 23:39:13] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:39:13] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:39:13] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:39:13] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:39:13] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:39:13] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:39:13] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:39:13] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:39:13] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:39:13] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:39:13] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:39:13] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:39:13] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:39:13] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:39:13] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:39:13] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:39:13] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:39:13] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:39:13] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:39:13] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:39:13] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:39:13] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:39:13] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:39:13] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:39:13] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:39:13] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:39:13] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:39:13] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:39:13] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:39:13] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:39:13] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:39:14] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:39:14] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:39:14] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:39:14] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:39:14] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:39:14] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:39:14] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:39:14] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:39:14] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:39:14] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:39:14] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:39:14] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:39:14] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:39:14] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:39:14] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:39:14] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:39:14] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:39:14] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:39:14] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:39:14] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:39:14] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:39:14] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:39:14] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:39:14] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:39:14] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:39:14] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:39:14] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:39:14] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:39:14] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:39:14] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:39:14] file: helpers.go - line: 186 - function: FormatIP - test
+[30 Jan 2024 23:41:07] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 192.30.252.0/22
+[30 Jan 2024 23:41:08] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 185.199.108.0/22
+[30 Jan 2024 23:41:08] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 192.30.252.0/22
+[30 Jan 2024 23:41:08] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 185.199.108.0/22
+[30 Jan 2024 23:41:08] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 140.82.112.0/20
+[30 Jan 2024 23:41:08] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 140.82.112.0/20
+[30 Jan 2024 23:41:11] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 143.55.64.0/20
+[30 Jan 2024 23:41:11] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 143.55.64.0/20
+[30 Jan 2024 23:41:12] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2a0a:a440::/29
+[30 Jan 2024 23:41:12] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2606:50c0::/32
+[30 Jan 2024 23:41:12] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2a0a:a440::/29
+[30 Jan 2024 23:41:13] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2606:50c0::/32
+[30 Jan 2024 23:41:36] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 192.30.252.0/22
+[30 Jan 2024 23:41:36] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 192.30.252.0/22
+[30 Jan 2024 23:41:36] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 185.199.108.0/22
+[30 Jan 2024 23:41:36] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 185.199.108.0/22
+[30 Jan 2024 23:41:36] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 140.82.112.0/20
+[30 Jan 2024 23:41:37] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 140.82.112.0/20
+[30 Jan 2024 23:41:37] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 143.55.64.0/20
+[30 Jan 2024 23:41:37] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 143.55.64.0/20
+[30 Jan 2024 23:41:37] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2a0a:a440::/29
+[30 Jan 2024 23:41:37] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2a0a:a440::/29
+[30 Jan 2024 23:41:38] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2606:50c0::/32
+[30 Jan 2024 23:41:38] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2606:50c0::/32
+[30 Jan 2024 23:45:57] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 192.30.252.0/22
+[30 Jan 2024 23:45:57] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 185.199.108.0/22
+[30 Jan 2024 23:45:57] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 192.30.252.0/22
+[30 Jan 2024 23:45:58] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 140.82.112.0/20
+[30 Jan 2024 23:45:58] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 185.199.108.0/22
+[30 Jan 2024 23:45:59] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 140.82.112.0/20
+[30 Jan 2024 23:46:00] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 143.55.64.0/20
+[30 Jan 2024 23:46:01] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2a0a:a440::/29
+[30 Jan 2024 23:46:01] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 143.55.64.0/20
+[30 Jan 2024 23:46:02] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2606:50c0::/32
+[30 Jan 2024 23:46:02] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2a0a:a440::/29
+[30 Jan 2024 23:46:03] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2606:50c0::/32
+[30 Jan 2024 23:46:25] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 192.30.252.0/22
+[30 Jan 2024 23:46:25] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 192.30.252.0/22
+[30 Jan 2024 23:46:25] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 185.199.108.0/22
+[30 Jan 2024 23:46:25] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 185.199.108.0/22
+[30 Jan 2024 23:46:25] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 140.82.112.0/20
+[30 Jan 2024 23:46:26] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 140.82.112.0/20
+[30 Jan 2024 23:46:26] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 143.55.64.0/20
+[30 Jan 2024 23:46:26] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 143.55.64.0/20
+[30 Jan 2024 23:46:26] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2a0a:a440::/29
+[30 Jan 2024 23:46:26] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2a0a:a440::/29
+[30 Jan 2024 23:46:27] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2606:50c0::/32
+[30 Jan 2024 23:46:27] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2606:50c0::/32
+[30 Jan 2024 23:53:55] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:53:55] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:53:55] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:53:55] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:53:55] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:53:55] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:53:55] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:53:55] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:53:55] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:53:55] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:53:55] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:53:55] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:53:55] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:53:55] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:53:55] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:53:55] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:53:55] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:53:55] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:53:55] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:53:55] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:53:55] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:53:55] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:53:55] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:53:55] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:53:55] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:53:55] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:53:55] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:53:55] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:53:55] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:53:55] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:53:55] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:53:57] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:53:57] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:53:57] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:53:57] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:53:57] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:53:57] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:53:57] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:53:57] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:53:57] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:53:57] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:53:57] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:53:57] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:53:57] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:53:57] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:53:57] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:53:57] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:53:57] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:53:57] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:53:57] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:53:57] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:53:57] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:53:57] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:53:57] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:53:57] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:53:57] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:53:57] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:53:57] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:53:57] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:53:57] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:53:57] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:53:57] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix
+[30 Jan 2024 23:55:48] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:55:48] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:07] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:07] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:07] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:07] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:07] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:07] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:07] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:07] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:07] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:07] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:07] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:07] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:07] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:07] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:07] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:07] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:07] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:07] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:07] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:07] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:07] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:07] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:07] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:07] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:07] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:07] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:07] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:07] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:07] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:07] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:07] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:10] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:10] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:10] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:10] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:10] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:10] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:10] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:10] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:10] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:10] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:10] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:10] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:10] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:10] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:10] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:10] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:10] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:10] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:10] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:10] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:10] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:10] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:10] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:10] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:10] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:10] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:10] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:10] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:10] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:10] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:56:10] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:<nil>
+[30 Jan 2024 23:57:42] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:143.55.64.0/20
+[30 Jan 2024 23:57:42] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:143.55.64.0/20
+[30 Jan 2024 23:58:01] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:192.30.252.0/22
+[30 Jan 2024 23:58:01] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:185.199.108.0/22
+[30 Jan 2024 23:58:01] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:140.82.112.0/20
+[30 Jan 2024 23:58:01] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.248.137.48/32
+[30 Jan 2024 23:58:01] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:143.55.64.0/20
+[30 Jan 2024 23:58:01] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:2a0a:a440::/29
+[30 Jan 2024 23:58:01] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:2606:50c0::/32
+[30 Jan 2024 23:58:01] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.201.28.151/32
+[30 Jan 2024 23:58:01] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.205.243.166/32
+[30 Jan 2024 23:58:01] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.87.245.0/32
+[30 Jan 2024 23:58:01] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.248.137.48/32
+[30 Jan 2024 23:58:01] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.207.73.82/32
+[30 Jan 2024 23:58:01] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.27.177.113/32
+[30 Jan 2024 23:58:01] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.200.245.247/32
+[30 Jan 2024 23:58:01] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.175.192.147/32
+[30 Jan 2024 23:58:01] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.233.83.145/32
+[30 Jan 2024 23:58:01] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:192.30.252.0/22
+[30 Jan 2024 23:58:01] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:185.199.108.0/22
+[30 Jan 2024 23:58:01] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:140.82.112.0/20
+[30 Jan 2024 23:58:01] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:143.55.64.0/20
+[30 Jan 2024 23:58:01] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:2a0a:a440::/29
+[30 Jan 2024 23:58:01] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:2606:50c0::/32
+[30 Jan 2024 23:58:01] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.201.28.151/32
+[30 Jan 2024 23:58:01] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.205.243.166/32
+[30 Jan 2024 23:58:01] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.87.245.0/32
+[30 Jan 2024 23:58:01] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.248.137.48/32
+[30 Jan 2024 23:58:01] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.207.73.82/32
+[30 Jan 2024 23:58:01] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.27.177.113/32
+[30 Jan 2024 23:58:01] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.200.245.247/32
+[30 Jan 2024 23:58:01] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.175.192.147/32
+[30 Jan 2024 23:58:01] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.233.83.145/32
+[30 Jan 2024 23:58:04] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:192.30.252.0/22
+[30 Jan 2024 23:58:04] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:185.199.108.0/22
+[30 Jan 2024 23:58:04] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:140.82.112.0/20
+[30 Jan 2024 23:58:04] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.248.137.48/32
+[30 Jan 2024 23:58:04] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:143.55.64.0/20
+[30 Jan 2024 23:58:04] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:2a0a:a440::/29
+[30 Jan 2024 23:58:04] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:2606:50c0::/32
+[30 Jan 2024 23:58:04] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.201.28.151/32
+[30 Jan 2024 23:58:04] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.205.243.166/32
+[30 Jan 2024 23:58:04] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.87.245.0/32
+[30 Jan 2024 23:58:04] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.248.137.48/32
+[30 Jan 2024 23:58:04] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.207.73.82/32
+[30 Jan 2024 23:58:04] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.27.177.113/32
+[30 Jan 2024 23:58:04] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.200.245.247/32
+[30 Jan 2024 23:58:04] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.175.192.147/32
+[30 Jan 2024 23:58:04] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.233.83.145/32
+[30 Jan 2024 23:58:04] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:192.30.252.0/22
+[30 Jan 2024 23:58:04] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:185.199.108.0/22
+[30 Jan 2024 23:58:04] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:140.82.112.0/20
+[30 Jan 2024 23:58:04] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:143.55.64.0/20
+[30 Jan 2024 23:58:04] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:2a0a:a440::/29
+[30 Jan 2024 23:58:04] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:2606:50c0::/32
+[30 Jan 2024 23:58:04] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.201.28.151/32
+[30 Jan 2024 23:58:04] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.205.243.166/32
+[30 Jan 2024 23:58:04] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.87.245.0/32
+[30 Jan 2024 23:58:04] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.248.137.48/32
+[30 Jan 2024 23:58:04] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.207.73.82/32
+[30 Jan 2024 23:58:04] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.27.177.113/32
+[30 Jan 2024 23:58:04] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.200.245.247/32
+[30 Jan 2024 23:58:04] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.175.192.147/32
+[30 Jan 2024 23:58:04] file: helpers.go - line: 178 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.233.83.145/32
+[30 Jan 2024 23:58:52] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:143.55.64.0/20
+[30 Jan 2024 23:58:52] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:143.55.64.0/20
+[30 Jan 2024 23:59:09] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:192.30.252.0/22
+[30 Jan 2024 23:59:09] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:185.199.108.0/22
+[30 Jan 2024 23:59:09] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:140.82.112.0/20
+[30 Jan 2024 23:59:09] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.248.137.48/32
+[30 Jan 2024 23:59:09] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:143.55.64.0/20
+[30 Jan 2024 23:59:09] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:2a0a:a440::/29
+[30 Jan 2024 23:59:09] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:2606:50c0::/32
+[30 Jan 2024 23:59:09] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.201.28.151/32
+[30 Jan 2024 23:59:09] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.205.243.166/32
+[30 Jan 2024 23:59:09] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.87.245.0/32
+[30 Jan 2024 23:59:09] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.248.137.48/32
+[30 Jan 2024 23:59:09] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.207.73.82/32
+[30 Jan 2024 23:59:09] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.27.177.113/32
+[30 Jan 2024 23:59:09] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.200.245.247/32
+[30 Jan 2024 23:59:09] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.175.192.147/32
+[30 Jan 2024 23:59:09] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.233.83.145/32
+[30 Jan 2024 23:59:09] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:192.30.252.0/22
+[30 Jan 2024 23:59:09] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:185.199.108.0/22
+[30 Jan 2024 23:59:09] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:140.82.112.0/20
+[30 Jan 2024 23:59:09] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:143.55.64.0/20
+[30 Jan 2024 23:59:09] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:2a0a:a440::/29
+[30 Jan 2024 23:59:09] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:2606:50c0::/32
+[30 Jan 2024 23:59:09] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.201.28.151/32
+[30 Jan 2024 23:59:09] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.205.243.166/32
+[30 Jan 2024 23:59:09] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.87.245.0/32
+[30 Jan 2024 23:59:09] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.248.137.48/32
+[30 Jan 2024 23:59:09] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.207.73.82/32
+[30 Jan 2024 23:59:09] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.27.177.113/32
+[30 Jan 2024 23:59:09] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.200.245.247/32
+[30 Jan 2024 23:59:09] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.175.192.147/32
+[30 Jan 2024 23:59:09] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.233.83.145/32
+[30 Jan 2024 23:59:12] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:192.30.252.0/22
+[30 Jan 2024 23:59:12] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:185.199.108.0/22
+[30 Jan 2024 23:59:12] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:140.82.112.0/20
+[30 Jan 2024 23:59:12] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.248.137.48/32
+[30 Jan 2024 23:59:12] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:143.55.64.0/20
+[30 Jan 2024 23:59:12] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:2a0a:a440::/29
+[30 Jan 2024 23:59:12] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:2606:50c0::/32
+[30 Jan 2024 23:59:12] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.201.28.151/32
+[30 Jan 2024 23:59:12] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.205.243.166/32
+[30 Jan 2024 23:59:12] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.87.245.0/32
+[30 Jan 2024 23:59:12] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.248.137.48/32
+[30 Jan 2024 23:59:12] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.207.73.82/32
+[30 Jan 2024 23:59:12] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.27.177.113/32
+[30 Jan 2024 23:59:12] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.200.245.247/32
+[30 Jan 2024 23:59:12] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.175.192.147/32
+[30 Jan 2024 23:59:12] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.233.83.145/32
+[30 Jan 2024 23:59:12] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:192.30.252.0/22
+[30 Jan 2024 23:59:12] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:185.199.108.0/22
+[30 Jan 2024 23:59:12] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:140.82.112.0/20
+[30 Jan 2024 23:59:12] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:143.55.64.0/20
+[30 Jan 2024 23:59:12] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:2a0a:a440::/29
+[30 Jan 2024 23:59:12] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:2606:50c0::/32
+[30 Jan 2024 23:59:12] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.201.28.151/32
+[30 Jan 2024 23:59:12] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.205.243.166/32
+[30 Jan 2024 23:59:12] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.87.245.0/32
+[30 Jan 2024 23:59:12] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.248.137.48/32
+[30 Jan 2024 23:59:12] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.207.73.82/32
+[30 Jan 2024 23:59:12] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.27.177.113/32
+[30 Jan 2024 23:59:12] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.200.245.247/32
+[30 Jan 2024 23:59:12] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.175.192.147/32
+[30 Jan 2024 23:59:12] file: helpers.go - line: 179 - function: FormatIP - Invalid IP, IP should have a 32 prefix ip:20.233.83.145/32
+[31 Jan 2024 00:00:56] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 143.55.64.0/20
+[31 Jan 2024 00:00:56] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 143.55.64.0/20
+[31 Jan 2024 00:01:16] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 192.30.252.0/22
+[31 Jan 2024 00:01:16] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 192.30.252.0/22
+[31 Jan 2024 00:01:16] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 185.199.108.0/22
+[31 Jan 2024 00:01:17] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 185.199.108.0/22
+[31 Jan 2024 00:01:17] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 140.82.112.0/20
+[31 Jan 2024 00:01:17] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 140.82.112.0/20
+[31 Jan 2024 00:01:20] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 143.55.64.0/20
+[31 Jan 2024 00:01:20] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 143.55.64.0/20
+[31 Jan 2024 00:01:20] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2a0a:a440::/29
+[31 Jan 2024 00:01:21] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2a0a:a440::/29
+[31 Jan 2024 00:01:21] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2606:50c0::/32
+[31 Jan 2024 00:01:21] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860[31 Jan 2024 00:05:24] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 143.55.64.0/20
+[31 Jan 2024 00:05:24] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 143.55.64.0/20
+[31 Jan 2024 00:05:46] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 192.30.252.0/22
+[31 Jan 2024 00:05:47] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 192.30.252.0/22
+[31 Jan 2024 00:05:47] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 185.199.108.0/22
+[31 Jan 2024 00:05:47] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 185.199.108.0/22
+[31 Jan 2024 00:05:48] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 140.82.112.0/20
+[31 Jan 2024 00:05:49] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 140.82.112.0/20
+[31 Jan 2024 00:05:49] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 143.55.64.0/20
+[31 Jan 2024 00:05:51] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2a0a:a440::/29
+[31 Jan 2024 00:05:51] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 143.55.64.0/20
+[31 Jan 2024 00:05:51] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2606:50c0::/32
+[31 Jan 2024 00:05:51] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2a0a:a440::/29
+[31 Jan 2024 00:05:54] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2606:50c0::/32
+[31 Jan 2024 00:06:17] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 192.30.252.0/22
+[31 Jan 2024 00:06:19] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 185.199.108.0/22
+[31 Jan 2024 00:06:20] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 192.30.252.0/22
+[31 Jan 2024 00:06:20] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 140.82.112.0/20
+[31 Jan 2024 00:06:20] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 185.199.108.0/22
+[31 Jan 2024 00:06:21] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 143.55.64.0/20
+[31 Jan 2024 00:06:21] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 140.82.112.0/20
+[31 Jan 2024 00:06:21] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2a0a:a440::/29
+[31 Jan 2024 00:06:21] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 143.55.64.0/20
+[31 Jan 2024 00:06:21] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2a0a:a440::/29
+[31 Jan 2024 00:06:22] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2606:50c0::/32
+[31 Jan 2024 00:06:22] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2606:50c0::/32
+[31 Jan 2024 00:10:11] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 143.55.64.0/20
+[31 Jan 2024 00:10:11] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 143.55.64.0/20
+[31 Jan 2024 00:10:30] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 192.30.252.0/22
+[31 Jan 2024 00:10:31] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 185.199.108.0/22
+[31 Jan 2024 00:10:31] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 140.82.112.0/20
+[31 Jan 2024 00:10:31] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 192.30.252.0/22
+[31 Jan 2024 00:10:33] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 185.199.108.0/22
+[31 Jan 2024 00:10:33] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 140.82.112.0/20
+[31 Jan 2024 00:10:33] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 143.55.64.0/20
+[31 Jan 2024 00:10:35] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2a0a:a440::/29
+[31 Jan 2024 00:10:35] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 143.55.64.0/20
+[31 Jan 2024 00:10:35] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2606:50c0::/32
+[31 Jan 2024 00:10:35] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2a0a:a440::/29
+[31 Jan 2024 00:10:38] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2606:50c0::/32
+[31 Jan 2024 00:10:57] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 192.30.252.0/22
+[31 Jan 2024 00:10:58] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 185.199.108.0/22
+[31 Jan 2024 00:10:59] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 140.82.112.0/20
+[31 Jan 2024 00:10:59] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 192.30.252.0/22
+[31 Jan 2024 00:10:59] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 143.55.64.0/20
+[31 Jan 2024 00:10:59] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 185.199.108.0/22
+[31 Jan 2024 00:10:59] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2a0a:a440::/29
+[31 Jan 2024 00:11:00] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 140.82.112.0/20
+[31 Jan 2024 00:11:00] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2606:50c0::/32
+[31 Jan 2024 00:11:00] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 143.55.64.0/20
+[31 Jan 2024 00:11:00] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2a0a:a440::/29
+[31 Jan 2024 00:11:03] file: abuseIPDB.go - line: 172 - function: getIPData - Invalid response status code, status code:422 while excepted status code is: 200, error massage: The ip address must be a valid IPv4 or IPv6 address (e.g. 8.8.8.8 or 2001:4860:4860::8888)., Current ip: 2606:50c0::/32

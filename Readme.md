@@ -110,20 +110,7 @@ func showANSIColors() {
 
 
 
-type abuseIPDBResponse struct {
-	Data struct {
-		Score       int    `json:"abuseConfidenceScore"`
-		Tor         bool   `json:"isTor"`
-		CountryCode string `json:"countryCode"`
-		Domain      string `json:"domain"`
-		IPAddress   string `json:"ipAddress"`
-		ISP         string `json:"isp"`
-		UsageType   string `json:"usageType"`
-	} `json:"data"`
-	limitRequestsNumber int // Keep or adjust this field as needed
-}
-type abuseIPDBErrResponse struct {
-	Errors []struct {
-		Detail string `json:"detail"`
-	} `json:"errors"`
-}
+to do:
+correct the helpers ip formator
+add the error channel to all handlers
+optimize the code

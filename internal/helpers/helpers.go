@@ -114,11 +114,14 @@ func IsExist(path string, isFile bool) bool {
 	return info.IsDir()
 }
 
-func IPFileWriter(file string, override bool, c chan string, wg *sync.WaitGroup, sharedErr *e.SharedError) {
+func FileWriter(file string, override bool, c chan string, wg *sync.WaitGroup, sharedErr *e.SharedError) {
+	var err error
+	var f *os.File
+	defer wg.Done()
+	fmt.Println()
 	if IsExist(file, true) && override {
 		if err := os.Remove(file); err != nil {
 			sharedErr.SetError(err)
-			wg.Done()
 			return
 		}
 	}
@@ -127,14 +130,16 @@ func IPFileWriter(file string, override bool, c chan string, wg *sync.WaitGroup,
 	if !IsExist(folder, false) {
 		if err := os.MkdirAll(folder, 0755); err != nil {
 			sharedErr.SetError(e.MakeErr(e.CREATE_FOLDER_ERR, err))
-			wg.Done()
 			return
 		}
 	}
-	f, err := os.Create(file)
+	if !IsExist(file, true) {
+		f, err = os.Create(file)
+	} else {
+		f, err = os.OpenFile(file, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
+	}
 	if err != nil {
 		sharedErr.SetError(err)
-		wg.Done()
 		return
 	}
 	defer f.Close()
@@ -145,20 +150,18 @@ func IPFileWriter(file string, override bool, c chan string, wg *sync.WaitGroup,
 		_, err := writer.WriteString(line + "\n")
 		if err != nil {
 			sharedErr.SetError(err)
-			wg.Done()
 			return
 		}
 	}
 	if err := writer.Flush(); err != nil {
 		sharedErr.SetError(err)
 	}
-	wg.Done()
 }
 
 func SafeChannelClose(ch chan string) {
 	defer func() {
 		if recover() != nil {
-			fmt.Printf("Recovered from panic: %v\n", recover())
+			return
 		}
 	}()
 	close(ch)
@@ -174,6 +177,7 @@ func FormatIP(IP string) (string, error) {
 	if err != nil {
 		return "", err
 	}
+
 	// check if the ip is version 4
 	if ipv4 := ip.To4(); ipv4 != nil {
 		// if the given ip ends with /32 then return only the ip without the /32 suffix
@@ -201,4 +205,27 @@ func ColorPrint(message string, color string) {
 	case "error":
 		fmt.Println(RedBackground + message + Reset)
 	}
+}
+
+func FilesLinesCounter(files []string) (int, error) {
+	var lines int
+	for _, fileName := range files {
+		file, err := os.Open(fileName)
+		if err != nil {
+			return 0, e.MakeErr(fmt.Sprintf("%s: %s", e.OPEN_FILE_ERR, fileName), err)
+		}
+		scanner := bufio.NewScanner(file)
+		for scanner.Scan() {
+			lines++
+		}
+		if err := scanner.Err(); err != nil {
+			file.Close()
+			return 0, e.MakeErr(fmt.Sprintf("%s: %s", e.FILE_SCANNER_ERR, fileName), err)
+		}
+		if err := file.Close(); err != nil {
+			return 0, e.MakeErr(fmt.Sprintf("%s: %s", e.CLOSE_FILE_ERR, fileName), err)
+		}
+	}
+	// return nil error and lines number minus length of files slice because EOF is also calculated as line
+	return lines - len(files), nil
 }

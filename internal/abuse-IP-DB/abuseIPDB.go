@@ -64,13 +64,15 @@ const (
 // New - create a new abuseipdb client
 // Args: [AbuseIPDB configuration]
 // Returns a pointer to abuseipdb client
-func New(a AbuseIPDB) (*abuseIPDBClient, error) {
+func New(a AbuseIPDB, validation bool) (*abuseIPDBClient, error) {
 	// create new variable for abuseipdb client
 	var abuseDB abuseIPDBClient
+
 	// set the abuseipdb configurations
 	abuseDB.abuseIPDB = a
 	// setting max ip checks that can be check against the abuseipdb API server
-	err := abuseDB.SetMaxIPCHecks()
+	err := abuseDB.SetMaxIPCHecks(validation)
+
 	// return a reference to abuseipdb and error if ocurred
 	return &abuseDB, err
 }
@@ -92,9 +94,11 @@ func (a *abuseIPDBClient) setNewKey(apiKey string) {
 }
 
 // SetMaxIPCHecks - set maximum available API requests to abuseipdb
-func (a *abuseIPDBClient) SetMaxIPCHecks() error {
-	// print info message to the user
-	helpers.ColorPrint("[+] validating API keys for abuseipdb.com....", "green")
+func (a *abuseIPDBClient) SetMaxIPCHecks(validation bool) error {
+	if validation {
+		// print info message to the user
+		helpers.ColorPrint("[+] validating API keys for abuseipdb.com....", "green")
+	}
 	// create a map[api-key]available-API-requests - the map will contain only valid api keys that
 	validApiKeys := make(map[string]int)
 	// generate dummy ip to check against th abuseipdb
@@ -112,12 +116,14 @@ func (a *abuseIPDBClient) SetMaxIPCHecks() error {
 		}
 		// check if api key have more then 0 available api requests
 		if data.availableRequestsNumber > 0 {
-			// print information to the console
-			message := fmt.Sprintf("[+] API key is valid, available requests: %d  - %s", data.availableRequestsNumber, key)
-			helpers.ColorPrint(message, "green")
+			if validation {
+				// print information to the console
+				message := fmt.Sprintf("[+] API key is valid, available requests: %d  - %s", data.availableRequestsNumber, key)
+				helpers.ColorPrint(message, "green")
+			}
 			// add the api key to the valid api keys map
 			validApiKeys[key] = data.availableRequestsNumber
-		} else {
+		} else if validation {
 			// in case api key is valid but daily api requests exceeded print it to console
 			message := fmt.Sprintf("[+] API key cannot be used because daily rate limit exceeded - %s", key)
 			helpers.ColorPrint(message, "red")
@@ -191,6 +197,7 @@ func (a *abuseIPDBClient) getIPData(ip string) (abuseIPDBResponse, error) {
 
 func (a *abuseIPDBClient) getNewKey() error {
 	if a.currentAPIKeyRequestsLimit > 0 {
+		fmt.Println(a.currentAPIKeyRequestsLimit)
 		time.Sleep(time.Second * 2)
 		return nil
 	}
@@ -199,6 +206,7 @@ func (a *abuseIPDBClient) getNewKey() error {
 		if v > 0 {
 			a.currentAPIKeyRequestsLimit = v
 			a.setNewKey(k)
+			return nil
 		}
 	}
 	return e.MakeErr(e.API_KEYS_LIMIT_HAS_BEEN_REACHED, nil)

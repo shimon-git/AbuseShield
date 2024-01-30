@@ -5,10 +5,12 @@ import (
 	"runtime"
 	"strings"
 	"sync"
+	"time"
 )
 
 const (
 	OPEN_FILE_ERR                       = "Failed to open the file"
+	CLOSE_FILE_ERR                      = "Failed to close the file"
 	CREATE_FILE_ERR                     = "Failed to create the file"
 	COPY_FILE_ERR                       = "Failed to copy the file"
 	FILE_SCANNER_ERR                    = "An error occurred while scanning the file"
@@ -68,16 +70,17 @@ func (s *SharedError) SetError(e error) {
 // MakeErr - return formatted error message with caller information
 func MakeErr(message any, err error) error {
 	callerInfo := getCallerInfo(2)
+	errTime := time.Now().Format("2 Jan 2006 15:04:05")
 	if message == nil && err != nil {
-		return fmt.Errorf("%s - %s", callerInfo, err.Error())
+		return fmt.Errorf("[%s] %s - %s", errTime, callerInfo, err.Error())
 	}
 	if err == nil && message != nil {
-		return fmt.Errorf("%s - %v", callerInfo, message)
+		return fmt.Errorf("[%s] %s - %v", errTime, callerInfo, message)
 	}
 	if err == nil && message == nil {
-		return fmt.Errorf("%s", callerInfo)
+		return fmt.Errorf("[%s] %s", errTime, callerInfo)
 	}
-	return fmt.Errorf("%s - %v: %s\n", callerInfo, message, err.Error())
+	return fmt.Errorf("[%s] %s - %v: %s\n", errTime, callerInfo, message, err.Error())
 }
 
 // getCallerInfo - return details about the function which the error was occurred - format: filename:lineno:function

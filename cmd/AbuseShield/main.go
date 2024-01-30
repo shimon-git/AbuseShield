@@ -10,7 +10,7 @@ import (
 	abuseipdb "github.com/shimon-git/AbuseShield/internal/abuse-IP-DB"
 	"github.com/shimon-git/AbuseShield/internal/config"
 	"github.com/shimon-git/AbuseShield/internal/cpanel"
-	abuse_shield_errors "github.com/shimon-git/AbuseShield/internal/errors"
+	e "github.com/shimon-git/AbuseShield/internal/errors"
 	"github.com/shimon-git/AbuseShield/internal/helpers"
 )
 
@@ -18,17 +18,29 @@ const (
 	MAX_GO_ROUTINES = 10
 )
 
+var (
+	errWg sync.WaitGroup
+)
+
 func main() {
 	// print the abuse shield header
 	printHeader("abuse-shield")
+
 	//printHeader("csf")
 	//printHeader("sophos")
-
-	//fmt.Println(time.Now().Format("2006-01-02 15:04:05"))
 	//os.Exit(0)
 
 	// get app configurations
 	conf := config.GetConfig()
+	// setup channel for error logging
+	errWriterChan := make(chan string, 50)
+	writerErr := e.NewSharedError()
+	go helpers.FileWriter(conf.Global.ErrorFile, false, errWriterChan, &errWg, writerErr)
+	errWg.Add(1)
+	defer func() {
+		close(errWriterChan)
+		errWg.Wait()
+	}()
 
 	// cpanel checker
 	if conf.Cpanel.Enable {
@@ -45,10 +57,11 @@ func main() {
 	if conf.AbuseIPDB.Enable {
 		// print the abuseipdb header
 		printHeader("abuseipdb")
-		if err := abuseDBIPChecker(conf.AbuseIPDB, conf.Global.IPsFiles, conf.Global.ErrorFile); err != nil {
+		if err := abuseDBIPChecker(conf.AbuseIPDB, conf.Global.IPsFiles, errWriterChan); err != nil {
 			log.Fatal(err)
 		}
 	}
+
 }
 
 // cpanelAbuseChecker consolidates cPanel access logs into a single file for abuse detection.
@@ -79,29 +92,36 @@ func cpanelAbuseChecker(cp cpanel.Cpanel) (string, error) {
 // abuseDBIPChecker evaluates IPs against abuseipdb, segregating them into 'whitelist', 'blacklist', and 'error' files.
 // Args: [abuseIPDB: Abuseipdb configurations, ipFiles: Paths to files with IPs for checking, errFile: Path for recording errors]
 // Returns an error if the checking process encounters issues.
-func abuseDBIPChecker(abuseIPDB abuseipdb.AbuseIPDB, ipFiles []string, errFile string) error {
+func abuseDBIPChecker(abuseIPDB abuseipdb.AbuseIPDB, ipFiles []string, errChan chan string) error {
 	var wgAbuseIPDB sync.WaitGroup
 	var wgWriter sync.WaitGroup
 
+	// set the ips number to check
+	if abuseIPDB.Limit == 0 {
+		ipsNum, err := helpers.FilesLinesCounter(ipFiles)
+		if err != nil {
+			return err
+		}
+		abuseIPDB.Limit = ipsNum
+	}
+
 	// initialize a shared error object for handling errors in writer goroutines
-	writerErr := abuse_shield_errors.NewSharedError()
+	writerErr := e.NewSharedError()
 
 	// create a new client for interacting with the abuseipdb API
-	abuseIPDBClient, err := abuseipdb.New(abuseIPDB)
+	abuseIPDBClient, err := abuseipdb.New(abuseIPDB, false)
 	if err != nil {
 		return err
 	}
 
-	// set up channels for error logging and IP categorization
-	errWriterChan := make(chan string, 50)
+	// set up channels for IP categorization
 	blacklistWriterChan := make(chan string, 50)
 	whitelistWriterChan := make(chan string, 50)
 
 	// prepare to launch writer goroutines for handling output
-	wgWriter.Add(3)
-	go helpers.IPFileWriter(abuseIPDB.BlackListFile, true, blacklistWriterChan, &wgWriter, writerErr)
-	go helpers.IPFileWriter(abuseIPDB.WhiteListFile, true, whitelistWriterChan, &wgWriter, writerErr)
-	go helpers.IPFileWriter(errFile, true, errWriterChan, &wgWriter, writerErr)
+	wgWriter.Add(2)
+	go helpers.FileWriter(abuseIPDB.BlackListFile, true, blacklistWriterChan, &wgWriter, writerErr)
+	go helpers.FileWriter(abuseIPDB.WhiteListFile, true, whitelistWriterChan, &wgWriter, writerErr)
 
 	// counter for managing the number of concurrent goroutines
 	goRoutinesCounter := 0
@@ -121,7 +141,7 @@ func abuseDBIPChecker(abuseIPDB abuseipdb.AbuseIPDB, ipFiles []string, errFile s
 		go helpers.IPFileReader(file, dataChannels[len(dataChannels)-1])
 
 		// start a goroutine for checking IP scores against abuseipdb
-		go abuseIPDBClient.CheckIPScore(dataChannels[len(dataChannels)-1], blacklistWriterChan, whitelistWriterChan, errWriterChan, &goRoutinesCounter, &wgAbuseIPDB)
+		go abuseIPDBClient.CheckIPScore(dataChannels[len(dataChannels)-1], blacklistWriterChan, whitelistWriterChan, errChan, &goRoutinesCounter, &wgAbuseIPDB)
 	}
 
 	// wait for all IP checking goroutines to complete
@@ -130,7 +150,6 @@ func abuseDBIPChecker(abuseIPDB abuseipdb.AbuseIPDB, ipFiles []string, errFile s
 	// close all writer channels after use
 	helpers.SafeChannelClose(blacklistWriterChan)
 	helpers.SafeChannelClose(whitelistWriterChan)
-	helpers.SafeChannelClose(errWriterChan)
 
 	// wait for all writer goroutines to finish
 	wgWriter.Wait()

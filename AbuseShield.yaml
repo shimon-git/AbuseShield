@@ -7,6 +7,10 @@ global:
   # Specify the paths to the IP files to check.
   ip_files:
     # - "C:\\Users\\shimony\\Desktop\\scripts\\AbuseShield\\ip.txt"
+    - "/Users/shimonyaniv/Desktop/github_projects/AbuseShield/ip.txt"
+    - "/Users/shimonyaniv/Desktop/github_projects/AbuseShield/ip.txt"
+    #- "/Users/shimonyaniv/Desktop/github_projects/AbuseShield/ip.txt"
+    #- "/Users/shimonyaniv/Desktop/github_projects/AbuseShield/ip.txt"
     #- "/Users/shimonyaniv/Desktop/github_projects/AbuseShield/ip.txt"
     #- "/Users/shimonyaniv/Desktop/github_projects/AbuseShield/ip.txt"
 
@@ -80,7 +84,7 @@ csf:
 
 # cPanel settings.
 cpanel:
-  enable: true # Set to 'true' to enable cPanel integration, 'false' to disable.
+  enable: fales # Set to 'true' to enable cPanel integration, 'false' to disable.
   checkAllUsers: true # Set to 'true' to check all users, 'false' to check specific users.
 
   # List of users to check (ignored if checkAllUsers is set to 'true').

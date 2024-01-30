@@ -6,6 +6,8 @@ github.com/golang/protobuf v1.5.0/go.mod h1:FsONVRAS9T7sI+LIUmWTfcYkHO4aIWwzhcaS
 github.com/google/go-cmp v0.5.5/go.mod h1:v8dTdLbMG2kIc/vJvl+f65V22dbkXbowE6jgT/gNBxE=
 github.com/nyaruka/phonenumbers v1.3.0 h1:IFyyJfF2Elg8xGKFghWrRXzb6qAHk+Q3uPqmIgS20JQ=
 github.com/nyaruka/phonenumbers v1.3.0/go.mod h1:4jyKp/BFUokLbCHyoZag+T3S1KezFVoEKtgnbpzItC4=
+github.com/xgfone/go-netaddr v0.6.0 h1:rxXgqGydV4qH7p68vra0BWv0NHVgZkvWATFx5xB9M3I=
+github.com/xgfone/go-netaddr v0.6.0/go.mod h1:5Slru6Mj3Sa68udHz+vEQr2r7ScBjOQB5uncHDpS4l8=
 golang.org/x/crypto v0.18.0 h1:PGVlW0xEltQnzFZ55hkuX5+KLyrMYhHld1YHO4AKcdc=
 golang.org/x/crypto v0.18.0/go.mod h1:R0j02AL6hcrfOiy9T4ZYp/rcWeMxM3L6QYxlOuEG1mg=
 golang.org/x/sys v0.16.0 h1:xWw16ngr6ZMtmxDyKyIgsE93KNKz5HKmMa3b8ALHidU=

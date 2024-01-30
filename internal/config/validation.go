@@ -250,7 +250,7 @@ func (c *Config) isValidAbuseDB(apiKeys string) error {
 	}
 	c.AbuseIPDB.ApiKeys = helpers.UniqSlice(c.AbuseIPDB.ApiKeys)
 
-	_, err := abuseipdb.New(c.AbuseIPDB)
+	_, err := abuseipdb.New(c.AbuseIPDB, true)
 
 	return err
 }

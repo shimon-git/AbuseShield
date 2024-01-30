@@ -48,7 +48,7 @@ type abuseIPDBResponse struct {
 		ISP         string `json:"isp"`
 		UsageType   string `json:"usageType"`
 	} `json:"data"`
-	limitRequestsNumber int // Keep or adjust this field as needed
+	availableRequestsNumber int // Keep or adjust this field as needed
 }
 type abuseIPDBErrResponse struct {
 	Errors []struct {
@@ -57,52 +57,79 @@ type abuseIPDBErrResponse struct {
 }
 
 const (
-	CONTENT_TYPE            = "application/json"
 	ABUSE_DB_ENDPOINT       = "https://api.abuseipdb.com/api/v2/check"
 	REMAINING_CHECKS_HEADER = "X-Ratelimit-Remaining"
 )
 
+// New - create a new abuseipdb client
+// Args: [AbuseIPDB configuration]
+// Returns a pointer to abuseipdb client
 func New(a AbuseIPDB) (*abuseIPDBClient, error) {
+	// create new variable for abuseipdb client
 	var abuseDB abuseIPDBClient
+	// set the abuseipdb configurations
 	abuseDB.abuseIPDB = a
+	// setting max ip checks that can be check against the abuseipdb API server
 	err := abuseDB.SetMaxIPCHecks()
+	// return a reference to abuseipdb and error if ocurred
 	return &abuseDB, err
 }
 
+// setNewKey - set new http client fot abuseipdb API requests with the provided API key
+// Args: [API key for abuseipdb API requests]
 func (a *abuseIPDBClient) setNewKey(apiKey string) {
+	// create new http client with custom headers
 	httpClient := helpers.HttpClient{
 		Headers: map[string]string{
 			"Accept": "application/json",
 			"Key":    apiKey,
 		},
 	}
+	// set the current API key
 	a.currentAPIKey = apiKey
+	// set the abuseipdb client
 	a.client = httpClient.NewHttpClient()
 }
 
+// SetMaxIPCHecks - set maximum available API requests to abuseipdb
 func (a *abuseIPDBClient) SetMaxIPCHecks() error {
+	// print info message to the user
 	helpers.ColorPrint("[+] validating API keys for abuseipdb.com....", "green")
+	// create a map[api-key]available-API-requests - the map will contain only valid api keys that
 	validApiKeys := make(map[string]int)
+	// generate dummy ip to check against th abuseipdb
 	ip := helpers.GenerateDummyIP()
-	counter := 0
+	// initialize a counter for the available API requests
+	availableApiRequests := 0
+	// iterate over the provided API keys
 	for _, key := range a.abuseIPDB.ApiKeys {
+		// set a new key
 		a.setNewKey(key)
+		// get data of dummy ip to check available api request for the current api key iteration
 		data, err := a.getIPData(ip)
-		if err != nil {
+		if err != nil && !strings.Contains(err.Error(), e.DAILY_RATE_LIMIT_EXCEEDED_ABUSEIPDB) {
 			return err
 		}
-		if data.limitRequestsNumber > 0 {
-			message := fmt.Sprintf("[+] API key is valid, available requests: %d  - %s", data.limitRequestsNumber, key)
+		// check if api key have more then 0 available api requests
+		if data.availableRequestsNumber > 0 {
+			// print information to the console
+			message := fmt.Sprintf("[+] API key is valid, available requests: %d  - %s", data.availableRequestsNumber, key)
 			helpers.ColorPrint(message, "green")
-			validApiKeys[key] = data.limitRequestsNumber
+			// add the api key to the valid api keys map
+			validApiKeys[key] = data.availableRequestsNumber
 		} else {
+			// in case api key is valid but daily api requests exceeded print it to console
 			message := fmt.Sprintf("[+] API key cannot be used because daily rate limit exceeded - %s", key)
 			helpers.ColorPrint(message, "red")
 		}
-		counter += data.limitRequestsNumber
+		// add the available api requests number
+		availableApiRequests += data.availableRequestsNumber
 	}
+	// set the abuseipdb client valid api keys
 	a.validAPIKeys = validApiKeys
-	a.maxIPChecks = counter
+	// set the max ip checks number
+	a.maxIPChecks = availableApiRequests
+	// return nil error
 	return nil
 }
 
@@ -149,7 +176,7 @@ func (a *abuseIPDBClient) getIPData(ip string) (abuseIPDBResponse, error) {
 	if err != nil {
 		return response, e.MakeErr(nil, err)
 	}
-	response.limitRequestsNumber = remainingChecks
+	response.availableRequestsNumber = remainingChecks
 
 	if err := json.Unmarshal(body, &response); err != nil {
 		log.Fatalf("Failed to parse JSON: %s", err)

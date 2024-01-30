@@ -23,6 +23,8 @@ func main() {
 	printHeader("abuse-shield")
 	//printHeader("csf")
 	//printHeader("sophos")
+
+	//fmt.Println(time.Now().Format("2006-01-02 15:04:05"))
 	//os.Exit(0)
 
 	// get app configurations
@@ -108,7 +110,7 @@ func abuseDBIPChecker(abuseIPDB abuseipdb.AbuseIPDB, ipFiles []string, errFile s
 	// iterate over the provided IP files
 	for _, file := range ipFiles {
 		// throttle goroutine creation if max limit is reached
-		for goRoutinesCounter <= MAX_GO_ROUTINES {
+		for goRoutinesCounter >= MAX_GO_ROUTINES {
 			time.Sleep(time.Second * 5)
 		}
 		goRoutinesCounter++

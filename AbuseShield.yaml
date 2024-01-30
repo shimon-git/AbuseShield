@@ -7,7 +7,7 @@ global:
   # Specify the paths to the IP files to check.
   ip_files:
     # - "C:\\Users\\shimony\\Desktop\\scripts\\AbuseShield\\ip.txt"
-    - "/Users/shimonyaniv/Desktop/github_projects/AbuseShield/ip.txt"
+    #- "/Users/shimonyaniv/Desktop/github_projects/AbuseShield/ip.txt"
     #- "/Users/shimonyaniv/Desktop/github_projects/AbuseShield/ip.txt"
 
   # Time to wait between API requests in seconds - minimum is 1 seconde.
@@ -55,10 +55,13 @@ abuse_ip_db:
     - "40b327b17c0a995d9022146c376009d4240acc99cdbf2b9d0bb3b92a18b25a15d257c546f597afe1"
     - "950e5a4c965b05dbe2bcb825fbe79f21090e756a57548ad1410013bf583eef4d6742aabd6307cdb2"
     - "8d2eb9ffe3af864463d87922b892bffe497b9e8dfa15f99ae1f3c74595180827f38b58dd58b259a5"
+    - "33d36dcad6c18a1c46e23bf21d4987108078a8a1961652c74ef8150c7cee3ce7b34396c3def31e29"
+    - "7152c6e038c3573946b5f63d8186aee23c894d6c921bc5a2ac9d7adcc321ede6c7f72e68962d0264"
+    - "94ca6ab6840817146d214cca336b1858a09904a917a2355d8240c64189582c5811ed6437a8d23578"
 
 # Sophos settings.
 sophos:
-  enable: true # Set to 'true' to enable Sophos integration, 'false' to disable.
+  enable: false # Set to 'true' to enable Sophos integration, 'false' to disable.
   host: "91.228.127.62"
   port: 4444
   user: "admin"
@@ -77,8 +80,8 @@ csf:
 
 # cPanel settings.
 cpanel:
-  enable: false # Set to 'true' to enable cPanel integration, 'false' to disable.
-  checkAllUsers: false # Set to 'true' to check all users, 'false' to check specific users.
+  enable: true # Set to 'true' to enable cPanel integration, 'false' to disable.
+  checkAllUsers: true # Set to 'true' to check all users, 'false' to check specific users.
 
   # List of users to check (ignored if checkAllUsers is set to 'true').
   users:

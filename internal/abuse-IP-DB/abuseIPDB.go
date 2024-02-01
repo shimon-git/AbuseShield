@@ -1,6 +1,7 @@
 package abuseipdb
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -17,6 +18,8 @@ import (
 )
 
 type AbuseIPDB struct {
+	Ipv6          bool
+	Ipv4          bool
 	Enable        bool     `yaml:"enable"`
 	Limit         int      `yaml:"limit"`
 	Interval      int      `yaml:"interval"`
@@ -24,8 +27,12 @@ type AbuseIPDB struct {
 	WhiteListFile string   `yaml:"whitelist_file"`
 	ApiKeys       []string `yaml:"api_keys"`
 	Score         int      `yaml:"score"`
-	Ipv6          bool
-	Ipv4          bool
+	BlockTor      bool     `yaml:"blockTor"`
+	Exclude       struct {
+		Domains  []string `yaml:"domains"`
+		Networks []string `yaml:"networks"`
+		Crawlers bool     `yaml:"crawlers"`
+	} `yaml:"exclude"`
 }
 
 type abuseIPDBClient struct {
@@ -36,6 +43,10 @@ type abuseIPDBClient struct {
 	currentAPIKeyRequestsLimit int
 	validAPIKeys               map[string]int
 	mu                         sync.Mutex
+	limit                      struct {
+		enable      bool
+		limitNumber int
+	}
 }
 
 type abuseIPDBResponse struct {
@@ -56,25 +67,26 @@ type abuseIPDBErrResponse struct {
 	} `json:"errors"`
 }
 
-const (
-	ABUSE_DB_ENDPOINT       = "https://api.abuseipdb.com/api/v2/check"
-	REMAINING_CHECKS_HEADER = "X-Ratelimit-Remaining"
-)
-
 // New - create a new abuseipdb client
 // Args: [AbuseIPDB configuration]
 // Returns a pointer to abuseipdb client
 func New(a AbuseIPDB, validation bool) (*abuseIPDBClient, error) {
 	// create new variable for abuseipdb client
-	var abuseDB abuseIPDBClient
+	var abuseIPDBclient abuseIPDBClient
 
 	// set the abuseipdb configurations
-	abuseDB.abuseIPDB = a
+	abuseIPDBclient.abuseIPDB = a
 	// setting max ip checks that can be check against the abuseipdb API server
-	err := abuseDB.SetMaxIPCHecks(validation)
+	err := abuseIPDBclient.SetMaxIPCHecks(validation)
+
+	// set limit ips to check
+	if a.Limit > 0 {
+		abuseIPDBclient.limit.enable = true
+		abuseIPDBclient.limit.limitNumber = a.Limit
+	}
 
 	// return a reference to abuseipdb and error if ocurred
-	return &abuseDB, err
+	return &abuseIPDBclient, err
 }
 
 // setNewKey - set new http client fot abuseipdb API requests with the provided API key
@@ -110,7 +122,7 @@ func (a *abuseIPDBClient) SetMaxIPCHecks(validation bool) error {
 		// set a new key
 		a.setNewKey(key)
 		// get data of dummy ip to check available api request for the current api key iteration
-		data, err := a.getIPData(ip)
+		data, err := a.getIPData(ip, true)
 		if err != nil && !strings.Contains(err.Error(), e.DAILY_RATE_LIMIT_EXCEEDED_ABUSEIPDB) {
 			return err
 		}
@@ -139,7 +151,7 @@ func (a *abuseIPDBClient) SetMaxIPCHecks(validation bool) error {
 	return nil
 }
 
-func (a *abuseIPDBClient) getIPData(ip string) (abuseIPDBResponse, error) {
+func (a *abuseIPDBClient) getIPData(ip string, apiKeysValidation bool) (abuseIPDBResponse, error) {
 	// lock the function to run it synchronously for avoiding interval issues
 	a.mu.Lock()
 	defer a.mu.Unlock()
@@ -151,7 +163,7 @@ func (a *abuseIPDBClient) getIPData(ip string) (abuseIPDBResponse, error) {
 	params.Add("ipAddress", ip)
 	params.Add("maxAgeInDays", "90")
 	params.Add("verbose", "")
-	url := ABUSE_DB_ENDPOINT + "?" + params.Encode()
+	url := "https://api.abuseipdb.com/api/v2/check" + "?" + params.Encode()
 
 	res, err := a.client.Get(url)
 	if err != nil {
@@ -166,13 +178,21 @@ func (a *abuseIPDBClient) getIPData(ip string) (abuseIPDBResponse, error) {
 	}
 
 	if res.StatusCode != http.StatusOK {
+		if strings.Contains(string(body), e.DAILY_RATE_LIMIT_EXCEEDED_ABUSEIPDB) && !apiKeysValidation {
+			a.currentAPIKeyRequestsLimit = 0
+			if err := a.getNewKey(); err != nil {
+				return response, err
+			}
+			a.setNewKey(a.currentAPIKey)
+			return a.getIPData(ip, false)
+		}
 		if err := json.Unmarshal(body, &errResponse); err != nil {
 			return response, e.MakeErr(fmt.Sprintf("%s \n%s, status code:%d while excepted status code is: %d, Body: %s, Current ip: %s", e.UNMARSHAL_ERR, e.INVALID_RESPONSE_CODE, res.StatusCode, http.StatusOK, string(body), ip), err)
 		}
 		return response, e.MakeErr(fmt.Sprintf("%s, status code:%d while excepted status code is: %d, error massage: %s, Current ip: %s", e.INVALID_RESPONSE_CODE, res.StatusCode, http.StatusOK, errResponse.Errors[0].Detail, ip), nil)
 	}
 
-	remainingChecksStr := res.Header.Get(REMAINING_CHECKS_HEADER)
+	remainingChecksStr := res.Header.Get("X-Ratelimit-Remaining")
 
 	if remainingChecksStr == "" {
 		return response, e.MakeErr(fmt.Sprintf("%s, api-key: %s", e.EMPTY_REMAINING_CHECKS_HEADER, a.currentAPIKey), nil)
@@ -197,8 +217,6 @@ func (a *abuseIPDBClient) getIPData(ip string) (abuseIPDBResponse, error) {
 
 func (a *abuseIPDBClient) getNewKey() error {
 	if a.currentAPIKeyRequestsLimit > 0 {
-		fmt.Println(a.currentAPIKeyRequestsLimit)
-		time.Sleep(time.Second * 2)
 		return nil
 	}
 	a.validAPIKeys[a.currentAPIKey] = 0
@@ -212,11 +230,16 @@ func (a *abuseIPDBClient) getNewKey() error {
 	return e.MakeErr(e.API_KEYS_LIMIT_HAS_BEEN_REACHED, nil)
 }
 
-func (a *abuseIPDBClient) CheckIPScore(dataChan chan string, blacklistWriterChan chan string, whitelistWriterChan chan string, errChan chan string, goRoutineNumber *int, wg *sync.WaitGroup) {
+func (a *abuseIPDBClient) CheckIPScore(cancelFunc context.CancelFunc, dataChan chan string, blacklistWriterChan chan string, whitelistWriterChan chan string, errChan chan string, goRoutineNumber *int, wg *sync.WaitGroup) {
 	defer wg.Done()
 	defer func() { *goRoutineNumber-- }()
 
 	for ip := range dataChan {
+		if a.limit.limitNumber <= 0 {
+			cancelFunc()
+			return
+		}
+
 		formattedIP, err := helpers.FormatIP(ip)
 		if err != nil {
 			errChan <- err.Error()
@@ -224,22 +247,23 @@ func (a *abuseIPDBClient) CheckIPScore(dataChan chan string, blacklistWriterChan
 			continue
 		}
 		// Retrieve IP data
-		ipData, err := a.getIPData(formattedIP)
+		ipData, err := a.getIPData(formattedIP, false)
+		if err != nil && strings.Contains(err.Error(), e.API_KEYS_LIMIT_HAS_BEEN_REACHED) {
+			errChan <- err.Error()
+			cancelFunc()
+			return
+		}
+
 		if err != nil {
-			if strings.Contains(err.Error(), e.DAILY_RATE_LIMIT_EXCEEDED_ABUSEIPDB) {
-				if err := a.getNewKey(); err != nil {
-					errChan <- err.Error()
-					return
-				}
-				a.setNewKey(a.currentAPIKey)
-				ipData, err = a.getIPData(formattedIP)
-			}
-			if err != nil {
-				errChan <- err.Error()
-				// Move to the next IP if there's an error in getting IP data
-				helpers.ColorPrint(fmt.Sprintf("[+] Error ocurred while trying to check the ip: %s", ip), "error")
-				continue
-			}
+			errChan <- err.Error()
+			// Move to the next IP if there's an error in getting IP data
+			helpers.ColorPrint(fmt.Sprintf("[+] Error ocurred while trying to check the ip: %s", ip), "error")
+			continue
+		}
+
+		a.currentAPIKeyRequestsLimit = ipData.availableRequestsNumber
+		if a.limit.enable {
+			a.limit.limitNumber--
 		}
 
 		// if the ip score is bigger then or equal to the minimum ip score then send it the writerChan channel
@@ -253,4 +277,16 @@ func (a *abuseIPDBClient) CheckIPScore(dataChan chan string, blacklistWriterChan
 			whitelistWriterChan <- ip
 		}
 	}
+}
+
+func (a *abuseIPDBClient) networkExclude() bool {
+	return false || true
+}
+
+func (a *abuseIPDBClient) crawlersExclude() bool {
+	return false || true
+}
+
+func (a *abuseIPDBClient) domainExclude() bool {
+	return false || true
 }

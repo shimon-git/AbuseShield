@@ -15,7 +15,7 @@ global:
     #- "/Users/shimonyaniv/Desktop/github_projects/AbuseShield/ip.txt"
 
   # Time to wait between API requests in seconds - minimum is 1 seconde.
-  interval: 1
+  interval: 3
 
   # Log settings.
   log_enable: true # Set to 'true' to enable logging, 'false' to disable.
@@ -33,24 +33,24 @@ abuse_ip_db:
   limit: 1000 # Limit the number of IPs to check.
   blacklist_file: "AbuseShieldResults/blacklist.txt" # Specify the path for the blacklist file.
   whitelist_file: "AbuseShieldResults/whitelist.txt" # Specify the path for the whitelist file.
-
+  
   # Add this options
-  #  exclude:
-  #    crawlers: true
-  #    domains:
-  #      - "google.com"
-  #      - "cloudflare.com"
-  #    networks:
-  #      - "172.16.0.4/24"
-  #
-  #  blockTor: true
+  exclude:
+    crawlers: true
+    domains:
+      - "google.com"
+      - "cloudflare.com"
+    networks:
+      - "172.16.0.4/24"
 
   # Interval between API requests in seconds minimum is 1 seconde (uncomment to override the global interval).
-  # interval: 3
+  interval: 1
 
   # Minimum score to consider an IP as malicious (values between 1 - 100, default is 15).
   score: 15
-
+  # block tor addresses
+  blockTor: true 
+  
   # API keys for Abuse IP DB.
   api_keys:
     - "61a80c5dc478417d7349d9acbdd546b9ad6e25d7b675e4146e011d1b9517dae10b9feb5384513719"
@@ -84,7 +84,7 @@ csf:
 
 # cPanel settings.
 cpanel:
-  enable: fales # Set to 'true' to enable cPanel integration, 'false' to disable.
+  enable: false # Set to 'true' to enable cPanel integration, 'false' to disable.
   checkAllUsers: true # Set to 'true' to check all users, 'false' to check specific users.
 
   # List of users to check (ignored if checkAllUsers is set to 'true').

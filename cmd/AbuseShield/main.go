@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"log"
 	"strings"
 	"sync"
@@ -114,6 +115,9 @@ func abuseDBIPChecker(abuseIPDB abuseipdb.AbuseIPDB, ipFiles []string, errChan c
 		return err
 	}
 
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
 	// set up channels for IP categorization
 	blacklistWriterChan := make(chan string, 50)
 	whitelistWriterChan := make(chan string, 50)
@@ -138,18 +142,18 @@ func abuseDBIPChecker(abuseIPDB abuseipdb.AbuseIPDB, ipFiles []string, errChan c
 
 		// set up a new channel for each file and start reading IPs
 		dataChannels = append(dataChannels, make(chan string, 50))
-		go helpers.IPFileReader(file, dataChannels[len(dataChannels)-1])
+		go helpers.FileReader(ctx, file, dataChannels[len(dataChannels)-1])
 
 		// start a goroutine for checking IP scores against abuseipdb
-		go abuseIPDBClient.CheckIPScore(dataChannels[len(dataChannels)-1], blacklistWriterChan, whitelistWriterChan, errChan, &goRoutinesCounter, &wgAbuseIPDB)
+		go abuseIPDBClient.CheckIPScore(cancel, dataChannels[len(dataChannels)-1], blacklistWriterChan, whitelistWriterChan, errChan, &goRoutinesCounter, &wgAbuseIPDB)
 	}
 
 	// wait for all IP checking goroutines to complete
 	wgAbuseIPDB.Wait()
 
 	// close all writer channels after use
-	helpers.SafeChannelClose(blacklistWriterChan)
-	helpers.SafeChannelClose(whitelistWriterChan)
+	close(blacklistWriterChan)
+	close(whitelistWriterChan)
 
 	// wait for all writer goroutines to finish
 	wgWriter.Wait()

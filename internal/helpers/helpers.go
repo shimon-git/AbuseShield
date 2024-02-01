@@ -2,6 +2,7 @@ package helpers
 
 import (
 	"bufio"
+	"context"
 	"crypto/tls"
 	"fmt"
 	"log"
@@ -23,7 +24,7 @@ const (
 	Reset         = "\033[0m"
 )
 
-func IPFileReader(ipFile string, dataChannel chan string) {
+func FileReader(ctx context.Context, ipFile string, dataChannel chan string) {
 	readFile, err := os.Open(ipFile)
 	if err != nil {
 		log.Fatal(e.MakeErr(fmt.Sprintf("%s: %s\n", e.FILE_SCANNER_ERR, ipFile), err))
@@ -33,14 +34,19 @@ func IPFileReader(ipFile string, dataChannel chan string) {
 	fileScanner := bufio.NewScanner(readFile)
 
 	for fileScanner.Scan() {
-		dataChannel <- fileScanner.Text()
+		select {
+		case <-ctx.Done():
+			return
+		default:
+			dataChannel <- fileScanner.Text()
+		}
 	}
 
 	if err := fileScanner.Err(); err != nil {
 		log.Fatal(e.MakeErr(fmt.Sprintf("%s: %s\n", e.FILE_SCANNER_ERR, ipFile), err))
 	}
 
-	defer SafeChannelClose(dataChannel)
+	defer close(dataChannel)
 }
 
 func GenerateDummyIP() string {
@@ -118,7 +124,6 @@ func FileWriter(file string, override bool, c chan string, wg *sync.WaitGroup, s
 	var err error
 	var f *os.File
 	defer wg.Done()
-	fmt.Println()
 	if IsExist(file, true) && override {
 		if err := os.Remove(file); err != nil {
 			sharedErr.SetError(err)
@@ -156,15 +161,6 @@ func FileWriter(file string, override bool, c chan string, wg *sync.WaitGroup, s
 	if err := writer.Flush(); err != nil {
 		sharedErr.SetError(err)
 	}
-}
-
-func SafeChannelClose(ch chan string) {
-	defer func() {
-		if recover() != nil {
-			return
-		}
-	}()
-	close(ch)
 }
 
 func FormatIP(IP string) (string, error) {

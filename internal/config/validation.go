@@ -1,6 +1,7 @@
 package config
 
 import (
+	"context"
 	"fmt"
 	"net"
 	"path/filepath"
@@ -41,10 +42,12 @@ func (c *Config) isValidIPFile(ipFiles string) error {
 		// add one job to the wait group
 		wg.Add(1)
 
+		ctx := context.Background()
+
 		// start goroutine to validate the ip file format
 		go ipFormatValidation(dataChan, &wg, filepath.Base(file), &err)
 		// start goroutine to read the ip file
-		go helpers.IPFileReader(file, dataChan)
+		go helpers.FileReader(ctx, file, dataChan)
 		// wait the job(the goroutine job will ended)
 		wg.Wait()
 		// check for errors(in case of ip file format error the goroutine ipFormatValidation will set an error)

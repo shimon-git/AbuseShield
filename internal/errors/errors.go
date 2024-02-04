@@ -44,6 +44,8 @@ const (
 	CPANEL_IP_FILE_NOT_FOUND            = "IP file output not found"
 	CREATE_FOLDER_ERR                   = "Folder creation has been failed"
 	DAILY_RATE_LIMIT_EXCEEDED_ABUSEIPDB = "requests exceeded for this endpoint"
+	INVALID_IP_OR_NETWORK               = "Invalid ip/network"
+	UNRESOLVABLE_DOMAIN                 = "Failed to resolve the domain"
 )
 
 type SharedError struct {

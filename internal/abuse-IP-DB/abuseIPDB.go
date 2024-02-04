@@ -244,10 +244,24 @@ func (a *abuseIPDBClient) CheckIPScore(cancelFunc context.CancelFunc, dataChan c
 		if err != nil {
 			errChan <- err.Error()
 			// Move to the next IP if there's an error in formatting
+			helpers.ColorPrint(fmt.Sprintf("[+] Error ocurred while trying to format the ip: %s\n %s", ip, err.Error()), "error")
 			continue
 		}
+
+		if len(a.abuseIPDB.Exclude.Networks) > 0 && helpers.IsNetworkExclude(formattedIP, a.abuseIPDB.Exclude.Networks) {
+			message := fmt.Sprintf("[+] Excluded IP: %s - This IP is within the exclusion ranges and has been added to the whitelist.", formattedIP)
+			helpers.ColorPrint(message, "exclude")
+			whitelistWriterChan <- ip
+			continue
+		}
+
 		// Retrieve IP data
 		ipData, err := a.getIPData(formattedIP, false)
+		a.currentAPIKeyRequestsLimit = ipData.availableRequestsNumber
+		if a.limit.enable {
+			a.limit.limitNumber--
+		}
+
 		if err != nil && strings.Contains(err.Error(), e.API_KEYS_LIMIT_HAS_BEEN_REACHED) {
 			errChan <- err.Error()
 			cancelFunc()
@@ -261,9 +275,18 @@ func (a *abuseIPDBClient) CheckIPScore(cancelFunc context.CancelFunc, dataChan c
 			continue
 		}
 
-		a.currentAPIKeyRequestsLimit = ipData.availableRequestsNumber
-		if a.limit.enable {
-			a.limit.limitNumber--
+		if a.abuseIPDB.Exclude.Crawlers && strings.Contains(strings.ToLower(ipData.Data.UsageType), "search engine") {
+			message := fmt.Sprintf("[+] Whitelisted crawler IP: %s - domain: %s - country: %s - Identified as a crawler and successfully added to the whitelist.", ip, ipData.Data.Domain, ipData.Data.CountryCode)
+			helpers.ColorPrint(message, "exclude")
+			whitelistWriterChan <- ip
+			continue
+		}
+
+		if len(a.abuseIPDB.Exclude.Domains) > 0 && helpers.IsDomainExclude(ipData.Data.Domain, a.abuseIPDB.Exclude.Domains) {
+			message := fmt.Sprintf("[+] Whitelisted: IP %s (domain: %s) - county: %s - Successfully added to the whitelist due the domain exclusions.", ip, ipData.Data.Domain, ipData.Data.CountryCode)
+			helpers.ColorPrint(message, "exclude")
+			whitelistWriterChan <- ip
+			continue
 		}
 
 		// if the ip score is bigger then or equal to the minimum ip score then send it the writerChan channel
@@ -277,16 +300,4 @@ func (a *abuseIPDBClient) CheckIPScore(cancelFunc context.CancelFunc, dataChan c
 			whitelistWriterChan <- ip
 		}
 	}
-}
-
-func (a *abuseIPDBClient) networkExclude() bool {
-	return false || true
-}
-
-func (a *abuseIPDBClient) crawlersExclude() bool {
-	return false || true
-}
-
-func (a *abuseIPDBClient) domainExclude() bool {
-	return false || true
 }

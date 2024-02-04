@@ -52,16 +52,11 @@ func GetConfig() Config {
 			// print the usage and the error and exit
 			printUsageAndExit(err)
 		}
-		// set the global configurations
-		c.adjustGlobalConfigurations()
-		// validate and set all configurations
-		c.validateAndSetConfigurations()
-		// return the config
-		return c
 	}
 
-	// in case a config file has not been provided parse,validate and set the configurations
+	// validate and set all configurations
 	c.validateAndSetConfigurations()
+	// set the global configurations
 	c.adjustGlobalConfigurations()
 	// return the config
 	return c

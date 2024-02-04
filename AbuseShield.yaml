@@ -40,8 +40,11 @@ abuse_ip_db:
     domains:
       - "google.com"
       - "cloudflare.com"
+      - "digitalocean.com"
     networks:
-      - "172.16.0.4/24"
+      - "172.16.0.0/24"
+      - "185.38.183.12/32"
+      - "152.212.0.0/16"
 
   # Interval between API requests in seconds minimum is 1 seconde (uncomment to override the global interval).
   interval: 1

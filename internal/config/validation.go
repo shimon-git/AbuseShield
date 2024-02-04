@@ -248,6 +248,34 @@ func (c *Config) isValidAbuseDB(apiKeys string) error {
 		c.AbuseIPDB.ApiKeys = strings.Split(strings.TrimSpace(apiKeys), ",")
 	}
 
+	if len(c.AbuseIPDB.Exclude.Networks) > 0 {
+		for _, network := range c.AbuseIPDB.Exclude.Networks {
+			if strings.HasSuffix(network, "/32") || strings.HasSuffix(network, "/128") {
+				ip := strings.Split(network, "/")[0]
+				i := net.ParseIP(ip)
+				if i == nil {
+					return e.MakeErr(fmt.Sprintf("%s, network: %s", e.INVALID_IP_OR_NETWORK, network), nil)
+				}
+			}
+			_, cidr, err := net.ParseCIDR(network)
+			if err != nil {
+				return err
+			}
+
+			if cidr.String() != network {
+				return e.MakeErr(fmt.Sprintf("%s, abuseipdb excluded network: %s", e.INVALID_IP_OR_NETWORK, network), nil)
+			}
+		}
+	}
+
+	if len(c.AbuseIPDB.Exclude.Domains) > 0 {
+		for _, domain := range c.AbuseIPDB.Exclude.Domains {
+			if _, err := net.LookupIP(domain); err != nil {
+				return e.MakeErr(fmt.Sprintf("%s: %s", e.UNRESOLVABLE_DOMAIN, domain), err)
+			}
+		}
+	}
+
 	if len(c.AbuseIPDB.ApiKeys) == 0 {
 		return e.MakeErr(e.MISSING_API_KEYS, nil)
 	}

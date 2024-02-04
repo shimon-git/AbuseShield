@@ -111,7 +111,6 @@ func showANSIColors() {
 
 
 to do:
-correct the helpers ip formator
 add the error channel to all handlers
 optimize the code
 

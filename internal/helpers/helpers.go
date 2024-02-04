@@ -10,6 +10,7 @@ import (
 	"net"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -21,6 +22,7 @@ const (
 	Red           = "\033[31m"
 	Green         = "\033[32m"
 	RedBackground = "\033[41m"
+	Yellow        = "\033[33m"
 	Reset         = "\033[0m"
 )
 
@@ -164,29 +166,31 @@ func FileWriter(file string, override bool, c chan string, wg *sync.WaitGroup, s
 }
 
 func FormatIP(IP string) (string, error) {
-	// check if the given ip has a prefix
-	if !strings.Contains(IP, "/") {
-		return IP, nil
+	var subnet int
+	var err error
+
+	if strings.HasSuffix(IP, "/32") || strings.HasSuffix(IP, "/128") {
+		IPParts := strings.Split(IP, "/")
+		IP = IPParts[0]
+		subnet, err = strconv.Atoi(IPParts[len(IPParts)-1])
+		if err != nil {
+			return "", e.MakeErr(fmt.Sprintf("%s: %s", e.INVALID_IP_OR_NETWORK, IP), nil)
+		}
 	}
-	// parse the cidr
-	ip, _, err := net.ParseCIDR(IP)
-	if err != nil {
-		return "", err
+
+	// parse the ip and check if the given ip is valid
+	ip := net.ParseIP(IP)
+	if ip == nil {
+		return "", e.MakeErr(fmt.Sprintf("%s:%s -  The IP should have a subnet mask of /32 for ipv4 or /128 for ipv6, indicating a single IP address.", e.INVALID_IP_OR_NETWORK, IP), nil)
 	}
 
 	// check if the ip is version 4
-	if ipv4 := ip.To4(); ipv4 != nil {
-		// if the given ip ends with /32 then return only the ip without the /32 suffix
-		if strings.HasSuffix(IP, "/32") {
-			return ipv4.String(), nil
-		}
-		// if the ip dose not have a suffix of /32 return the ip with the suffix
-		return IP, nil
-	} else if ipv6 := ip.To16(); ipv6 != nil {
-		if strings.HasSuffix(IP, "/128") {
-			return ipv6.String(), nil
-		}
-		return IP, nil
+	if ipv4 := ip.To4(); ipv4 != nil && (subnet == 32 || subnet == 0) {
+		return ipv4.String(), nil
+	}
+
+	if ipv6 := ip.To16(); ipv6 != nil && (subnet == 128 || subnet == 0) {
+		return ipv6.String(), nil
 	}
 	// return invalid ip error
 	return "", e.MakeErr(fmt.Sprintf("%s ,ip: %s", e.IP_IS_NOT_VALID, IP), nil)
@@ -198,9 +202,12 @@ func ColorPrint(message string, color string) {
 		fmt.Println(Red + message + Reset)
 	case "green":
 		fmt.Println(Green + message + Reset)
+	case "exclude":
+		fmt.Println(Yellow, message, Reset)
 	case "error":
 		fmt.Println(RedBackground + message + Reset)
 	}
+
 }
 
 func FilesLinesCounter(files []string) (int, error) {
@@ -224,4 +231,32 @@ func FilesLinesCounter(files []string) (int, error) {
 	}
 	// return nil error and lines number minus length of files slice because EOF is also calculated as line
 	return lines - len(files), nil
+}
+
+func IsDomainExclude(domain string, excludedDomains []string) bool {
+	for _, d := range excludedDomains {
+		if strings.ToLower(domain) == strings.ToLower(d) {
+			return true
+		}
+	}
+	return false
+}
+
+func IsNetworkExclude(ipAddress string, networks []string) bool {
+	ip := net.ParseIP(ipAddress)
+	if ip == nil {
+		return false
+	}
+	for _, cidr := range networks {
+		_, network, err := net.ParseCIDR(cidr)
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
+
+		if network.Contains(ip) {
+			return true
+		}
+	}
+	return false
 }

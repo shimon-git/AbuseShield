@@ -15,10 +15,6 @@ import (
 	"github.com/shimon-git/AbuseShield/internal/helpers"
 )
 
-const (
-	MAX_GO_ROUTINES = 10
-)
-
 var (
 	errWg sync.WaitGroup
 )
@@ -58,7 +54,7 @@ func main() {
 	if conf.AbuseIPDB.Enable {
 		// print the abuseipdb header
 		printHeader("abuseipdb")
-		if err := abuseDBIPChecker(conf.AbuseIPDB, conf.Global.IPsFiles, errWriterChan); err != nil {
+		if err := abuseDBIPChecker(conf.AbuseIPDB, conf.Global.IPsFiles, conf.Global.MaxThreads, errWriterChan); err != nil {
 			log.Fatal(err)
 		}
 	}
@@ -93,7 +89,7 @@ func cpanelAbuseChecker(cp cpanel.Cpanel) (string, error) {
 // abuseDBIPChecker evaluates IPs against abuseipdb, segregating them into 'whitelist', 'blacklist', and 'error' files.
 // Args: [abuseIPDB: Abuseipdb configurations, ipFiles: Paths to files with IPs for checking, errFile: Path for recording errors]
 // Returns an error if the checking process encounters issues.
-func abuseDBIPChecker(abuseIPDB abuseipdb.AbuseIPDB, ipFiles []string, errChan chan string) error {
+func abuseDBIPChecker(abuseIPDB abuseipdb.AbuseIPDB, ipFiles []string, maxThreads int, errChan chan string) error {
 	var wgAbuseIPDB sync.WaitGroup
 	var wgWriter sync.WaitGroup
 
@@ -134,7 +130,7 @@ func abuseDBIPChecker(abuseIPDB abuseipdb.AbuseIPDB, ipFiles []string, errChan c
 	// iterate over the provided IP files
 	for _, file := range ipFiles {
 		// throttle goroutine creation if max limit is reached
-		for goRoutinesCounter >= MAX_GO_ROUTINES {
+		for goRoutinesCounter >= maxThreads {
 			time.Sleep(time.Second * 5)
 		}
 		goRoutinesCounter++

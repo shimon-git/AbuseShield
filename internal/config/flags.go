@@ -169,6 +169,7 @@ func (c *Config) adjustGlobalConfigurations() {
 		if c.AbuseIPDB.Interval < MINIMUM_INTERVAL {
 			c.AbuseIPDB.Interval = c.Global.Interval
 		}
+
 	}
 }
 
@@ -216,6 +217,7 @@ func (c *Config) getGlobalFlags() {
 	flag.BoolVar(&c.Global.Ipv6, GLOBAL_IPV6_FLAG, DEFAULT_IPV6, globalIPv6UsageMessage)
 	flag.IntVar(&c.Global.Interval, GLOBAL_INTERVAL_FLAG, DEFAULT_INTERVAL, globalIntervalUsageMessage)
 	flag.IntVar(&c.Global.Interval, GLOBAL_INTERVAL_ALIAS_FLAG, DEFAULT_INTERVAL, globalIntervalAliasUsageMessage)
+	flag.IntVar(&c.Global.MaxThreads, GLOBAL_MAX_THREADS_FLAG, DEFAULT_MAX_THREADS, globalMaxThreadsUsageMessage)
 }
 
 /*

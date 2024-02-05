@@ -1,5 +1,6 @@
 # Global settings that apply to the entire application.
 global:
+  max_threads: 5 # maximum threads(minimum is 1,maximum is 10)
   # Enable or disable IPv6 and IPv4 support.
   ipv6: false
   ipv4: true
@@ -7,8 +8,8 @@ global:
   # Specify the paths to the IP files to check.
   ip_files:
     # - "C:\\Users\\shimony\\Desktop\\scripts\\AbuseShield\\ip.txt"
-    - "/Users/shimonyaniv/Desktop/github_projects/AbuseShield/ip.txt"
-    - "/Users/shimonyaniv/Desktop/github_projects/AbuseShield/ip.txt"
+    #- "/Users/shimonyaniv/Desktop/github_projects/AbuseShield/ip.txt"
+    #- "/Users/shimonyaniv/Desktop/github_projects/AbuseShield/ip.txt"
     #- "/Users/shimonyaniv/Desktop/github_projects/AbuseShield/ip.txt"
     #- "/Users/shimonyaniv/Desktop/github_projects/AbuseShield/ip.txt"
     #- "/Users/shimonyaniv/Desktop/github_projects/AbuseShield/ip.txt"
@@ -50,7 +51,7 @@ abuse_ip_db:
   interval: 1
 
   # Minimum score to consider an IP as malicious (values between 1 - 100, default is 15).
-  score: 15
+  score: 10
   # block tor addresses
   blockTor: true 
   
@@ -87,7 +88,7 @@ csf:
 
 # cPanel settings.
 cpanel:
-  enable: false # Set to 'true' to enable cPanel integration, 'false' to disable.
+  enable: true # Set to 'true' to enable cPanel integration, 'false' to disable.
   checkAllUsers: true # Set to 'true' to check all users, 'false' to check specific users.
 
   # List of users to check (ignored if checkAllUsers is set to 'true').

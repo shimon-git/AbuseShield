@@ -38,7 +38,8 @@ C*D@jtTT#JK84!shW&F6
 scp bin/main root@109.207.76.148:/root
 ./main  -m cp --cpanel-all-users
 
-
+scp AbuseShield.yaml root@83.229.80.81:/root/t
+0D)05bc6$cdcf3240c*96a8!50e9eA8
 
 // Basic ANSI Color Codes
 Black   = "\033[30m"

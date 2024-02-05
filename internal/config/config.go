@@ -33,6 +33,7 @@ type globalConfigurations struct {
 	SMS        string   `yaml:"phone"`
 	Email      string   `yaml:"email"`
 	ErrorFile  string   `yaml:"error_file"`
+	MaxThreads int      `yaml:"max_threads"`
 }
 
 // parseConfigFile - parse a given config file(yaml format) and return an error(if ocurred)

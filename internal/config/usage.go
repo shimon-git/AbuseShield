@@ -21,6 +21,7 @@ const (
 	DEFAULT_CHECK_ALL_CPANEL_USERS = false                  //default value to check all cpanel users(true for enable || false to disable)
 	DEFAULT_INTERVAL               = 3                      //default interval between api requests to avoid overload
 	MINIMUM_INTERVAL               = 1                      //minimum interval that can be set
+	DEFAULT_MAX_THREADS            = 5                      //max threads(goroutines)
 )
 
 const (
@@ -49,6 +50,7 @@ const (
 	GLOBAL_IPV6_FLAG           = "ipv6"
 	GLOBAL_INTERVAL_FLAG       = "interval"
 	GLOBAL_INTERVAL_ALIAS_FLAG = "i"
+	GLOBAL_MAX_THREADS_FLAG    = "max-threads"
 	//abuse db ip  flags
 	ABUSE_DB_IP_LIMIT_FLAG     = "limit"
 	ABUSE_DB_IP_INTERVAL_FLAG  = "abuse-ip-db-interval"
@@ -95,6 +97,7 @@ var (
 	globalIPv6UsageMessage          = fmt.Sprintf("Enable or disable IPv6 checking - default is disabled (%t)", DEFAULT_IPV6)
 	globalIntervalUsageMessage      = fmt.Sprintf("Global interval (in seconds) between API requests - default interval is: %d", DEFAULT_INTERVAL)
 	globalIntervalAliasUsageMessage = "Short alias for --interval"
+	globalMaxThreadsUsageMessage    = fmt.Sprintf("Max threads - default is: %d", DEFAULT_MAX_THREADS)
 	// abuseDBIP usage messages
 	abuseIPDBLimitUsageMessage     = "Maximum number of IP addresses to check against the AbuseIPDB"
 	abuseIPDBIntervalUsageMessage  = fmt.Sprintf("Time interval (in seconds) between requests to AbuseIPDB to avoid being blocked - default interval is: %d", DEFAULT_INTERVAL)
@@ -183,6 +186,7 @@ func printUsageMessage() {
 		formatFlag(GLOBAL_IPV6_FLAG, globalIPv6UsageMessage),
 		formatFlag(GLOBAL_INTERVAL_FLAG, globalIntervalUsageMessage),
 		formatFlag(GLOBAL_INTERVAL_ALIAS_FLAG, globalIntervalAliasUsageMessage),
+		formatFlag(GLOBAL_MAX_THREADS_FLAG, globalMaxThreadsUsageMessage),
 	})
 
 	printFlagSection("Abuse DB Configuration Flags", []string{

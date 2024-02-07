@@ -8,8 +8,8 @@ global:
   # Specify the paths to the IP files to check.
   ip_files:
     # - "C:\\Users\\shimony\\Desktop\\scripts\\AbuseShield\\ip.txt"
-    #- "/Users/shimonyaniv/Desktop/github_projects/AbuseShield/ip.txt"
-    #- "/Users/shimonyaniv/Desktop/github_projects/AbuseShield/ip.txt"
+    - "/Users/shimonyaniv/Desktop/github_projects/AbuseShield/ip.txt"
+    - "/Users/shimonyaniv/Desktop/github_projects/AbuseShield/ip.txt"
     #- "/Users/shimonyaniv/Desktop/github_projects/AbuseShield/ip.txt"
     #- "/Users/shimonyaniv/Desktop/github_projects/AbuseShield/ip.txt"
     #- "/Users/shimonyaniv/Desktop/github_projects/AbuseShield/ip.txt"
@@ -31,7 +31,7 @@ global:
 # Abuse IP DB settings.
 abuse_ip_db:
   enable: true # Set to 'true' to enable Abuse IP DB integration, 'false' to disable.
-  limit: 1000 # Limit the number of IPs to check.
+  limit: 5 # Limit the number of IPs to check.
   blacklist_file: "AbuseShieldResults/blacklist.txt" # Specify the path for the blacklist file.
   whitelist_file: "AbuseShieldResults/whitelist.txt" # Specify the path for the whitelist file.
   
@@ -88,7 +88,7 @@ csf:
 
 # cPanel settings.
 cpanel:
-  enable: true # Set to 'true' to enable cPanel integration, 'false' to disable.
+  enable: false # Set to 'true' to enable cPanel integration, 'false' to disable.
   checkAllUsers: true # Set to 'true' to check all users, 'false' to check specific users.
 
   # List of users to check (ignored if checkAllUsers is set to 'true').

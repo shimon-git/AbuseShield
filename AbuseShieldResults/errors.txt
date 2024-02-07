@@ -873,3 +873,62 @@
 [4 Feb 2024 13:17:09] file: helpers.go - line: 184 - function: FormatIP - Invalid ip/network:143.55.64.0/20 -  The IP should have a subnet mask of /32, indicating a single IP address.
 [4 Feb 2024 13:17:09] file: helpers.go - line: 184 - function: FormatIP - Invalid ip/network:2a0a:a440::/29 -  The IP should have a subnet mask of /32, indicating a single IP address.
 [4 Feb 2024 13:17:09] file: helpers.go - line: 196 - function: FormatIP - The given IP is not valid ,ip: 2606:50c0::
+[7 Feb 2024 07:18:41] file: helpers.go - line: 184 - function: FormatIP - Invalid ip/network:143.55.64.0/20 -  The IP should have a subnet mask of /32 for ipv4 or /128 for ipv6, indicating a single IP address.
+[7 Feb 2024 07:18:42] file: helpers.go - line: 184 - function: FormatIP - Invalid ip/network:143.55.64.0/20 -  The IP should have a subnet mask of /32 for ipv4 or /128 for ipv6, indicating a single IP address.
+[7 Feb 2024 07:19:03] file: helpers.go - line: 184 - function: FormatIP - Invalid ip/network:192.30.252.0/22 -  The IP should have a subnet mask of /32 for ipv4 or /128 for ipv6, indicating a single IP address.
+[7 Feb 2024 07:19:03] file: helpers.go - line: 184 - function: FormatIP - Invalid ip/network:185.199.108.0/22 -  The IP should have a subnet mask of /32 for ipv4 or /128 for ipv6, indicating a single IP address.
+[7 Feb 2024 07:19:03] file: helpers.go - line: 184 - function: FormatIP - Invalid ip/network:140.82.112.0/20 -  The IP should have a subnet mask of /32 for ipv4 or /128 for ipv6, indicating a single IP address.
+[7 Feb 2024 07:19:04] file: helpers.go - line: 184 - function: FormatIP - Invalid ip/network:192.30.252.0/22 -  The IP should have a subnet mask of /32 for ipv4 or /128 for ipv6, indicating a single IP address.
+[7 Feb 2024 07:19:04] file: helpers.go - line: 184 - function: FormatIP - Invalid ip/network:185.199.108.0/22 -  The IP should have a subnet mask of /32 for ipv4 or /128 for ipv6, indicating a single IP address.
+[7 Feb 2024 07:19:04] file: helpers.go - line: 184 - function: FormatIP - Invalid ip/network:140.82.112.0/20 -  The IP should have a subnet mask of /32 for ipv4 or /128 for ipv6, indicating a single IP address.
+[7 Feb 2024 07:19:05] file: helpers.go - line: 184 - function: FormatIP - Invalid ip/network:143.55.64.0/20 -  The IP should have a subnet mask of /32 for ipv4 or /128 for ipv6, indicating a single IP address.
+[7 Feb 2024 07:19:05] file: helpers.go - line: 184 - function: FormatIP - Invalid ip/network:2a0a:a440::/29 -  The IP should have a subnet mask of /32 for ipv4 or /128 for ipv6, indicating a single IP address.
+[7 Feb 2024 07:19:05] file: helpers.go - line: 196 - function: FormatIP - The given IP is not valid ,ip: 2606:50c0::
+[7 Feb 2024 07:19:06] file: helpers.go - line: 184 - function: FormatIP - Invalid ip/network:143.55.64.0/20 -  The IP should have a subnet mask of /32 for ipv4 or /128 for ipv6, indicating a single IP address.
+[7 Feb 2024 07:19:06] file: helpers.go - line: 184 - function: FormatIP - Invalid ip/network:2a0a:a440::/29 -  The IP should have a subnet mask of /32 for ipv4 or /128 for ipv6, indicating a single IP address.
+[7 Feb 2024 07:19:06] file: helpers.go - line: 196 - function: FormatIP - The given IP is not valid ,ip: 2606:50c0::
+[7 Feb 2024 07:19:29] file: helpers.go - line: 184 - function: FormatIP - Invalid ip/network:192.30.252.0/22 -  The IP should have a subnet mask of /32 for ipv4 or /128 for ipv6, indicating a single IP address.
+[7 Feb 2024 07:19:29] file: helpers.go - line: 184 - function: FormatIP - Invalid ip/network:185.199.108.0/22 -  The IP should have a subnet mask of /32 for ipv4 or /128 for ipv6, indicating a single IP address.
+[7 Feb 2024 07:19:29] file: helpers.go - line: 184 - function: FormatIP - Invalid ip/network:140.82.112.0/20 -  The IP should have a subnet mask of /32 for ipv4 or /128 for ipv6, indicating a single IP address.
+[7 Feb 2024 07:19:29] file: helpers.go - line: 184 - function: FormatIP - Invalid ip/network:143.55.64.0/20 -  The IP should have a subnet mask of /32 for ipv4 or /128 for ipv6, indicating a single IP address.
+[7 Feb 2024 07:19:29] file: helpers.go - line: 184 - function: FormatIP - Invalid ip/network:2a0a:a440::/29 -  The IP should have a subnet mask of /32 for ipv4 or /128 for ipv6, indicating a single IP address.
+[7 Feb 2024 07:19:29] file: helpers.go - line: 196 - function: FormatIP - The given IP is not valid ,ip: 2606:50c0::
+[7 Feb 2024 07:19:31] file: helpers.go - line: 184 - function: FormatIP - Invalid ip/network:192.30.252.0/22 -  The IP should have a subnet mask of /32 for ipv4 or /128 for ipv6, indicating a single IP address.
+[7 Feb 2024 07:19:31] file: helpers.go - line: 184 - function: FormatIP - Invalid ip/network:185.199.108.0/22 -  The IP should have a subnet mask of /32 for ipv4 or /128 for ipv6, indicating a single IP address.
+[7 Feb 2024 07:19:31] file: helpers.go - line: 184 - function: FormatIP - Invalid ip/network:140.82.112.0/20 -  The IP should have a subnet mask of /32 for ipv4 or /128 for ipv6, indicating a single IP address.
+[7 Feb 2024 07:19:31] file: helpers.go - line: 184 - function: FormatIP - Invalid ip/network:143.55.64.0/20 -  The IP should have a subnet mask of /32 for ipv4 or /128 for ipv6, indicating a single IP address.
+[7 Feb 2024 07:19:31] file: helpers.go - line: 184 - function: FormatIP - Invalid ip/network:2a0a:a440::/29 -  The IP should have a subnet mask of /32 for ipv4 or /128 for ipv6, indicating a single IP address.
+[7 Feb 2024 07:19:31] file: helpers.go - line: 196 - function: FormatIP - The given IP is not valid ,ip: 2606:50c0::
+[7 Feb 2024 07:20:28] file: helpers.go - line: 184 - function: FormatIP - Invalid ip/network:143.55.64.0/20 -  The IP should have a subnet mask of /32 for ipv4 or /128 for ipv6, indicating a single IP address.
+[7 Feb 2024 07:20:29] file: helpers.go - line: 184 - function: FormatIP - Invalid ip/network:143.55.64.0/20 -  The IP should have a subnet mask of /32 for ipv4 or /128 for ipv6, indicating a single IP address.
+[7 Feb 2024 07:20:47] file: helpers.go - line: 184 - function: FormatIP - Invalid ip/network:192.30.252.0/22 -  The IP should have a subnet mask of /32 for ipv4 or /128 for ipv6, indicating a single IP address.
+[7 Feb 2024 07:20:47] file: helpers.go - line: 184 - function: FormatIP - Invalid ip/network:185.199.108.0/22 -  The IP should have a subnet mask of /32 for ipv4 or /128 for ipv6, indicating a single IP address.
+[7 Feb 2024 07:20:47] file: helpers.go - line: 184 - function: FormatIP - Invalid ip/network:140.82.112.0/20 -  The IP should have a subnet mask of /32 for ipv4 or /128 for ipv6, indicating a single IP address.
+[7 Feb 2024 07:20:49] file: helpers.go - line: 184 - function: FormatIP - Invalid ip/network:143.55.64.0/20 -  The IP should have a subnet mask of /32 for ipv4 or /128 for ipv6, indicating a single IP address.
+[7 Feb 2024 07:20:49] file: helpers.go - line: 184 - function: FormatIP - Invalid ip/network:2a0a:a440::/29 -  The IP should have a subnet mask of /32 for ipv4 or /128 for ipv6, indicating a single IP address.
+[7 Feb 2024 07:20:49] file: helpers.go - line: 196 - function: FormatIP - The given IP is not valid ,ip: 2606:50c0::
+[7 Feb 2024 07:20:51] file: helpers.go - line: 184 - function: FormatIP - Invalid ip/network:192.30.252.0/22 -  The IP should have a subnet mask of /32 for ipv4 or /128 for ipv6, indicating a single IP address.
+[7 Feb 2024 07:20:51] file: helpers.go - line: 184 - function: FormatIP - Invalid ip/network:185.199.108.0/22 -  The IP should have a subnet mask of /32 for ipv4 or /128 for ipv6, indicating a single IP address.
+[7 Feb 2024 07:20:51] file: helpers.go - line: 184 - function: FormatIP - Invalid ip/network:140.82.112.0/20 -  The IP should have a subnet mask of /32 for ipv4 or /128 for ipv6, indicating a single IP address.
+[7 Feb 2024 07:20:53] file: helpers.go - line: 184 - function: FormatIP - Invalid ip/network:143.55.64.0/20 -  The IP should have a subnet mask of /32 for ipv4 or /128 for ipv6, indicating a single IP address.
+[7 Feb 2024 07:20:53] file: helpers.go - line: 184 - function: FormatIP - Invalid ip/network:2a0a:a440::/29 -  The IP should have a subnet mask of /32 for ipv4 or /128 for ipv6, indicating a single IP address.
+[7 Feb 2024 07:20:53] file: helpers.go - line: 196 - function: FormatIP - The given IP is not valid ,ip: 2606:50c0::
+[7 Feb 2024 07:21:12] file: helpers.go - line: 184 - function: FormatIP - Invalid ip/network:192.30.252.0/22 -  The IP should have a subnet mask of /32 for ipv4 or /128 for ipv6, indicating a single IP address.
+[7 Feb 2024 07:21:12] file: helpers.go - line: 184 - function: FormatIP - Invalid ip/network:185.199.108.0/22 -  The IP should have a subnet mask of /32 for ipv4 or /128 for ipv6, indicating a single IP address.
+[7 Feb 2024 07:21:12] file: helpers.go - line: 184 - function: FormatIP - Invalid ip/network:140.82.112.0/20 -  The IP should have a subnet mask of /32 for ipv4 or /128 for ipv6, indicating a single IP address.
+[7 Feb 2024 07:21:12] file: helpers.go - line: 184 - function: FormatIP - Invalid ip/network:143.55.64.0/20 -  The IP should have a subnet mask of /32 for ipv4 or /128 for ipv6, indicating a single IP address.
+[7 Feb 2024 07:21:12] file: helpers.go - line: 184 - function: FormatIP - Invalid ip/network:2a0a:a440::/29 -  The IP should have a subnet mask of /32 for ipv4 or /128 for ipv6, indicating a single IP address.
+[7 Feb 2024 07:21:12] file: helpers.go - line: 196 - function: FormatIP - The given IP is not valid ,ip: 2606:50c0::
+[7 Feb 2024 07:21:15] file: helpers.go - line: 184 - function: FormatIP - Invalid ip/network:192.30.252.0/22 -  The IP should have a subnet mask of /32 for ipv4 or /128 for ipv6, indicating a single IP address.
+[7 Feb 2024 07:21:15] file: helpers.go - line: 184 - function: FormatIP - Invalid ip/network:185.199.108.0/22 -  The IP should have a subnet mask of /32 for ipv4 or /128 for ipv6, indicating a single IP address.
+[7 Feb 2024 07:21:15] file: helpers.go - line: 184 - function: FormatIP - Invalid ip/network:140.82.112.0/20 -  The IP should have a subnet mask of /32 for ipv4 or /128 for ipv6, indicating a single IP address.
+[7 Feb 2024 07:21:15] file: helpers.go - line: 184 - function: FormatIP - Invalid ip/network:143.55.64.0/20 -  The IP should have a subnet mask of /32 for ipv4 or /128 for ipv6, indicating a single IP address.
+[7 Feb 2024 07:21:15] file: helpers.go - line: 184 - function: FormatIP - Invalid ip/network:2a0a:a440::/29 -  The IP should have a subnet mask of /32 for ipv4 or /128 for ipv6, indicating a single IP address.
+[7 Feb 2024 07:21:15] file: helpers.go - line: 196 - function: FormatIP - The given IP is not valid ,ip: 2606:50c0::
+[7 Feb 2024 08:36:35] file: helpers.go - line: 184 - function: FormatIP - Invalid ip/network:143.55.64.0/20 -  The IP should have a subnet mask of /32 for ipv4 or /128 for ipv6, indicating a single IP address.
+[7 Feb 2024 08:39:01] file: helpers.go - line: 184 - function: FormatIP - Invalid ip/network:143.55.64.0/20 -  The IP should have a subnet mask of /32 for ipv4 or /128 for ipv6, indicating a single IP address.
+[7 Feb 2024 08:39:02] file: helpers.go - line: 184 - function: FormatIP - Invalid ip/network:143.55.64.0/20 -  The IP should have a subnet mask of /32 for ipv4 or /128 for ipv6, indicating a single IP address.
+[7 Feb 2024 08:39:55] file: helpers.go - line: 184 - function: FormatIP - Invalid ip/network:143.55.64.0/20 -  The IP should have a subnet mask of /32 for ipv4 or /128 for ipv6, indicating a single IP address.
+[7 Feb 2024 08:39:56] file: helpers.go - line: 184 - function: FormatIP - Invalid ip/network:143.55.64.0/20 -  The IP should have a subnet mask of /32 for ipv4 or /128 for ipv6, indicating a single IP address.
+[7 Feb 2024 08:50:10] file: helpers.go - line: 184 - function: FormatIP - Invalid ip/network:143.55.64.0/20 -  The IP should have a subnet mask of /32 for ipv4 or /128 for ipv6, indicating a single IP address.
+[7 Feb 2024 12:16:04] file: helpers.go - line: 184 - function: FormatIP - Invalid ip/network:143.55.64.0/20 -  The IP should have a subnet mask of /32 for ipv4 or /128 for ipv6, indicating a single IP address.

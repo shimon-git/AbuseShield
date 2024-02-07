@@ -63,7 +63,7 @@ func main() {
 
 // cpanelAbuseChecker consolidates cPanel access logs into a single file for abuse detection.
 // Args: [cp: cPanel configuration details, ipFileOutput: Destination for consolidated logs]
-// Returns an error if log processing fails, otherwise nil.
+// Returns [string - ip file path, error - in case of error ocurred]
 func cpanelAbuseChecker(cp cpanel.Cpanel) (string, error) {
 	//initialize new cpanel client
 	cpanelClient := cpanel.New(cp)

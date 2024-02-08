@@ -22,7 +22,6 @@ global:
   log_enable: true # Set to 'true' to enable logging, 'false' to disable.
   log_file: "AbuseShieldResults/abuseShield.log" # Specify the path for the log file.
   log_level: info # info || debug || error
-  error_file: "AbuseShieldResults/errors.txt" # path to error file
   max_log_size: 3000 # Maximum log file size in bytes.
 
   # Notifications (Will be sent after the check has finished)

@@ -165,7 +165,7 @@ func FileWriter(file string, override bool, c chan string, wg *sync.WaitGroup, s
 	}
 }
 
-func FormatIP(IP string) (string, error) {
+func FormatIP(IP string) (string, int, error) {
 	var subnet int
 	var err error
 
@@ -174,38 +174,38 @@ func FormatIP(IP string) (string, error) {
 		IP = IPParts[0]
 		subnet, err = strconv.Atoi(IPParts[len(IPParts)-1])
 		if err != nil {
-			return "", e.MakeErr(fmt.Sprintf("%s: %s", e.INVALID_IP_OR_NETWORK, IP), nil)
+			return "", 0, e.MakeErr(fmt.Sprintf("%s: %s", e.INVALID_IP_OR_NETWORK, IP), nil)
 		}
 	}
 
 	// parse the ip and check if the given ip is valid
 	ip := net.ParseIP(IP)
 	if ip == nil {
-		return "", e.MakeErr(fmt.Sprintf("%s:%s -  The IP should have a subnet mask of /32 for ipv4 or /128 for ipv6, indicating a single IP address.", e.INVALID_IP_OR_NETWORK, IP), nil)
+		return "", 0, e.MakeErr(fmt.Sprintf("%s:%s -  The IP should have a subnet mask of /32 for ipv4 or /128 for ipv6, indicating a single IP address.", e.INVALID_IP_OR_NETWORK, IP), nil)
 	}
 
 	// check if the ip is version 4
 	if ipv4 := ip.To4(); ipv4 != nil && (subnet == 32 || subnet == 0) {
-		return ipv4.String(), nil
+		return ipv4.String(), 4, nil
 	}
 
 	if ipv6 := ip.To16(); ipv6 != nil && (subnet == 128 || subnet == 0) {
-		return ipv6.String(), nil
+		return ipv6.String(), 6, nil
 	}
 	// return invalid ip error
-	return "", e.MakeErr(fmt.Sprintf("%s ,ip: %s", e.IP_IS_NOT_VALID, IP), nil)
+	return "", 0, e.MakeErr(fmt.Sprintf("%s ,ip: %s", e.IP_IS_NOT_VALID, IP), nil)
 }
 
 func ColorPrint(message string, color string) {
 	switch color {
 	case "red":
-		fmt.Println(Red + message + Reset)
+		fmt.Print(Red + message + Reset)
 	case "green":
-		fmt.Println(Green + message + Reset)
+		fmt.Print(Green + message + Reset)
 	case "exclude":
-		fmt.Println(Yellow, message, Reset)
+		fmt.Print(Yellow, message, Reset)
 	case "error":
-		fmt.Println(RedBackground + message + Reset)
+		fmt.Print(RedBackground + Yellow + message + Reset + "\n")
 	}
 
 }

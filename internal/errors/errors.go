@@ -46,6 +46,7 @@ const (
 	DAILY_RATE_LIMIT_EXCEEDED_ABUSEIPDB = "requests exceeded for this endpoint"
 	INVALID_IP_OR_NETWORK               = "Invalid ip/network"
 	UNRESOLVABLE_DOMAIN                 = "Failed to resolve the domain"
+	IPV6_AND_IPV4_NOT_ENABLED           = "IPv4 and IPv6 are not enabled, you must enable at least one ip version"
 )
 
 type SharedError struct {

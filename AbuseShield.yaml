@@ -1,8 +1,8 @@
 # Global settings that apply to the entire application.
 global:
-  max_threads: 5 # maximum threads(minimum is 1,maximum is 10)
+  max_threads: 10 # maximum threads(minimum is 1,maximum is 10)
   # Enable or disable IPv6 and IPv4 support.
-  ipv6: false
+  ipv6: true
   ipv4: true
 
   # Specify the paths to the IP files to check.
@@ -21,6 +21,7 @@ global:
   # Log settings.
   log_enable: true # Set to 'true' to enable logging, 'false' to disable.
   log_file: "AbuseShieldResults/abuseShield.log" # Specify the path for the log file.
+  log_level: info # info || debug || error
   error_file: "AbuseShieldResults/errors.txt" # path to error file
   max_log_size: 3000 # Maximum log file size in bytes.
 
@@ -31,7 +32,7 @@ global:
 # Abuse IP DB settings.
 abuse_ip_db:
   enable: true # Set to 'true' to enable Abuse IP DB integration, 'false' to disable.
-  limit: 5 # Limit the number of IPs to check.
+  limit: 0 # Limit the number of IPs to check.
   blacklist_file: "AbuseShieldResults/blacklist.txt" # Specify the path for the blacklist file.
   whitelist_file: "AbuseShieldResults/whitelist.txt" # Specify the path for the whitelist file.
   

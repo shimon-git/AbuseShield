@@ -111,16 +111,3 @@ func showANSIColors() {
 
 
 
-to do:
-add the error channel to all handlers
-optimize the code
-
-
-/* func SafeChannelClose(ch chan string) {
-	defer func() {
-		if recover() != nil {
-			return
-		}
-	}()
-	close(ch)
-} */

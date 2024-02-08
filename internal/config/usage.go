@@ -126,7 +126,7 @@ func printUsageAndExit(err error) {
 	fmt.Printf("\n%s\n", "-------------------------------------")
 	// print error message if error is not nil
 	if err != nil {
-		fmt.Printf("\n%s\n\n", "--------------- Error ---------------")
+		fmt.Printf("\n%s\n", "--------------- Error ---------------")
 		fmt.Println(err.Error())
 		fmt.Printf("%s\n", "-------------------------------------")
 	}

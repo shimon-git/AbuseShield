@@ -6,6 +6,7 @@ import (
 	abuseipdb "github.com/shimon-git/AbuseShield/internal/abuse-IP-DB"
 	"github.com/shimon-git/AbuseShield/internal/cpanel"
 	"github.com/shimon-git/AbuseShield/internal/csf"
+	e "github.com/shimon-git/AbuseShield/internal/errors"
 	"github.com/shimon-git/AbuseShield/internal/sophos"
 )
 
@@ -86,6 +87,11 @@ func (c *Config) validateAndSetConfigurations() {
 	// mode validation and setter(its will set the Enable field for the modes(sophos,csf,cpanel,abuseDBIP))
 	if err := c.isValidMode(tempMode); err != nil {
 		printUsageAndExit(err)
+	}
+
+	// check at least one ip version is enable
+	if !c.Global.Ipv4 && !c.Global.Ipv6 {
+		printUsageAndExit(e.MakeErr(e.IPV6_AND_IPV4_NOT_ENABLED, nil))
 	}
 
 	// sophos validation
@@ -169,7 +175,13 @@ func (c *Config) adjustGlobalConfigurations() {
 		if c.AbuseIPDB.Interval < MINIMUM_INTERVAL {
 			c.AbuseIPDB.Interval = c.Global.Interval
 		}
+	}
 
+	switch {
+	case c.Global.MaxThreads > 10:
+		c.Global.MaxThreads = 10
+	case c.Global.MaxThreads < 1:
+		c.Global.MaxThreads = 1
 	}
 }
 

@@ -1,4 +1,0 @@
-{"level":"info","time":"10 Feb 2024 15:27:36","location":"AbuseShield/main.go:40","function":"main.main","message":"You just test me","pid":90090}
-{"level":"info","time":"10 Feb 2024 15:27:36","location":"AbuseShield/main.go:41","function":"main.main","message":"You test","pid":90090}
-{"level":"error","time":"10 Feb 2024 15:27:36","location":"AbuseShield/main.go:43","function":"main.main","message":"test","pid":90090}
-{"level":"info","time":"10 Feb 2024 15:27:36","location":"AbuseShield/main.go:26","function":"main.test","message":"Test func","pid":90090}

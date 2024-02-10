@@ -22,6 +22,9 @@ const (
 	DEFAULT_INTERVAL               = 3                      //default interval between api requests to avoid overload
 	MINIMUM_INTERVAL               = 1                      //minimum interval that can be set
 	DEFAULT_MAX_THREADS            = 5                      //max threads(goroutines)
+	DEFAULT_LOG_LEVEL              = "info"
+	DEFAULT_LOG_FILE               = "abuseShield.log"
+	DEFAULT_LOG_ENABLE             = false
 )
 
 const (
@@ -51,6 +54,11 @@ const (
 	GLOBAL_INTERVAL_FLAG       = "interval"
 	GLOBAL_INTERVAL_ALIAS_FLAG = "i"
 	GLOBAL_MAX_THREADS_FLAG    = "max-threads"
+	// logs flags
+	LOG_ENABLE_FLAG   = "log"
+	LOG_FILE_FLAG     = "log-file"
+	LOG_MAX_SIZE_FLAG = "log-max-size"
+	LOG_LEVEL_FLAG    = "log-level"
 	//abuse db ip  flags
 	ABUSE_DB_IP_LIMIT_FLAG     = "limit"
 	ABUSE_DB_IP_INTERVAL_FLAG  = "abuse-ip-db-interval"
@@ -98,6 +106,12 @@ var (
 	globalIntervalUsageMessage      = fmt.Sprintf("Global interval (in seconds) between API requests - default interval is: %d", DEFAULT_INTERVAL)
 	globalIntervalAliasUsageMessage = "Short alias for --interval"
 	globalMaxThreadsUsageMessage    = fmt.Sprintf("Max threads - default is: %d", DEFAULT_MAX_THREADS)
+
+	logEnableUsageMassage  = "Enable logs"
+	logMaxSizeUsageMassage = "Set max log file size, once the log size will exceeded a new log file will be created and the old file will renamed"
+	logLevelUsageMassage   = fmt.Sprintf("Log level: debug || info || error, default log level is: %s", DEFAULT_LOG_LEVEL)
+	logFileUsageMassage    = fmt.Sprintf("Log file path, default log file path is: %s", DEFAULT_LOG_FILE)
+
 	// abuseDBIP usage messages
 	abuseIPDBLimitUsageMessage     = "Maximum number of IP addresses to check against the AbuseIPDB"
 	abuseIPDBIntervalUsageMessage  = fmt.Sprintf("Time interval (in seconds) between requests to AbuseIPDB to avoid being blocked - default interval is: %d", DEFAULT_INTERVAL)
@@ -157,30 +171,6 @@ func formatFlag(flagName, usage string) string {
 // printUsageMessage - print usage message
 func printUsageMessage() {
 	fmt.Fprintf(flag.CommandLine.Output(), "Usage: %s [options]\n", os.Args[0])
-
-	printFlagSection("Sophos Configuration Flags", []string{
-		formatFlag(SOPHOS_HOST_FLAG, sophosHostUsageMessage),
-		formatFlag(SOPHOS_PORT_FLAG, sophosPortUsageMessage),
-		formatFlag(SOPHOS_USER_FLAG, sophosUserUsageMessage),
-		formatFlag(SOPHOS_PASSWORD_FLAG, sophosPasswordUsageMessage),
-		formatFlag(SOPHOS_INTERVAL_FLAG, sophosIntervalUsageMessage),
-		formatFlag(SOPHOS_GROUP_FLAG, sophosGroupUsageMessage),
-		formatFlag(SOPHOS_COMMENT_FLAG, sophosCommentUsageMessage),
-		formatFlag(SOPHOS_HOST_ALIAS_FLAG, sophosHostAliasUsageMessage),
-		formatFlag(SOPHOS_PORT_ALIAS_FLAG, sophosPortAliasUsageMessage),
-		formatFlag(SOPHOS_USER_ALIAS_FLAG, sophosUserAliasUsageMessage),
-		formatFlag(SOPHOS_PASSWORD_ALIAS_FLAG, sophosPasswordAliasUsageMessage),
-		formatFlag(SOPHOS_GROUP_ALIAS_FLAG, sophosGroupAliasUsageMessage),
-		formatFlag(SOPHOS_COMMENT_ALIAS_FLAG, sophosCommentAliasUsageMessage),
-	})
-
-	printFlagSection("CSF and CPanel Flags", []string{
-		formatFlag(CPANEL_USERS_FLAG, cpanelUsersUsageMessage),
-		formatFlag(CPANEL_CHECK_ALL_USERS_FLAG, cpanelAllUsersUsageMessage),
-		formatFlag(CSF_FILE_FLAG, csfFileUsageMessage),
-		formatFlag(CSF_BACKUP_FILE_FLAG, csfBackupFileUsageMessage),
-	})
-
 	printFlagSection("Global Configuration Flags", []string{
 		formatFlag(GLOBAL_IPV4_FLAG, globalIPv4UsageMessage),
 		formatFlag(GLOBAL_IPV6_FLAG, globalIPv6UsageMessage),
@@ -189,13 +179,11 @@ func printUsageMessage() {
 		formatFlag(GLOBAL_MAX_THREADS_FLAG, globalMaxThreadsUsageMessage),
 	})
 
-	printFlagSection("Abuse DB Configuration Flags", []string{
-		formatFlag(ABUSE_DB_IP_LIMIT_FLAG, abuseIPDBLimitUsageMessage),
-		formatFlag(ABUSE_DB_IP_INTERVAL_FLAG, abuseIPDBIntervalUsageMessage),
-		formatFlag(ABUSE_DB_IP_BLACKLIST_FLAG, abuseIPDBBlacklistUsageMessage),
-		formatFlag(ABUSE_DB_IP_WHITELIST_FLAG, abuseIPDBWhitelistUsageMessage),
-		formatFlag(ABUSE_DB_IP_API_KEYS_FLAG, abuseIPDBAPIKeysUsageMessage),
-		formatFlag(ABUSE_DB_IP_SCORE_FLAG, abuseIPDBScoreUsageMessage),
+	printFlagSection("Log Configuration Flags", []string{
+		formatFlag(LOG_ENABLE_FLAG, logEnableUsageMassage),
+		formatFlag(LOG_FILE_FLAG, logFileUsageMassage),
+		formatFlag(LOG_LEVEL_FLAG, logLevelUsageMassage),
+		formatFlag(LOG_MAX_SIZE_FLAG, logMaxSizeUsageMassage),
 	})
 
 	printFlagSection("File Configuration Flags", []string{
@@ -214,4 +202,37 @@ func printUsageMessage() {
 		formatFlag(EMAIL_FLAG, emailUsageMessage),
 		formatFlag(SMS_FLAG, smsUsageMessage),
 	})
+
+	printFlagSection("Abuse DB Configuration Flags", []string{
+		formatFlag(ABUSE_DB_IP_LIMIT_FLAG, abuseIPDBLimitUsageMessage),
+		formatFlag(ABUSE_DB_IP_INTERVAL_FLAG, abuseIPDBIntervalUsageMessage),
+		formatFlag(ABUSE_DB_IP_BLACKLIST_FLAG, abuseIPDBBlacklistUsageMessage),
+		formatFlag(ABUSE_DB_IP_WHITELIST_FLAG, abuseIPDBWhitelistUsageMessage),
+		formatFlag(ABUSE_DB_IP_API_KEYS_FLAG, abuseIPDBAPIKeysUsageMessage),
+		formatFlag(ABUSE_DB_IP_SCORE_FLAG, abuseIPDBScoreUsageMessage),
+	})
+
+	printFlagSection("Sophos Configuration Flags", []string{
+		formatFlag(SOPHOS_HOST_FLAG, sophosHostUsageMessage),
+		formatFlag(SOPHOS_PORT_FLAG, sophosPortUsageMessage),
+		formatFlag(SOPHOS_USER_FLAG, sophosUserUsageMessage),
+		formatFlag(SOPHOS_PASSWORD_FLAG, sophosPasswordUsageMessage),
+		formatFlag(SOPHOS_INTERVAL_FLAG, sophosIntervalUsageMessage),
+		formatFlag(SOPHOS_GROUP_FLAG, sophosGroupUsageMessage),
+		formatFlag(SOPHOS_COMMENT_FLAG, sophosCommentUsageMessage),
+		formatFlag(SOPHOS_HOST_ALIAS_FLAG, sophosHostAliasUsageMessage),
+		formatFlag(SOPHOS_PORT_ALIAS_FLAG, sophosPortAliasUsageMessage),
+		formatFlag(SOPHOS_USER_ALIAS_FLAG, sophosUserAliasUsageMessage),
+		formatFlag(SOPHOS_PASSWORD_ALIAS_FLAG, sophosPasswordAliasUsageMessage),
+		formatFlag(SOPHOS_GROUP_ALIAS_FLAG, sophosGroupAliasUsageMessage),
+		formatFlag(SOPHOS_COMMENT_ALIAS_FLAG, sophosCommentAliasUsageMessage),
+	})
+
+	printFlagSection("CSF And CPanel Flags", []string{
+		formatFlag(CPANEL_USERS_FLAG, cpanelUsersUsageMessage),
+		formatFlag(CPANEL_CHECK_ALL_USERS_FLAG, cpanelAllUsersUsageMessage),
+		formatFlag(CSF_FILE_FLAG, csfFileUsageMessage),
+		formatFlag(CSF_BACKUP_FILE_FLAG, csfBackupFileUsageMessage),
+	})
+
 }

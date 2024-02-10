@@ -6,18 +6,19 @@ import (
 	abuseipdb "github.com/shimon-git/AbuseShield/internal/abuse-IP-DB"
 	"github.com/shimon-git/AbuseShield/internal/cpanel"
 	"github.com/shimon-git/AbuseShield/internal/csf"
-	e "github.com/shimon-git/AbuseShield/internal/errors"
+	"github.com/shimon-git/AbuseShield/internal/logger"
 	"github.com/shimon-git/AbuseShield/internal/sophos"
 )
 
 // Config - type to store the configurations
 type Config struct {
 	ConfigFile string               //config file path
-	Sophos     sophos.Sophos        //sophos conf
-	Cpanel     cpanel.Cpanel        //cpanel conf
-	CSF        csf.CSF              //csf conf
-	AbuseIPDB  abuseipdb.AbuseIPDB  //abuse dv ip conf
-	Global     globalConfigurations //global conf
+	Sophos     sophos.Sophos        `yaml:"sophos"`      //sophos conf
+	Cpanel     cpanel.Cpanel        `yaml:"cpanel"`      //cpanel conf
+	CSF        csf.CSF              `yaml:"csf"`         //csf conf
+	AbuseIPDB  abuseipdb.AbuseIPDB  `yaml:"abuse_ip_db"` //abuse dv ip conf
+	Global     globalConfigurations `yaml:"global"`      //global conf
+	Logs       logger.Log           `yaml:"logger"`      // logs conf
 }
 
 var (
@@ -44,42 +45,31 @@ func GetConfig() Config {
 	c.getCsfAndCpanelFlags() // get csf and cpanel conf
 	c.GetAbuseDBFlags()      // get abuse db ip conf
 	c.getGlobalFlags()       // get global conf
+	c.GetLogFlags()          // get log flags
 	flag.Parse()             // parse the flags
 
-	// check if a config file has been provided
+	// parse the config file and check for errors
 	if c.ConfigFile != "" {
-		// parse the config file and check for errors
 		if err := c.parseConfigFile(); err != nil {
-			// print the usage and the error and exit
 			printUsageAndExit(err)
 		}
 	}
 
 	// validate and set all configurations
 	c.validateAndSetConfigurations()
+
 	// set the global configurations
 	c.adjustGlobalConfigurations()
+
 	// return the config
 	return c
 }
 
 // validateAndSetConfigurations - validate the configurations that provided by the user(except the global configurations)
 func (c *Config) validateAndSetConfigurations() {
-	// ip file validation
-	if err := c.isValidIPFile(tempIPFiles); err != nil {
-		printUsageAndExit(err)
-	}
-
-	// email validation
-	if c.Global.Email != "" {
-		if err := c.isValidEmail(); err != nil {
-			printUsageAndExit(err)
-		}
-	}
-
-	// sms validation
-	if c.Global.SMS != "" {
-		if err := c.isValidPhoneNumber(); err != nil {
+	// logs validation
+	if c.Logs.Enable {
+		if err := c.isLogsConfValid(); err != nil {
 			printUsageAndExit(err)
 		}
 	}
@@ -87,11 +77,6 @@ func (c *Config) validateAndSetConfigurations() {
 	// mode validation and setter(its will set the Enable field for the modes(sophos,csf,cpanel,abuseDBIP))
 	if err := c.isValidMode(tempMode); err != nil {
 		printUsageAndExit(err)
-	}
-
-	// check at least one ip version is enable
-	if !c.Global.Ipv4 && !c.Global.Ipv6 {
-		printUsageAndExit(e.MakeErr(e.IPV6_AND_IPV4_NOT_ENABLED, nil))
 	}
 
 	// sophos validation
@@ -124,65 +109,30 @@ func (c *Config) validateAndSetConfigurations() {
 
 // adjustGlobalConfigurations - validate the global configurations only
 func (c *Config) adjustGlobalConfigurations() {
-	// if ipv4 is false which is not the default behavior then set the global modes flags
-	if !c.Global.Ipv4 {
-		c.Sophos.Ipv4 = c.Global.Ipv4
-		c.CSF.Ipv4 = c.Global.Ipv4
-		c.AbuseIPDB.Ipv4 = c.Global.Ipv4
-	}
-	// if ipv6 is true which is not the default behavior then set the global modes flags
-	if c.Global.Ipv6 {
-		c.Sophos.Ipv6 = c.Global.Ipv6
-		c.CSF.Ipv6 = c.Global.Ipv6
-		c.AbuseIPDB.Ipv6 = c.Global.Ipv6
+	// ip file validation
+	if err := c.isValidIPFile(tempIPFiles); err != nil {
+		printUsageAndExit(err)
 	}
 
-	// if the global interval is not the default then set the global modes flags
-	if c.Global.Interval < MINIMUM_INTERVAL {
-		c.Global.Interval = DEFAULT_INTERVAL
-	}
-	// check if the global interval is not the default interval
-	if c.Global.Interval != DEFAULT_INTERVAL {
-		// set the sophos interval except if the sophos interval has been override and is valid
-		if c.Sophos.Interval == DEFAULT_INTERVAL || c.Sophos.Interval < MINIMUM_INTERVAL {
-			c.Sophos.Interval = c.Global.Interval
-		}
-		// set the abuse db ip interval except if the sophos interval has been override and is valid
-		if c.AbuseIPDB.Interval == DEFAULT_INTERVAL || c.AbuseIPDB.Interval < MINIMUM_INTERVAL {
-			c.AbuseIPDB.Interval = c.Global.Interval
+	// email validation
+	if c.Global.Email != "" {
+		if err := c.isValidEmail(); err != nil {
+			printUsageAndExit(err)
 		}
 	}
 
-	// check if a config file has been provided
-	if c.ConfigFile != "" {
-		// set ipv4 and ipv6 for each mode
-		c.Sophos.Ipv4 = c.Global.Ipv4
-		c.CSF.Ipv4 = c.Global.Ipv4
-		c.AbuseIPDB.Ipv4 = c.Global.Ipv4
-		c.Sophos.Ipv6 = c.Global.Ipv6
-		c.CSF.Ipv6 = c.Global.Ipv6
-		c.AbuseIPDB.Ipv6 = c.Global.Ipv6
-
-		// if global interval is invalid set the global interval to the default behavior
-		if c.Global.Interval < MINIMUM_INTERVAL {
-			c.Global.Interval = DEFAULT_INTERVAL
-		}
-		// if sophos interval is invalid set the sophos interval to the global behavior
-		if c.Sophos.Interval < MINIMUM_INTERVAL {
-			c.Sophos.Interval = c.Global.Interval
-		}
-		// if abuse db ip interval is invalid set the abuse db ip interval to the global behavior
-		if c.AbuseIPDB.Interval < MINIMUM_INTERVAL {
-			c.AbuseIPDB.Interval = c.Global.Interval
+	// sms validation
+	if c.Global.SMS != "" {
+		if err := c.isValidPhoneNumber(); err != nil {
+			printUsageAndExit(err)
 		}
 	}
 
-	switch {
-	case c.Global.MaxThreads > 10:
-		c.Global.MaxThreads = 10
-	case c.Global.MaxThreads < 1:
-		c.Global.MaxThreads = 1
+	// global configuration validation
+	if err := c.isValidGlobalConf(); err != nil {
+		printUsageAndExit(err)
 	}
+
 }
 
 /*
@@ -267,6 +217,17 @@ aliases: -m for --mode
 func (c *Config) GetModeFlags() {
 	flag.StringVar(&tempMode, MODE_FLAG, "", modeUsageMessage)
 	flag.StringVar(&tempMode, MODE_ALIAS_FLAG, "", modeAliasUsageMessage)
+}
+
+/*
+GetLogFlags - get the log flags:
+flags: --log && --log-file && log-max-size && log-level
+*/
+func (c *Config) GetLogFlags() {
+	flag.BoolVar(&c.Logs.Enable, LOG_ENABLE_FLAG, DEFAULT_LOG_ENABLE, logEnableUsageMassage)
+	flag.StringVar(&c.Logs.LogFile, LOG_FILE_FLAG, DEFAULT_LOG_FILE, logFileUsageMassage)
+	flag.IntVar(&c.Logs.MaxLogSize, LOG_MAX_SIZE_FLAG, 0, logMaxSizeUsageMassage)
+	flag.StringVar(&c.Logs.Level, LOG_LEVEL_FLAG, DEFAULT_LOG_LEVEL, logLevelUsageMassage)
 }
 
 /*

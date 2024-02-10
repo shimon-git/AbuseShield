@@ -9,6 +9,7 @@ import (
 
 	e "github.com/shimon-git/AbuseShield/internal/errors"
 	"github.com/shimon-git/AbuseShield/internal/helpers"
+	"go.uber.org/zap"
 )
 
 const (
@@ -19,6 +20,7 @@ type Cpanel struct {
 	Enable        bool     `yaml:"enable"`
 	Users         []string `yaml:"users"`
 	CheckAllUsers bool     `yaml:"checkAllUsers"`
+	Logger        *zap.Logger
 }
 
 type cpClient struct {

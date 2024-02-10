@@ -16,6 +16,7 @@ import (
 
 	e "github.com/shimon-git/AbuseShield/internal/errors"
 	"github.com/shimon-git/AbuseShield/internal/helpers"
+	"go.uber.org/zap"
 )
 
 // AbuseIPDB - store the configurations for the abuseipdb
@@ -35,6 +36,7 @@ type AbuseIPDB struct {
 		Networks []string `yaml:"networks"` //Exclude networks from check
 		Crawlers bool     `yaml:"crawlers"` //Exclude crawlers from check
 	} `yaml:"exclude"`
+	Logger *zap.Logger
 }
 
 // abuseIPDBClient - struct to hold runtime abuseipdb configurations
@@ -117,7 +119,7 @@ func (a *abuseIPDBClient) setNewKey(apiKey string) {
 func (a *abuseIPDBClient) SetMaxIPCHecks(validation bool) error {
 	if validation {
 		// print info message to the user
-		helpers.ColorPrint("[+] validating API keys for abuseipdb.com....\n", "green")
+		helpers.ColorPrint("validating API keys for abuseipdb.com....\n", "green")
 	}
 	// create a map[api-key]available-API-requests - the map will contain only valid api keys that
 	validApiKeys := make(map[string]int)
@@ -138,14 +140,14 @@ func (a *abuseIPDBClient) SetMaxIPCHecks(validation bool) error {
 		if data.availableRequestsNumber > 0 {
 			if validation {
 				// print information to the console
-				message := fmt.Sprintf("[+] API key is valid, available requests: %d  - %s\n", data.availableRequestsNumber, key)
+				message := fmt.Sprintf("API key is valid, available requests: %d  - %s\n", data.availableRequestsNumber, key)
 				helpers.ColorPrint(message, "green")
 			}
 			// add the api key to the valid api keys map
 			validApiKeys[key] = data.availableRequestsNumber
 		} else if validation {
 			// in case api key is valid but daily api requests exceeded print it to console
-			message := fmt.Sprintf("[+] API key cannot be used because daily rate limit exceeded - %s\n", key)
+			message := fmt.Sprintf("API key cannot be used because daily rate limit exceeded - %s\n", key)
 			helpers.ColorPrint(message, "red")
 		}
 		// add the available api requests number
@@ -279,12 +281,11 @@ func (a *abuseIPDBClient) getNewKey() error {
 // dataChan: channel to collect the ips to check,
 // blacklistWriterChan: channel to write the malicious ips,
 // whitelistWriterChan: channel to write the unmalicious ips,
-// errChan: channel to send the errors,
 // goRoutineNumber: update the goroutine number when execution finish,
 // wg: waitgroup to sync with the caller function
 // ]
 // Note: CheckIPScore function designed to run as a goroutine
-func (a *abuseIPDBClient) CheckIPScore(cancelFunc context.CancelFunc, dataChan chan string, blacklistWriterChan chan string, whitelistWriterChan chan string, errChan chan string, goRoutineNumber *int, wg *sync.WaitGroup) {
+func (a *abuseIPDBClient) CheckIPScore(cancelFunc context.CancelFunc, dataChan chan string, blacklistWriterChan chan string, whitelistWriterChan chan string, goRoutineNumber *int, wg *sync.WaitGroup) {
 	defer func() {
 		*goRoutineNumber--
 		wg.Done()
@@ -300,7 +301,7 @@ func (a *abuseIPDBClient) CheckIPScore(cancelFunc context.CancelFunc, dataChan c
 		// format the ip
 		formattedIP, ipVersion, err := helpers.FormatIP(ip)
 		if err != nil {
-			processError(ip, err, errChan)
+			a.abuseIPDB.processError(ip, err)
 			continue
 		}
 
@@ -313,14 +314,14 @@ func (a *abuseIPDBClient) CheckIPScore(cancelFunc context.CancelFunc, dataChan c
 		if len(a.abuseIPDB.Exclude.Networks) > 0 && helpers.IsNetworkExclude(formattedIP, a.abuseIPDB.Exclude.Networks) {
 			r := abuseIPDBResponse{}
 			r.Data.IPAddress = ip
-			processIPClassification("networkExclusion", r, whitelistWriterChan)
+			a.abuseIPDB.processIPClassification("networkExclusion", r, whitelistWriterChan)
 			continue
 		}
 
 		// Retrieve IP data
 		ipData, err := a.getIPData(formattedIP, false)
 		if err != nil {
-			processError(ip, err, errChan)
+			a.abuseIPDB.processError(ip, err)
 			// check if the error occurred because the api keys daily rate limit has been exceeded
 			if strings.Contains(err.Error(), e.API_KEYS_LIMIT_HAS_BEEN_REACHED) {
 				cancelFunc()
@@ -331,21 +332,21 @@ func (a *abuseIPDBClient) CheckIPScore(cancelFunc context.CancelFunc, dataChan c
 
 		// check if crawlers has been exclude and the ip is in use by a crawler
 		if a.abuseIPDB.Exclude.Crawlers && strings.Contains(strings.ToLower(ipData.Data.UsageType), "search engine") {
-			processIPClassification("crawlersExclusion", ipData, whitelistWriterChan)
+			a.abuseIPDB.processIPClassification("crawlersExclusion", ipData, whitelistWriterChan)
 			continue
 		}
 
 		// check if the ip is assigned to domain that has been excluded
 		if len(a.abuseIPDB.Exclude.Domains) > 0 && helpers.IsDomainExclude(ipData.Data.Domain, a.abuseIPDB.Exclude.Domains) {
-			processIPClassification("domainExclusion", ipData, whitelistWriterChan)
+			a.abuseIPDB.processIPClassification("domainExclusion", ipData, whitelistWriterChan)
 			continue
 		}
 
 		// check ip score, send the malicious IPs to the blacklistWriterChan channel and the unmalicious IPs to the whitelistWriterChan channel
 		if ipData.Data.Score >= a.abuseIPDB.Score {
-			processIPClassification("malicious", ipData, blacklistWriterChan)
+			a.abuseIPDB.processIPClassification("malicious", ipData, blacklistWriterChan)
 		} else {
-			processIPClassification("unmalicious", ipData, whitelistWriterChan)
+			a.abuseIPDB.processIPClassification("unmalicious", ipData, whitelistWriterChan)
 		}
 	}
 }
@@ -356,27 +357,30 @@ func (a *abuseIPDBClient) CheckIPScore(cancelFunc context.CancelFunc, dataChan c
 // ipData: abuseipdb response,
 // c: channel to pass the ip to
 // ]
-func processIPClassification(msgType string, ipData abuseIPDBResponse, c chan string) {
+func (a AbuseIPDB) processIPClassification(msgType string, ipData abuseIPDBResponse, c chan string) {
 	var message, messageType string
 	switch msgType {
 	case "malicious":
-		message = fmt.Sprintf("[+] malicious IP: { ip: %s - country: %s - domain: %s - ISP: %s - score: %d }\n", ipData.Data.IPAddress, ipData.Data.CountryCode, ipData.Data.Domain, ipData.Data.ISP, ipData.Data.Score)
+		message = fmt.Sprintf("malicious IP: { ip: %s - country: %s - domain: %s - ISP: %s - score: %d }\n", ipData.Data.IPAddress, ipData.Data.CountryCode, ipData.Data.Domain, ipData.Data.ISP, ipData.Data.Score)
 		messageType = "red"
 	case "unmalicious":
-		message = fmt.Sprintf("[+] unmalicious IP: { ip: %s - country: %s - domain: %s - ISP: %s - score: %d }\n", ipData.Data.IPAddress, ipData.Data.CountryCode, ipData.Data.Domain, ipData.Data.ISP, ipData.Data.Score)
+		message = fmt.Sprintf("unmalicious IP: { ip: %s - country: %s - domain: %s - ISP: %s - score: %d }\n", ipData.Data.IPAddress, ipData.Data.CountryCode, ipData.Data.Domain, ipData.Data.ISP, ipData.Data.Score)
 		messageType = "green"
 	case "domainExclusion":
-		message = fmt.Sprintf("[+] Whitelisted: IP %s (domain: %s) - county: %s - Successfully added to the whitelist due the domain exclusions.\n", ipData.Data.IPAddress, ipData.Data.Domain, ipData.Data.CountryCode)
+		message = fmt.Sprintf("Whitelisted: IP %s (domain: %s) - county: %s - Successfully added to the whitelist due the domain exclusions.\n", ipData.Data.IPAddress, ipData.Data.Domain, ipData.Data.CountryCode)
 		messageType = "exclude"
 	case "crawlersExclusion":
-		message = fmt.Sprintf("[+] Whitelisted crawler IP: %s - domain: %s - country: %s - Identified as a crawler and successfully added to the whitelist.\n", ipData.Data.IPAddress, ipData.Data.Domain, ipData.Data.CountryCode)
+		message = fmt.Sprintf("Whitelisted crawler IP: %s - domain: %s - country: %s - Identified as a crawler and successfully added to the whitelist.\n", ipData.Data.IPAddress, ipData.Data.Domain, ipData.Data.CountryCode)
 		messageType = "exclude"
 	case "networkExclusion":
-		message = fmt.Sprintf("[+] Excluded IP: %s - This IP is within the exclusion ranges and has been added to the whitelist.\n", ipData.Data.IPAddress)
+		message = fmt.Sprintf("Excluded IP: %s - This IP is within the exclusion ranges and has been added to the whitelist.\n", ipData.Data.IPAddress)
 		messageType = "exclude"
 	default:
-		log.Fatal("msgType must be one of the following options:[`malicious`,`unmalicious`,`domainExclusion`,`crawlersExclusion`,`networkExclusion`]")
+		message = "msgType must be one of the following options:[`malicious`,`unmalicious`,`domainExclusion`,`crawlersExclusion`,`networkExclusion`]"
+		a.Logger.WithOptions(zap.AddCallerSkip(1)).Error(message)
+		log.Fatal(message)
 	}
+	a.Logger.WithOptions(zap.AddCallerSkip(1)).Info(message)
 	helpers.ColorPrint(message, messageType)
 	c <- ipData.Data.IPAddress
 }
@@ -385,11 +389,10 @@ func processIPClassification(msgType string, ipData abuseIPDBResponse, c chan st
 // Args: [
 // ip: the ip that failed to check
 // err: error that occurred
-// c: channel to pass the error to
 // ]
-func processError(ip string, err error, c chan string) {
+func (a AbuseIPDB) processError(ip string, err error) {
 	errUserFormat := strings.Join(strings.Split(err.Error(), "-")[3:], "-")
-	message := fmt.Sprintf("[+] Error occurred while trying to check the ip: %s - %s", ip, errUserFormat)
+	message := fmt.Sprintf("Error occurred while trying to check the ip: %s - %s", ip, errUserFormat)
 	helpers.ColorPrint(message, "error")
-	c <- err.Error()
+	a.Logger.WithOptions(zap.AddCallerSkip(1)).Error(message)
 }

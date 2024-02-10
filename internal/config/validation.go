@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net"
+	"os"
 	"path/filepath"
 	"strings"
 	"sync"
@@ -198,7 +199,18 @@ func (c *Config) isValidMode(mode string) error {
 }
 
 func (c *Config) isSophosValid() error {
+	// set default sophos port if port has not been provided
+	if c.Sophos.Port == 0 {
+		c.Sophos.Port = DEFAULT_SOPHOS_PORT
+	}
+	// set default sophos user if user has not been provided
+	if c.Sophos.User == "" {
+		c.Sophos.User = DEFAULT_SOPHOS_USER
+	}
+
+	// create sophos client
 	sophosClient := sophos.New(c.Sophos)
+	// verify sophos connectivity
 	if err := sophosClient.VerifyConnection(); err != nil {
 		return err
 	}
@@ -206,7 +218,9 @@ func (c *Config) isSophosValid() error {
 }
 
 func (c *Config) isCpanelValid(cpanelUsers string) error {
+	// create new cpanel client
 	cpanelClient := cpanel.New(c.Cpanel)
+	// check if cpanel is installed
 	if err := cpanelClient.IsCpanelInstalled(); err != nil {
 		return err
 	}
@@ -229,21 +243,52 @@ func (c *Config) isCpanelValid(cpanelUsers string) error {
 }
 
 func (c Config) isCsfValid() error {
+	// set default csf file if csf file has not been provided
+	if c.CSF.CSFFile == "" {
+		c.CSF.CSFFile = DEFAULT_CSF_FILE
+	}
+	// set default csf backup file if csf backup file has not been provided
+	if c.CSF.Backup == "" {
+		c.CSF.Backup = DEFAULT_CSF_BACKUP
+	}
+	// check if csf file exist
 	if !helpers.IsExist(c.CSF.CSFFile, true) {
 		return e.MakeErr(e.CSF_FILE_NOT_FOUND, nil)
 	}
+
+	// create new cpanel client
 	csfClient := csf.New(c.CSF)
 
-	if err := csfClient.CsfBackup(); err != nil {
-		return err
-	}
+	// check cpanel service is active
 	if err := csfClient.IsCsfServiceActive(); err != nil {
 		return err
 	}
+
+	// check if the provided csf backup file path is valid
+	csfBackupFile, err := os.OpenFile(c.CSF.Backup, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
+	if err != nil {
+		return err
+	}
+	defer csfBackupFile.Close()
+
 	return nil
 }
 
 func (c *Config) isValidAbuseDB(apiKeys string) error {
+	// set default blacklist file if blacklist file has not been provided
+	if c.AbuseIPDB.BlackListFile == "" {
+		c.AbuseIPDB.BlackListFile = DEFAULT_BLACKLIST_FILE
+	}
+	// set default whitelist file if whitelist file has not been provided
+	if c.AbuseIPDB.WhiteListFile == "" {
+		c.AbuseIPDB.WhiteListFile = DEFAULT_WHITELIST_FILE
+	}
+	// set default score if score has not been provided
+	if c.AbuseIPDB.Score == 0 {
+		c.AbuseIPDB.Score = DEFAULT_SCORE
+	}
+
+	// validating the api key length is not 0
 	if len(apiKeys) != 0 {
 		c.AbuseIPDB.ApiKeys = strings.Split(strings.TrimSpace(apiKeys), ",")
 	}
@@ -284,4 +329,58 @@ func (c *Config) isValidAbuseDB(apiKeys string) error {
 	_, err := abuseipdb.New(c.AbuseIPDB, true)
 
 	return err
+}
+
+func (c *Config) isLogsConfValid() error {
+	// set fields in case of missing fields
+	if c.Logs.LogFile == "" {
+		c.Logs.LogFile = DEFAULT_LOG_FILE
+	}
+	if c.Logs.Level == "" {
+		c.Logs.Level = DEFAULT_LOG_LEVEL
+	}
+
+	// check if the provided log file path is valid
+	logFile, err := os.OpenFile(c.Logs.LogFile, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
+	if err != nil {
+		return err
+	}
+	defer logFile.Close()
+	return nil
+}
+func (c *Config) isValidGlobalConf() error {
+	if !c.Global.Ipv4 && !c.Global.Ipv6 {
+		return e.MakeErr(e.IPV6_AND_IPV4_NOT_ENABLED, nil)
+	}
+
+	c.AbuseIPDB.Ipv4 = c.Global.Ipv4
+	c.Sophos.Ipv4 = c.Global.Ipv4
+	c.CSF.Ipv4 = c.Global.Ipv4
+
+	c.AbuseIPDB.Ipv6 = c.Global.Ipv6
+	c.Sophos.Ipv6 = c.Global.Ipv6
+	c.CSF.Ipv6 = c.Global.Ipv6
+
+	// if the global interval is not the default then set the global modes flags
+	if c.Global.Interval < MINIMUM_INTERVAL {
+		c.Global.Interval = MINIMUM_INTERVAL
+	}
+
+	// set global interval
+	if c.Sophos.Interval == DEFAULT_INTERVAL && c.Global.Interval != DEFAULT_INTERVAL {
+		c.Sophos.Interval = c.Global.Interval
+	}
+	if c.AbuseIPDB.Interval == DEFAULT_INTERVAL && c.Global.Interval != DEFAULT_INTERVAL {
+		c.AbuseIPDB.Interval = c.Global.Interval
+	}
+
+	// validating max threads number
+	switch {
+	case c.Global.MaxThreads > 10:
+		c.Global.MaxThreads = 10
+	case c.Global.MaxThreads < 1:
+		c.Global.MaxThreads = 1
+	}
+
+	return nil
 }

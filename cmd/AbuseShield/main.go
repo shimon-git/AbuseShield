@@ -3,16 +3,15 @@ package main
 import (
 	"context"
 	"log"
-	"strings"
 	"sync"
 	"time"
 
-	"github.com/common-nighthawk/go-figure"
 	abuseipdb "github.com/shimon-git/AbuseShield/internal/abuse-IP-DB"
 	"github.com/shimon-git/AbuseShield/internal/config"
 	"github.com/shimon-git/AbuseShield/internal/cpanel"
 	e "github.com/shimon-git/AbuseShield/internal/errors"
 	"github.com/shimon-git/AbuseShield/internal/helpers"
+	"github.com/shimon-git/AbuseShield/internal/logger"
 )
 
 var (
@@ -20,29 +19,30 @@ var (
 )
 
 func main() {
+
 	// print the abuse shield header
-	printHeader("abuse-shield")
-
-	//printHeader("csf")
-	//printHeader("sophos")
-	//os.Exit(0)
-
+	helpers.PrintHeader("abuse-shield")
 	// get app configurations
 	conf := config.GetConfig()
-	// setup channel for error logging
-	errWriterChan := make(chan string, 50)
-	writerErr := e.NewSharedError()
-	go helpers.FileWriter(conf.Global.ErrorFile, false, errWriterChan, &errWg, writerErr)
-	errWg.Add(1)
-	defer func() {
-		close(errWriterChan)
-		errWg.Wait()
-	}()
+
+	// create new logger
+	l := logger.Log{
+		Enable:     conf.Logs.Enable,
+		Level:      conf.Logs.Level,
+		MaxLogSize: conf.Logs.MaxLogSize,
+		LogFile:    conf.Logs.LogFile,
+	}
+	logger, err := logger.New(l)
+	if err != nil {
+		log.Panicf("Cannot create or write to log file - %s", err.Error())
+	}
+	defer logger.Sync()
 
 	// cpanel checker
 	if conf.Cpanel.Enable {
 		// print the cpanel header
-		printHeader("cpanel")
+		helpers.PrintHeader("cpanel")
+		conf.Cpanel.Logger = logger
 		ipFile, err := cpanelAbuseChecker(conf.Cpanel)
 		if err != nil {
 			log.Fatal(err)
@@ -53,8 +53,9 @@ func main() {
 	// abuseDBIP checker
 	if conf.AbuseIPDB.Enable {
 		// print the abuseipdb header
-		printHeader("abuseipdb")
-		if err := abuseDBIPChecker(conf.AbuseIPDB, conf.Global.IPsFiles, conf.Global.MaxThreads, errWriterChan); err != nil {
+		helpers.PrintHeader("abuseipdb")
+		conf.AbuseIPDB.Logger = logger
+		if err := abuseDBIPChecker(conf.AbuseIPDB, conf.Global.IPsFiles, conf.Global.MaxThreads); err != nil {
 			log.Fatal(err)
 		}
 	}
@@ -89,7 +90,7 @@ func cpanelAbuseChecker(cp cpanel.Cpanel) (string, error) {
 // abuseDBIPChecker evaluates IPs against abuseipdb, segregating them into 'whitelist', 'blacklist', and 'error' files.
 // Args: [abuseIPDB: Abuseipdb configurations, ipFiles: Paths to files with IPs for checking, errFile: Path for recording errors]
 // Returns an error if the checking process encounters issues.
-func abuseDBIPChecker(abuseIPDB abuseipdb.AbuseIPDB, ipFiles []string, maxThreads int, errChan chan string) error {
+func abuseDBIPChecker(abuseIPDB abuseipdb.AbuseIPDB, ipFiles []string, maxThreads int) error {
 	var wgAbuseIPDB sync.WaitGroup
 	var wgWriter sync.WaitGroup
 
@@ -120,8 +121,8 @@ func abuseDBIPChecker(abuseIPDB abuseipdb.AbuseIPDB, ipFiles []string, maxThread
 
 	// prepare to launch writer goroutines for handling output
 	wgWriter.Add(2)
-	go helpers.FileWriter(abuseIPDB.BlackListFile, true, blacklistWriterChan, &wgWriter, writerErr)
-	go helpers.FileWriter(abuseIPDB.WhiteListFile, true, whitelistWriterChan, &wgWriter, writerErr)
+	go helpers.FileWriter(abuseIPDB.BlackListFile, blacklistWriterChan, &wgWriter, writerErr)
+	go helpers.FileWriter(abuseIPDB.WhiteListFile, whitelistWriterChan, &wgWriter, writerErr)
 
 	// counter for managing the number of concurrent goroutines
 	goRoutinesCounter := 0
@@ -141,7 +142,7 @@ func abuseDBIPChecker(abuseIPDB abuseipdb.AbuseIPDB, ipFiles []string, maxThread
 		go helpers.FileReader(ctx, file, dataChannels[len(dataChannels)-1])
 
 		// start a goroutine for checking IP scores against abuseipdb
-		go abuseIPDBClient.CheckIPScore(cancel, dataChannels[len(dataChannels)-1], blacklistWriterChan, whitelistWriterChan, errChan, &goRoutinesCounter, &wgAbuseIPDB)
+		go abuseIPDBClient.CheckIPScore(cancel, dataChannels[len(dataChannels)-1], blacklistWriterChan, whitelistWriterChan, &goRoutinesCounter, &wgAbuseIPDB)
 	}
 
 	// wait for all IP checking goroutines to complete
@@ -156,33 +157,4 @@ func abuseDBIPChecker(abuseIPDB abuseipdb.AbuseIPDB, ipFiles []string, maxThread
 
 	// check and return any errors that occurred during writing.
 	return writerErr.GetError()
-}
-
-func printBanner(text string, color string, dashLen int) {
-	myFigure := figure.NewColorFigure(strings.Repeat("-", dashLen), "", color, true)
-	myFigure.Print()
-	myFigure = figure.NewColorFigure(text, "", color, true)
-	myFigure.Print()
-	myFigure = figure.NewColorFigure(strings.Repeat("-", dashLen), "", color, true)
-	myFigure.Print()
-}
-
-func printHeader(logo string) {
-	switch logo {
-	case "abuse-shield":
-		// print abuse shield header
-		printBanner("Abuse - Shield", "blue", 12)
-	case "abuseipdb":
-		// print abuseipdb header
-		printBanner("AbuseIPDB", "gray", 9)
-	case "cpanel":
-		// print cpanel header
-		printBanner("Cpanel", "cyan", 6)
-	case "csf":
-		// print csf header
-		printBanner("CSF", "gray", 3)
-	case "sophos":
-		// print sophos header
-		printBanner("Sophos", "yellow", 6)
-	}
 }

@@ -15,6 +15,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/common-nighthawk/go-figure"
 	e "github.com/shimon-git/AbuseShield/internal/errors"
 )
 
@@ -122,11 +123,11 @@ func IsExist(path string, isFile bool) bool {
 	return info.IsDir()
 }
 
-func FileWriter(file string, override bool, c chan string, wg *sync.WaitGroup, sharedErr *e.SharedError) {
+func FileWriter(file string, c chan string, wg *sync.WaitGroup, sharedErr *e.SharedError) {
 	var err error
 	var f *os.File
 	defer wg.Done()
-	if IsExist(file, true) && override {
+	if IsExist(file, true) {
 		if err := os.Remove(file); err != nil {
 			sharedErr.SetError(err)
 			return
@@ -140,11 +141,9 @@ func FileWriter(file string, override bool, c chan string, wg *sync.WaitGroup, s
 			return
 		}
 	}
-	if !IsExist(file, true) {
-		f, err = os.Create(file)
-	} else {
-		f, err = os.OpenFile(file, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
-	}
+
+	f, err = os.Create(file)
+
 	if err != nil {
 		sharedErr.SetError(err)
 		return
@@ -197,6 +196,7 @@ func FormatIP(IP string) (string, int, error) {
 }
 
 func ColorPrint(message string, color string) {
+	message = fmt.Sprintf("[+] %s", message)
 	switch color {
 	case "red":
 		fmt.Print(Red + message + Reset)
@@ -259,4 +259,33 @@ func IsNetworkExclude(ipAddress string, networks []string) bool {
 		}
 	}
 	return false
+}
+
+func printBanner(text string, color string, dashLen int) {
+	myFigure := figure.NewColorFigure(strings.Repeat("-", dashLen), "", color, true)
+	myFigure.Print()
+	myFigure = figure.NewColorFigure(text, "", color, true)
+	myFigure.Print()
+	myFigure = figure.NewColorFigure(strings.Repeat("-", dashLen), "", color, true)
+	myFigure.Print()
+}
+
+func PrintHeader(logo string) {
+	switch logo {
+	case "abuse-shield":
+		// print abuse shield header
+		printBanner("Abuse - Shield", "blue", 12)
+	case "abuseipdb":
+		// print abuseipdb header
+		printBanner("AbuseIPDB", "gray", 9)
+	case "cpanel":
+		// print cpanel header
+		printBanner("Cpanel", "cyan", 6)
+	case "csf":
+		// print csf header
+		printBanner("CSF", "gray", 3)
+	case "sophos":
+		// print sophos header
+		printBanner("Sophos", "yellow", 6)
+	}
 }

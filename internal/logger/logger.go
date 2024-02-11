@@ -62,3 +62,7 @@ func New(l Log) (*zap.Logger, error) {
 	logger := zap.New(core, zap.AddCaller(), zap.Fields(zap.Int("pid", os.Getpid())))
 	return logger, nil
 }
+
+func NewDummyLogger() *zap.Logger {
+	return zap.NewNop()
+}

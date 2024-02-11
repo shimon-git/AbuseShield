@@ -66,6 +66,8 @@ type abuseIPDBResponse struct {
 		UsageType   string `json:"usageType"`            //The usage type of the IP
 	} `json:"data"`
 	availableRequestsNumber int //Available API calls
+	ipVersion               int
+	destinationChannel      chan string
 }
 
 // abuseIPDBErrResponse - struct to store the abuseipdb http error response
@@ -84,13 +86,17 @@ func New(a AbuseIPDB, validation bool) (*abuseIPDBClient, error) {
 
 	// set the abuseipdb configurations
 	abuseIPDBclient.abuseIPDB = a
+
 	// setting max ip checks that can be check against the abuseipdb API server
+	a.Logger.Debug("setting max ips to check")
 	err := abuseIPDBclient.SetMaxIPCHecks(validation)
 
 	// set limit ips to check
 	if a.Limit > 0 {
+		a.Logger.Debug("setting ips limit to check")
 		abuseIPDBclient.limit.enable = true
 		abuseIPDBclient.limit.limitNumber = int32(a.Limit)
+		a.Logger.Debug(fmt.Sprintf("ips limit to check is: %d", abuseIPDBclient.limit.limitNumber))
 	}
 
 	// return a reference to abuseipdb and error if occurred
@@ -124,6 +130,7 @@ func (a *abuseIPDBClient) SetMaxIPCHecks(validation bool) error {
 	// create a map[api-key]available-API-requests - the map will contain only valid api keys that
 	validApiKeys := make(map[string]int)
 	// generate dummy ip to check against th abuseipdb
+	a.abuseIPDB.Logger.Debug("generating dummy ip for set max ip checker")
 	ip := helpers.GenerateDummyIP()
 	// initialize a counter for the available API requests
 	availableApiRequests := 0
@@ -142,6 +149,7 @@ func (a *abuseIPDBClient) SetMaxIPCHecks(validation bool) error {
 				// print information to the console
 				message := fmt.Sprintf("API key is valid, available requests: %d  - %s\n", data.availableRequestsNumber, key)
 				helpers.ColorPrint(message, "green")
+				a.abuseIPDB.Logger.Debug(message)
 			}
 			// add the api key to the valid api keys map
 			validApiKeys[key] = data.availableRequestsNumber
@@ -149,6 +157,7 @@ func (a *abuseIPDBClient) SetMaxIPCHecks(validation bool) error {
 			// in case api key is valid but daily api requests exceeded print it to console
 			message := fmt.Sprintf("API key cannot be used because daily rate limit exceeded - %s\n", key)
 			helpers.ColorPrint(message, "red")
+			a.abuseIPDB.Logger.Debug(message)
 		}
 		// add the available api requests number
 		availableApiRequests += data.availableRequestsNumber
@@ -157,6 +166,7 @@ func (a *abuseIPDBClient) SetMaxIPCHecks(validation bool) error {
 	a.validAPIKeys = validApiKeys
 	// set the max ip checks number
 	a.maxIPChecks = availableApiRequests
+	a.abuseIPDB.Logger.Debug(fmt.Sprintf("max ips to check based on available API requests to abuseipdb is: %d", a.maxIPChecks))
 	// return nil error
 	return nil
 }
@@ -179,7 +189,10 @@ func (a *abuseIPDBClient) getIPData(ip string, apiKeysValidation bool) (abuseIPD
 	params.Add("verbose", "")
 	url := "https://api.abuseipdb.com/api/v2/check" + "?" + params.Encode()
 
+	tempLogger := a.abuseIPDB.Logger.With(zap.String("URL", url), zap.String("httpMethod", "GET"))
+
 	// send http Get request to abuseipdb
+	tempLogger.Info("sending http request to abuseipdb endpoint")
 	res, err := a.client.Get(url)
 	if err != nil {
 		return response, e.MakeErr(e.HTTP_GET_ERR, err)
@@ -194,6 +207,7 @@ func (a *abuseIPDBClient) getIPData(ip string, apiKeysValidation bool) (abuseIPD
 
 	// check if the response status code is ok(200)
 	if res.StatusCode != http.StatusOK {
+		tempLogger.Warn("got unexpected response status code", zap.Int("excepted status code", http.StatusOK), zap.Int("response status code", res.StatusCode), zap.String("response body", string(body)))
 		// check if the error is because current API key exceeded the daily rate limit for API calls
 		if strings.Contains(string(body), e.DAILY_RATE_LIMIT_EXCEEDED_ABUSEIPDB) && !apiKeysValidation {
 			// set the api key available requests number
@@ -220,10 +234,14 @@ func (a *abuseIPDBClient) getIPData(ip string, apiKeysValidation bool) (abuseIPD
 
 	// unmarshal the http response body into the response variable
 	if err := json.Unmarshal(body, &response); err != nil {
+		tempLogger.Error("failed to unmarshal response body", zap.Int("response status code", res.StatusCode), zap.String("response body", string(body)))
 		log.Fatalf("Failed to parse JSON: %s", err)
 	}
 
+	tempLogger.Debug("got valid response from abuseipdb", zap.Int("response status code", res.StatusCode), zap.String("response body", string(body)), zap.String("X-Ratelimit-Remaining_Header", res.Header.Get("X-Ratelimit-Remaining")))
+
 	//abuseipdb interval
+	tempLogger.Debug(fmt.Sprintf("sleeping for %d seconds due to interval configuration", a.abuseIPDB.Interval))
 	time.Sleep(time.Second * time.Duration(a.abuseIPDB.Interval))
 
 	return response, nil
@@ -253,6 +271,7 @@ func (a *abuseIPDBClient) setRemainingApiCalls(availableApiCalls string, res *ab
 // getNewKey - iterating over the abuseipdb client api keys to find a new key
 // Return: [error: in case of error occurred]
 func (a *abuseIPDBClient) getNewKey() error {
+	a.abuseIPDB.Logger.Debug("looking for available and valid API key for abuseipdb")
 	// check if the current api key don't have available api requests calls
 	if a.currentAPIKeyRequestsLimit > 0 {
 		return nil
@@ -266,7 +285,9 @@ func (a *abuseIPDBClient) getNewKey() error {
 		if v > 0 {
 			//set the remaining api calls number for the current api key
 			a.currentAPIKeyRequestsLimit = v
+			a.abuseIPDB.Logger.Debug("available and valid API key has found", zap.Int("availableAPICalls", a.currentAPIKeyRequestsLimit))
 			//set the api key
+			a.abuseIPDB.Logger.Debug("setting the new key for the abuseipdb http client")
 			a.setNewKey(k)
 			return nil
 		}
@@ -306,7 +327,10 @@ func (a *abuseIPDBClient) CheckIPScore(cancelFunc context.CancelFunc, dataChan c
 		}
 
 		if (!a.abuseIPDB.Ipv4 && ipVersion == 4) || (!a.abuseIPDB.Ipv6 && ipVersion == 6) {
-			fmt.Printf("Passing on Ip: %s - ipv%d is disable.\n", formattedIP, ipVersion)
+			r := abuseIPDBResponse{}
+			r.Data.IPAddress = ip
+			r.ipVersion = ipVersion
+			a.abuseIPDB.processIPClassification("disable", r)
 			continue
 		}
 
@@ -314,7 +338,9 @@ func (a *abuseIPDBClient) CheckIPScore(cancelFunc context.CancelFunc, dataChan c
 		if len(a.abuseIPDB.Exclude.Networks) > 0 && helpers.IsNetworkExclude(formattedIP, a.abuseIPDB.Exclude.Networks) {
 			r := abuseIPDBResponse{}
 			r.Data.IPAddress = ip
-			a.abuseIPDB.processIPClassification("networkExclusion", r, whitelistWriterChan)
+			r.ipVersion = ipVersion
+			r.destinationChannel = whitelistWriterChan
+			a.abuseIPDB.processIPClassification("networkExclusion", r)
 			continue
 		}
 
@@ -332,21 +358,29 @@ func (a *abuseIPDBClient) CheckIPScore(cancelFunc context.CancelFunc, dataChan c
 
 		// check if crawlers has been exclude and the ip is in use by a crawler
 		if a.abuseIPDB.Exclude.Crawlers && strings.Contains(strings.ToLower(ipData.Data.UsageType), "search engine") {
-			a.abuseIPDB.processIPClassification("crawlersExclusion", ipData, whitelistWriterChan)
+			ipData.ipVersion = ipVersion
+			ipData.destinationChannel = whitelistWriterChan
+			a.abuseIPDB.processIPClassification("crawlersExclusion", ipData)
 			continue
 		}
 
 		// check if the ip is assigned to domain that has been excluded
 		if len(a.abuseIPDB.Exclude.Domains) > 0 && helpers.IsDomainExclude(ipData.Data.Domain, a.abuseIPDB.Exclude.Domains) {
-			a.abuseIPDB.processIPClassification("domainExclusion", ipData, whitelistWriterChan)
+			ipData.ipVersion = ipVersion
+			ipData.destinationChannel = whitelistWriterChan
+			a.abuseIPDB.processIPClassification("domainExclusion", ipData)
 			continue
 		}
 
 		// check ip score, send the malicious IPs to the blacklistWriterChan channel and the unmalicious IPs to the whitelistWriterChan channel
 		if ipData.Data.Score >= a.abuseIPDB.Score {
-			a.abuseIPDB.processIPClassification("malicious", ipData, blacklistWriterChan)
+			ipData.ipVersion = ipVersion
+			ipData.destinationChannel = blacklistWriterChan
+			a.abuseIPDB.processIPClassification("malicious", ipData)
 		} else {
-			a.abuseIPDB.processIPClassification("unmalicious", ipData, whitelistWriterChan)
+			ipData.ipVersion = ipVersion
+			ipData.destinationChannel = whitelistWriterChan
+			a.abuseIPDB.processIPClassification("unmalicious", ipData)
 		}
 	}
 }
@@ -357,24 +391,28 @@ func (a *abuseIPDBClient) CheckIPScore(cancelFunc context.CancelFunc, dataChan c
 // ipData: abuseipdb response,
 // c: channel to pass the ip to
 // ]
-func (a AbuseIPDB) processIPClassification(msgType string, ipData abuseIPDBResponse, c chan string) {
+func (a AbuseIPDB) processIPClassification(msgType string, ipData abuseIPDBResponse) {
 	var message, messageType string
 	switch msgType {
 	case "malicious":
-		message = fmt.Sprintf("malicious IP: { ip: %s - country: %s - domain: %s - ISP: %s - score: %d }\n", ipData.Data.IPAddress, ipData.Data.CountryCode, ipData.Data.Domain, ipData.Data.ISP, ipData.Data.Score)
+		message = fmt.Sprintf("malicious IPv%d: { ip: %s - country: %s - domain: %s - ISP: %s - score: %d }\n", ipData.ipVersion, ipData.Data.IPAddress, ipData.Data.CountryCode, ipData.Data.Domain, ipData.Data.ISP, ipData.Data.Score)
 		messageType = "red"
 	case "unmalicious":
-		message = fmt.Sprintf("unmalicious IP: { ip: %s - country: %s - domain: %s - ISP: %s - score: %d }\n", ipData.Data.IPAddress, ipData.Data.CountryCode, ipData.Data.Domain, ipData.Data.ISP, ipData.Data.Score)
+		message = fmt.Sprintf("unmalicious IPv%d: { ip: %s - country: %s - domain: %s - ISP: %s - score: %d }\n", ipData.ipVersion, ipData.Data.IPAddress, ipData.Data.CountryCode, ipData.Data.Domain, ipData.Data.ISP, ipData.Data.Score)
 		messageType = "green"
 	case "domainExclusion":
-		message = fmt.Sprintf("Whitelisted: IP %s (domain: %s) - county: %s - Successfully added to the whitelist due the domain exclusions.\n", ipData.Data.IPAddress, ipData.Data.Domain, ipData.Data.CountryCode)
+		message = fmt.Sprintf("Whitelisted: IPv%d %s (domain: %s) - county: %s - Successfully added to the whitelist due the domain exclusions.\n", ipData.ipVersion, ipData.Data.IPAddress, ipData.Data.Domain, ipData.Data.CountryCode)
 		messageType = "exclude"
 	case "crawlersExclusion":
-		message = fmt.Sprintf("Whitelisted crawler IP: %s - domain: %s - country: %s - Identified as a crawler and successfully added to the whitelist.\n", ipData.Data.IPAddress, ipData.Data.Domain, ipData.Data.CountryCode)
+		message = fmt.Sprintf("Whitelisted crawler IPv%d: %s - domain: %s - country: %s - Identified as a crawler and successfully added to the whitelist.\n", ipData.ipVersion, ipData.Data.IPAddress, ipData.Data.Domain, ipData.Data.CountryCode)
 		messageType = "exclude"
 	case "networkExclusion":
-		message = fmt.Sprintf("Excluded IP: %s - This IP is within the exclusion ranges and has been added to the whitelist.\n", ipData.Data.IPAddress)
+		message = fmt.Sprintf("Excluded IPv%d: %s - This IP is within the exclusion ranges and has been added to the whitelist.\n", ipData.ipVersion, ipData.Data.IPAddress)
 		messageType = "exclude"
+	case "disable":
+		message = fmt.Sprintf("Passing on ipv%d: %s - ipv%d is disabled.\n", ipData.ipVersion, ipData.Data.IPAddress, ipData.ipVersion)
+		messageType = "disable"
+
 	default:
 		message = "msgType must be one of the following options:[`malicious`,`unmalicious`,`domainExclusion`,`crawlersExclusion`,`networkExclusion`]"
 		a.Logger.WithOptions(zap.AddCallerSkip(1)).Error(message)
@@ -382,7 +420,10 @@ func (a AbuseIPDB) processIPClassification(msgType string, ipData abuseIPDBRespo
 	}
 	a.Logger.WithOptions(zap.AddCallerSkip(1)).Info(message)
 	helpers.ColorPrint(message, messageType)
-	c <- ipData.Data.IPAddress
+
+	if msgType != "disable" {
+		ipData.destinationChannel <- ipData.Data.IPAddress
+	}
 }
 
 // processError - print the error and pass the error to the desired channel

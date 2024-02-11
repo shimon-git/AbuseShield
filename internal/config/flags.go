@@ -8,17 +8,19 @@ import (
 	"github.com/shimon-git/AbuseShield/internal/csf"
 	"github.com/shimon-git/AbuseShield/internal/logger"
 	"github.com/shimon-git/AbuseShield/internal/sophos"
+	"go.uber.org/zap"
 )
 
 // Config - type to store the configurations
 type Config struct {
-	ConfigFile string               //config file path
-	Sophos     sophos.Sophos        `yaml:"sophos"`      //sophos conf
-	Cpanel     cpanel.Cpanel        `yaml:"cpanel"`      //cpanel conf
-	CSF        csf.CSF              `yaml:"csf"`         //csf conf
-	AbuseIPDB  abuseipdb.AbuseIPDB  `yaml:"abuse_ip_db"` //abuse dv ip conf
-	Global     globalConfigurations `yaml:"global"`      //global conf
-	Logs       logger.Log           `yaml:"logger"`      // logs conf
+	ConfigFile  string               //config file path
+	DummyLogger *zap.Logger          // dummy logger
+	Sophos      sophos.Sophos        `yaml:"sophos"`      //sophos conf
+	Cpanel      cpanel.Cpanel        `yaml:"cpanel"`      //cpanel conf
+	CSF         csf.CSF              `yaml:"csf"`         //csf conf
+	AbuseIPDB   abuseipdb.AbuseIPDB  `yaml:"abuse_ip_db"` //abuse dv ip conf
+	Global      globalConfigurations `yaml:"global"`      //global conf
+	Logs        logger.Log           `yaml:"logger"`      // logs conf
 }
 
 var (
@@ -31,6 +33,10 @@ var (
 // GetConfig - return the configurations
 func GetConfig() Config {
 	var c Config // config to return
+
+	// set dummy logger to avoid from errors
+	c.DummyLogger = logger.NewDummyLogger()
+	defer c.DummyLogger.Sync()
 
 	// override the default Usage message
 	flag.Usage = func() {
@@ -81,12 +87,14 @@ func (c *Config) validateAndSetConfigurations() {
 
 	// sophos validation
 	if c.Sophos.Enable {
+		c.Sophos.Logger = c.DummyLogger
 		if err := c.isSophosValid(); err != nil {
 			printUsageAndExit(err)
 		}
 	}
 	// cpanel validation
 	if c.Cpanel.Enable {
+		c.Cpanel.Logger = c.DummyLogger
 		if err := c.isCpanelValid(tempCpanelUsers); err != nil {
 			printUsageAndExit(err)
 		}
@@ -94,6 +102,7 @@ func (c *Config) validateAndSetConfigurations() {
 
 	// csf validation
 	if c.CSF.Enable {
+		c.CSF.Logger = c.DummyLogger
 		if err := c.isCsfValid(); err != nil {
 			printUsageAndExit(err)
 		}
@@ -101,6 +110,7 @@ func (c *Config) validateAndSetConfigurations() {
 
 	// abuseDBIP validation
 	if c.AbuseIPDB.Enable {
+		c.AbuseIPDB.Logger = c.DummyLogger
 		if err := c.isValidAbuseDB(tempApiKeys); err != nil {
 			printUsageAndExit(err)
 		}

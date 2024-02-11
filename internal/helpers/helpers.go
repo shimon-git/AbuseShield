@@ -24,6 +24,7 @@ const (
 	Green         = "\033[32m"
 	RedBackground = "\033[41m"
 	Yellow        = "\033[33m"
+	GRAY          = "\033[90m"
 	Reset         = "\033[0m"
 )
 
@@ -204,6 +205,8 @@ func ColorPrint(message string, color string) {
 		fmt.Print(Green + message + Reset)
 	case "exclude":
 		fmt.Print(Yellow, message, Reset)
+	case "disable":
+		fmt.Print(GRAY, message, Reset)
 	case "error":
 		fmt.Print(RedBackground + Yellow + message + Reset + "\n")
 	}

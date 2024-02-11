@@ -7,6 +7,7 @@ import (
 
 	e "github.com/shimon-git/AbuseShield/internal/errors"
 	"github.com/shimon-git/AbuseShield/internal/helpers"
+	"go.uber.org/zap"
 )
 
 type Sophos struct {
@@ -20,6 +21,7 @@ type Sophos struct {
 	Comment   string `yaml:"comment"`
 	Ipv6      bool
 	Ipv4      bool
+	Logger    *zap.Logger
 }
 
 type sophosClient struct {

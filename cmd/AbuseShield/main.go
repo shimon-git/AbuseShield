@@ -25,13 +25,14 @@ func main() {
 	// get app configurations
 	conf := config.GetConfig()
 
-	// create new logger
+	// setting new logger object
 	l := logger.Log{
 		Enable:     conf.Logs.Enable,
 		Level:      conf.Logs.Level,
 		MaxLogSize: conf.Logs.MaxLogSize,
 		LogFile:    conf.Logs.LogFile,
 	}
+	// initializing a new logger object
 	logger, err := logger.New(l)
 	if err != nil {
 		log.Panicf("Cannot create or write to log file - %s", err.Error())
@@ -43,10 +44,12 @@ func main() {
 		// print the cpanel header
 		helpers.PrintHeader("cpanel")
 		conf.Cpanel.Logger = logger
+		// get ip file to check
 		ipFile, err := cpanelAbuseChecker(conf.Cpanel)
 		if err != nil {
 			log.Fatal(err)
 		}
+		// add the ip file to ip files checks
 		conf.Global.IPsFiles = append(conf.Global.IPsFiles, ipFile)
 	}
 

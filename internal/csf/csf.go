@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	e "github.com/shimon-git/AbuseShield/internal/errors"
+	"go.uber.org/zap"
 )
 
 type CSF struct {
@@ -16,6 +17,7 @@ type CSF struct {
 	CSFFile string `yaml:"csf_file"`
 	Ipv6    bool
 	Ipv4    bool
+	Logger  *zap.Logger
 }
 
 type csfClient struct {

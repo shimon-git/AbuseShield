@@ -10,10 +10,11 @@ import (
 )
 
 type Log struct {
-	Level      string `yaml:"log_level"`
-	MaxLogSize int    `yaml:"max_log_size"`
-	LogFile    string `yaml:"log_file"`
-	Enable     bool   `yaml:"log_enable"`
+	Level         string `yaml:"log_level"`
+	MaxLogSize    int    `yaml:"max_log_size"`
+	LogFile       string `yaml:"log_file"`
+	Enable        bool   `yaml:"log_enable"`
+	JsonLogFormat bool   `yaml:"json_log_format"`
 }
 
 func New(l Log) (*zap.Logger, error) {
@@ -24,16 +25,23 @@ func New(l Log) (*zap.Logger, error) {
 	if l.Enable == false {
 		return zap.NewNop(), err
 	}
-
-	encoderCfg := zap.NewProductionEncoderConfig()
-	encoderCfg.TimeKey = "time"
-	encoderCfg.CallerKey = "location"
-	encoderCfg.FunctionKey = "function"
-	encoderCfg.MessageKey = "message"
-	customTimeFormat := "2 Jan 2006 15:04:05"
-	encoderCfg.EncodeTime = zapcore.TimeEncoderOfLayout(customTimeFormat)
-
-	encoder := zapcore.NewJSONEncoder(encoderCfg)
+	var encoder zapcore.Encoder
+	if l.JsonLogFormat {
+		// Default to JSON encoder if not specified or specified format is not recognized
+		encoderConfig := zap.NewProductionEncoderConfig()
+		encoderConfig.TimeKey = "time"
+		encoderConfig.CallerKey = "location"
+		encoderConfig.FunctionKey = "function"
+		encoderConfig.MessageKey = "message"
+		customTimeFormat := "2 Jan 2006 15:04:05"
+		encoderConfig.EncodeTime = zapcore.TimeEncoderOfLayout(customTimeFormat)
+		encoder = zapcore.NewJSONEncoder(encoderConfig)
+	} else {
+		encoderConfig := zap.NewDevelopmentEncoderConfig() // Console-friendly encoder config
+		customTimeFormat := "2 Jan 2006 15:04:05"
+		encoderConfig.EncodeTime = zapcore.TimeEncoderOfLayout(customTimeFormat)
+		encoder = zapcore.NewConsoleEncoder(encoderConfig)
+	}
 
 	if l.MaxLogSize > 0 {
 		logFile = zapcore.AddSync(&lumberjack.Logger{

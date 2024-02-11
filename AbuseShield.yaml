@@ -1,6 +1,6 @@
 # Global settings that apply to the entire application.
 global:
-  max_threads: 10 # maximum threads(minimum is 1,maximum is 10)
+  max_threads: 5 # maximum threads(minimum is 1,maximum is 10)
   # Enable or disable IPv6 and IPv4 support.
   ipv6: false
   ipv4: true
@@ -8,12 +8,12 @@ global:
   # Specify the paths to the IP files to check.
   ip_files:
     # - "C:\\Users\\shimony\\Desktop\\scripts\\AbuseShield\\ip.txt"
-    #- "/Users/shimonyaniv/Desktop/github_projects/AbuseShield/ip.txt"
     - "/Users/shimonyaniv/Desktop/github_projects/AbuseShield/ip.txt"
-    #- "/Users/shimonyaniv/Desktop/github_projects/AbuseShield/ip.txt"
-    #- "/Users/shimonyaniv/Desktop/github_projects/AbuseShield/ip.txt"
-    #- "/Users/shimonyaniv/Desktop/github_projects/AbuseShield/ip.txt"
-    #- "/Users/shimonyaniv/Desktop/github_projects/AbuseShield/ip.txt"
+    - "/Users/shimonyaniv/Desktop/github_projects/AbuseShield/ip.txt"
+    - "/Users/shimonyaniv/Desktop/github_projects/AbuseShield/ip.txt"
+    - "/Users/shimonyaniv/Desktop/github_projects/AbuseShield/ip.txt"
+    - "/Users/shimonyaniv/Desktop/github_projects/AbuseShield/ip.txt"
+    - "/Users/shimonyaniv/Desktop/github_projects/AbuseShield/ip.txt"
 
   # Time to wait between API requests in seconds - minimum is 1 seconde.
   interval: 3
@@ -26,8 +26,9 @@ global:
 logger:
   log_enable: true # Set to 'true' to enable logging, 'false' to disable.
   log_file: "AbuseShieldResults/abuseShield.log" # Specify the path for the log file.
-  log_level: "debug" # info || debug || error
+  log_level: "info" # info || debug || error
   max_log_size: 10 # Maximum log file size in megabytes.
+  #json_log_format: true # comment this in case you want standard log format
 
 # Abuse IP DB settings.
 abuse_ip_db:

@@ -55,10 +55,11 @@ const (
 	GLOBAL_INTERVAL_ALIAS_FLAG = "i"
 	GLOBAL_MAX_THREADS_FLAG    = "max-threads"
 	// logs flags
-	LOG_ENABLE_FLAG   = "log"
-	LOG_FILE_FLAG     = "log-file"
-	LOG_MAX_SIZE_FLAG = "log-max-size"
-	LOG_LEVEL_FLAG    = "log-level"
+	LOG_ENABLE_FLAG      = "log"
+	LOG_FILE_FLAG        = "log-file"
+	LOG_MAX_SIZE_FLAG    = "log-max-size"
+	LOG_LEVEL_FLAG       = "log-level"
+	JSON_LOG_FORMAT_FLAG = "json-log-format"
 	//abuse db ip  flags
 	ABUSE_DB_IP_LIMIT_FLAG     = "limit"
 	ABUSE_DB_IP_INTERVAL_FLAG  = "abuse-ip-db-interval"
@@ -107,10 +108,11 @@ var (
 	globalIntervalAliasUsageMessage = "Short alias for --interval"
 	globalMaxThreadsUsageMessage    = fmt.Sprintf("Max threads - default is: %d", DEFAULT_MAX_THREADS)
 
-	logEnableUsageMassage  = "Enable logs"
-	logMaxSizeUsageMassage = "Set max log file size, once the log size will exceeded a new log file will be created and the old file will renamed"
-	logLevelUsageMassage   = fmt.Sprintf("Log level: debug || info || error, default log level is: %s", DEFAULT_LOG_LEVEL)
-	logFileUsageMassage    = fmt.Sprintf("Log file path, default log file path is: %s", DEFAULT_LOG_FILE)
+	logEnableUsageMassage     = "Enable logs"
+	logMaxSizeUsageMassage    = "Set max log file size, once the log size will exceeded a new log file will be created and the old file will renamed"
+	logLevelUsageMassage      = fmt.Sprintf("Log level: debug || info || error, default log level is: %s", DEFAULT_LOG_LEVEL)
+	logFileUsageMassage       = fmt.Sprintf("Log file path, default log file path is: %s", DEFAULT_LOG_FILE)
+	jsonLogFormatUsageMassage = "Set this flag in case you want json log format"
 
 	// abuseDBIP usage messages
 	abuseIPDBLimitUsageMessage     = "Maximum number of IP addresses to check against the AbuseIPDB"
@@ -184,6 +186,7 @@ func printUsageMessage() {
 		formatFlag(LOG_FILE_FLAG, logFileUsageMassage),
 		formatFlag(LOG_LEVEL_FLAG, logLevelUsageMassage),
 		formatFlag(LOG_MAX_SIZE_FLAG, logMaxSizeUsageMassage),
+		formatFlag(JSON_LOG_FORMAT_FLAG, jsonLogFormatUsageMassage),
 	})
 
 	printFlagSection("File Configuration Flags", []string{

@@ -231,13 +231,14 @@ func (c *Config) GetModeFlags() {
 
 /*
 GetLogFlags - get the log flags:
-flags: --log && --log-file && log-max-size && log-level
+flags: --log && --log-file && log-max-size && log-level && json-log-format
 */
 func (c *Config) GetLogFlags() {
 	flag.BoolVar(&c.Logs.Enable, LOG_ENABLE_FLAG, DEFAULT_LOG_ENABLE, logEnableUsageMassage)
 	flag.StringVar(&c.Logs.LogFile, LOG_FILE_FLAG, DEFAULT_LOG_FILE, logFileUsageMassage)
 	flag.IntVar(&c.Logs.MaxLogSize, LOG_MAX_SIZE_FLAG, 0, logMaxSizeUsageMassage)
 	flag.StringVar(&c.Logs.Level, LOG_LEVEL_FLAG, DEFAULT_LOG_LEVEL, logLevelUsageMassage)
+	flag.BoolVar(&c.Logs.JsonLogFormat, JSON_LOG_FORMAT_FLAG, false, jsonLogFormatUsageMassage)
 }
 
 /*

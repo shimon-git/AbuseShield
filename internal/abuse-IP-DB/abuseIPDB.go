@@ -177,7 +177,14 @@ func (a *abuseIPDBClient) SetMaxIPCHecks(validation bool) error {
 func (a *abuseIPDBClient) getIPData(ip string, apiKeysValidation bool) (abuseIPDBResponse, error) {
 	// lock the function to run it synchronously for avoiding interval issues
 	a.mu.Lock()
-	defer a.mu.Unlock()
+	// set default runRecessively value to false
+	var runRecessively = false
+	defer func() {
+		// unlock only in case the function not run recursively, in case the function run recursively the unlock using manually
+		if !runRecessively {
+			a.mu.Unlock()
+		}
+	}()
 
 	var response abuseIPDBResponse
 	var errResponse abuseIPDBErrResponse
@@ -210,13 +217,15 @@ func (a *abuseIPDBClient) getIPData(ip string, apiKeysValidation bool) (abuseIPD
 		tempLogger.Warn("got unexpected response status code", zap.Int("excepted status code", http.StatusOK), zap.Int("response status code", res.StatusCode), zap.String("response body", string(body)))
 		// check if the error is because current API key exceeded the daily rate limit for API calls
 		if strings.Contains(string(body), e.DAILY_RATE_LIMIT_EXCEEDED_ABUSEIPDB) && !apiKeysValidation {
-			// set the api key available requests number
-			a.currentAPIKeyRequestsLimit = 0
 			// get new api key
 			if err := a.getNewKey(); err != nil {
 				return response, err
 			}
-			// call the current function again
+
+			// call the current function again(recursively)
+			a.mu.Unlock()
+			// set runRecessively to true to avoid unlocking the mutex again
+			runRecessively = true
 			return a.getIPData(ip, false)
 		}
 		// extract the abuseipdb error
@@ -272,13 +281,8 @@ func (a *abuseIPDBClient) setRemainingApiCalls(availableApiCalls string, res *ab
 // Return: [error: in case of error occurred]
 func (a *abuseIPDBClient) getNewKey() error {
 	a.abuseIPDB.Logger.Debug("looking for available and valid API key for abuseipdb")
-	// check if the current api key don't have available api requests calls
-	if a.currentAPIKeyRequestsLimit > 0 {
-		return nil
-	}
 	// update the api key and the api calls number in the a.validAPIKeys map
 	a.validAPIKeys[a.currentAPIKey] = 0
-
 	// iterating through the api keys in the a.validAPIKeys(k:api-key, v: available api calls number)
 	for k, v := range a.validAPIKeys {
 		// check the available api calls number for the iterated key is over then 0

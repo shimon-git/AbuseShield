@@ -117,3 +117,7 @@ adding log_level
 checking log size
 adding logger package
 crate log flags under global configuration
+
+
+YASHIMO9
+ShimonTest2024@!

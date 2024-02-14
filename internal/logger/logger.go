@@ -37,7 +37,7 @@ func New(l Log) (*zap.Logger, error) {
 		encoderConfig.EncodeTime = zapcore.TimeEncoderOfLayout(customTimeFormat)
 		encoder = zapcore.NewJSONEncoder(encoderConfig)
 	} else {
-		encoderConfig := zap.NewDevelopmentEncoderConfig() // Console-friendly encoder config
+		encoderConfig := zap.NewDevelopmentEncoderConfig()
 		customTimeFormat := "2 Jan 2006 15:04:05"
 		encoderConfig.EncodeTime = zapcore.TimeEncoderOfLayout(customTimeFormat)
 		encoder = zapcore.NewConsoleEncoder(encoderConfig)

@@ -28,7 +28,7 @@ logger:
   log_file: "AbuseShieldResults/abuseShield.log" # Specify the path for the log file.
   log_level: "info" # info || debug || error
   max_log_size: 10 # Maximum log file size in megabytes.
-  #json_log_format: true # comment this in case you want standard log format
+  json_log_format: true # comment this in case you want standard log format
 
 # Abuse IP DB settings.
 abuse_ip_db:

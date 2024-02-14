@@ -33,14 +33,15 @@ func main() {
 		log.Panicf("Cannot create or write to log file - %s", err.Error())
 	}
 	defer logger.Sync()
+	logger.Info("staring abuse shield checks")
 
-	// cpanel checker
 	if conf.Cpanel.Enable {
 		// print the cpanel header
 		helpers.PrintHeader("cpanel")
+		logger.Info("checking cpanel abuse")
+		// set cpanel logger
 		conf.Cpanel.Logger = logger
 		// get ip file to check
-		logger.Info("checking cpanel abuse")
 		ipFile, err := cpanelAbuseChecker(conf.Cpanel)
 		if err != nil {
 			conf.Cpanel.Logger.Error(err.Error())
@@ -55,14 +56,15 @@ func main() {
 	if conf.AbuseIPDB.Enable {
 		// print the abuseipdb header
 		helpers.PrintHeader("abuseipdb")
+		// set abuseipdb logger
 		conf.AbuseIPDB.Logger = logger
 		logger.Info("using abuseipdb to check ips score")
-		if err := abuseDBIPChecker(conf.AbuseIPDB, conf.Global.IPsFiles, conf.Global.MaxThreads); err != nil {
+		// call abuseipdb checker to check for abuse
+		if err := abuseIPDBChecker(conf.AbuseIPDB, conf.Global.IPsFiles, conf.Global.MaxThreads); err != nil {
 			conf.AbuseIPDB.Logger.Error(err.Error())
 			log.Fatal(err)
 		}
 	}
-
 }
 
 // cpanelAbuseChecker consolidates cPanel access logs into a single file for abuse detection.
@@ -94,10 +96,10 @@ func cpanelAbuseChecker(cp cpanel.Cpanel) (string, error) {
 	return accessLogsIPsFile, nil
 }
 
-// abuseDBIPChecker evaluates IPs against abuseipdb, segregating them into 'whitelist', 'blacklist', and 'error' files.
+// abuseIPDBChecker evaluates IPs against abuseipdb, segregating them into 'whitelist', 'blacklist', and 'error' files.
 // Args: [abuseIPDB: Abuseipdb configurations, ipFiles: Paths to files with IPs for checking, errFile: Path for recording errors]
 // Returns an error if the checking process encounters issues.
-func abuseDBIPChecker(abuseIPDB abuseipdb.AbuseIPDB, ipFiles []string, maxThreads int) error {
+func abuseIPDBChecker(abuseIPDB abuseipdb.AbuseIPDB, ipFiles []string, maxThreads int) error {
 	var wgAbuseIPDB sync.WaitGroup
 	var wgWriter sync.WaitGroup
 	var writerErr *e.SharedError
@@ -123,6 +125,7 @@ func abuseDBIPChecker(abuseIPDB abuseipdb.AbuseIPDB, ipFiles []string, maxThread
 		return err
 	}
 
+	// create context to pass the goroutines
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
@@ -130,7 +133,7 @@ func abuseDBIPChecker(abuseIPDB abuseipdb.AbuseIPDB, ipFiles []string, maxThread
 	blacklistWriterChan := make(chan string, 50)
 	whitelistWriterChan := make(chan string, 50)
 
-	// prepare to launch writer goroutines for handling output
+	// launch writer goroutines for handling output
 	abuseIPDB.Logger.Info("creating blacklist file writer", zap.String("blacklistFilePath", abuseIPDB.BlackListFile))
 	abuseIPDB.Logger.Info("creating whitelist file writer", zap.String("whitelistFilePath", abuseIPDB.WhiteListFile))
 	wgWriter.Add(2)

@@ -339,6 +339,12 @@ func (c *Config) isLogsConfValid() error {
 	if c.Logs.Level == "" {
 		c.Logs.Level = DEFAULT_LOG_LEVEL
 	}
+	// split path to log folder
+	dirPath := strings.Split(c.Logs.LogFile, "/")
+	// create the log folder if the folder those not exist
+	if err := os.MkdirAll(strings.Join(dirPath[:len(dirPath)-1], "/"), 0755); err != nil {
+		return err
+	}
 
 	// check if the provided log file path is valid
 	logFile, err := os.OpenFile(c.Logs.LogFile, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)

@@ -35,6 +35,7 @@ func main() {
 	defer logger.Sync()
 	logger.Info("staring abuse shield checks")
 
+	// check if cpanel module if cpanel module is enabled
 	if conf.Cpanel.Enable {
 		// print the cpanel header
 		helpers.PrintHeader("cpanel")
@@ -73,7 +74,7 @@ func main() {
 func cpanelAbuseChecker(cp cpanel.Cpanel) (string, error) {
 	//initialize new cpanel client
 	cp.Logger.Debug("initializing new cpanel client")
-	cpanelClient := cpanel.New(cp)
+	cpanelClient := cpanel.New(cp, false)
 	// if configured, set up to check all cPanel users
 	if cp.CheckAllUsers {
 		cp.Logger.Info("setting all cpanel users to check")
@@ -96,8 +97,8 @@ func cpanelAbuseChecker(cp cpanel.Cpanel) (string, error) {
 	return accessLogsIPsFile, nil
 }
 
-// abuseIPDBChecker evaluates IPs against abuseipdb, segregating them into 'whitelist', 'blacklist', and 'error' files.
-// Args: [abuseIPDB: Abuseipdb configurations, ipFiles: Paths to files with IPs for checking, errFile: Path for recording errors]
+// abuseIPDBChecker evaluates IPs against abuseipdb, segregating them into 'whitelist' and 'blacklist' files.
+// Args: [abuseIPDB: Abuseipdb configurations, ipFiles: Paths to files with IPs for checking, maxThreads: number of max concurrence goroutines]
 // Returns an error if the checking process encounters issues.
 func abuseIPDBChecker(abuseIPDB abuseipdb.AbuseIPDB, ipFiles []string, maxThreads int) error {
 	var wgAbuseIPDB sync.WaitGroup

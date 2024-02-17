@@ -219,11 +219,13 @@ func (c *Config) isSophosValid() error {
 
 func (c *Config) isCpanelValid(cpanelUsers string) error {
 	// create new cpanel client
-	cpanelClient := cpanel.New(c.Cpanel)
+	cpanelClient := cpanel.New(c.Cpanel, true)
 	// check if cpanel is installed
 	if err := cpanelClient.IsCpanelInstalled(); err != nil {
 		return err
 	}
+
+	helpers.ColorPrint("cpanel installation has been detected successfully\n", "green")
 
 	// if cpanel all users check is enabled
 	if c.Cpanel.CheckAllUsers {
@@ -236,10 +238,9 @@ func (c *Config) isCpanelValid(cpanelUsers string) error {
 		return e.MakeErr(e.MISSING_CPANEL_USERS, nil)
 	}
 
-	if err := cpanelClient.IsAllUsersExists(); err != nil {
-		return err
-	}
-	return nil
+	helpers.ColorPrint(fmt.Sprintf("cpanel users: [ %s ]\n", strings.Join(c.Cpanel.Users, ", ")), "green")
+	return cpanelClient.IsCpanelUsersExists()
+
 }
 
 func (c Config) isCsfValid() error {

@@ -2,6 +2,7 @@ package helpers
 
 import (
 	"bufio"
+	"bytes"
 	"context"
 	"crypto/tls"
 	"fmt"
@@ -10,6 +11,7 @@ import (
 	"net"
 	"net/http"
 	"os"
+	"os/exec"
 	"strconv"
 	"strings"
 	"sync"
@@ -291,4 +293,61 @@ func PrintHeader(logo string) {
 		// print sophos header
 		printBanner("Sophos", "yellow", 6)
 	}
+}
+
+func ExecuteCommand(stderr bool, cmdName string, args ...string) (string, int, error) {
+	var exitCode int
+	var output bytes.Buffer
+	var err error
+	var cmd *exec.Cmd
+
+	if strings.Contains(cmdName, "|") {
+		cmd = exec.Command("sh", "-c", cmdName)
+	} else {
+		cmd = exec.Command(cmdName, args...)
+	}
+
+	cmd.Stdout = &output
+	if stderr {
+		cmd.Stderr = &output
+	}
+	//cmd.Stderr = &output
+
+	err = cmd.Run()
+	if err != nil {
+		return "", 0, e.MakeErr(e.COMMAND_EXECUTE_ERR, err)
+	}
+
+	if exitErr, ok := err.(*exec.ExitError); ok {
+		exitCode = exitErr.ExitCode()
+	}
+
+	return output.String(), exitCode, err
+}
+
+func FindTextFiles(dir string) ([]string, error) {
+	var textFiles []string
+
+	files, err := os.ReadDir(dir)
+	if err != nil {
+		return textFiles, err
+	}
+	for _, file := range files {
+		if !file.IsDir() {
+			logFilePath := dir + "/" + file.Name()
+			if err != nil {
+				return textFiles, err
+			}
+			output, _, err := ExecuteCommand(true, "file", logFilePath)
+			if err != nil {
+				return textFiles, err
+			}
+
+			if strings.Contains(output, "ASCII text") {
+				textFiles = append(textFiles, logFilePath)
+			}
+		}
+	}
+
+	return textFiles, nil
 }

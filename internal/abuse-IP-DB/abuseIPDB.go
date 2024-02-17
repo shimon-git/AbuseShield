@@ -65,9 +65,9 @@ type abuseIPDBResponse struct {
 		ISP         string `json:"isp"`                  //IP ISP provider
 		UsageType   string `json:"usageType"`            //The usage type of the IP
 	} `json:"data"`
-	availableRequestsNumber int //Available API calls
-	ipVersion               int
-	destinationChannel      chan string
+	availableRequestsNumber int         //Available API calls
+	ipVersion               int         // ip version of the current ip check
+	destinationChannel      chan string //the destination channel(blacklist or whitelist channel)
 }
 
 // abuseIPDBErrResponse - struct to store the abuseipdb http error response
@@ -180,7 +180,7 @@ func (a *abuseIPDBClient) getIPData(ip string, apiKeysValidation bool) (abuseIPD
 	// set default runRecessively value to false
 	var runRecessively = false
 	defer func() {
-		// unlock only in case the function not run recursively, in case the function run recursively the unlock using manually
+		// unlock only in case the function not run recursively, in case the function run recursively the unlock will occurred manually
 		if !runRecessively {
 			a.mu.Unlock()
 		}
@@ -196,6 +196,7 @@ func (a *abuseIPDBClient) getIPData(ip string, apiKeysValidation bool) (abuseIPD
 	params.Add("verbose", "")
 	url := "https://api.abuseipdb.com/api/v2/check" + "?" + params.Encode()
 
+	// create temp logger with URL,httpMethod fields
 	tempLogger := a.abuseIPDB.Logger.With(zap.String("URL", url), zap.String("httpMethod", "GET"))
 
 	// send http Get request to abuseipdb
@@ -221,7 +222,6 @@ func (a *abuseIPDBClient) getIPData(ip string, apiKeysValidation bool) (abuseIPD
 			if err := a.getNewKey(); err != nil {
 				return response, err
 			}
-
 			// call the current function again(recursively)
 			a.mu.Unlock()
 			// set runRecessively to true to avoid unlocking the mutex again
@@ -258,6 +258,7 @@ func (a *abuseIPDBClient) getIPData(ip string, apiKeysValidation bool) (abuseIPD
 
 // setRemainingApiCalls - set the remaining api calls for the current abuseipdb client API key
 // Args: [availableApiCalls: remaining api calls, a pointer to abuseipdb response]
+// Return: [error: in case of error occurred]
 func (a *abuseIPDBClient) setRemainingApiCalls(availableApiCalls string, res *abuseIPDBResponse) error {
 	// check if the availableApiCalls variable is not empty
 	if availableApiCalls == "" {
@@ -311,6 +312,7 @@ func (a *abuseIPDBClient) getNewKey() error {
 // ]
 // Note: CheckIPScore function designed to run as a goroutine
 func (a *abuseIPDBClient) CheckIPScore(cancelFunc context.CancelFunc, dataChan chan string, blacklistWriterChan chan string, whitelistWriterChan chan string, goRoutineNumber *int, wg *sync.WaitGroup) {
+	// on finish decrease goRoutineNumber and the waitgroup jobs counter
 	defer func() {
 		*goRoutineNumber--
 		wg.Done()
@@ -377,7 +379,7 @@ func (a *abuseIPDBClient) CheckIPScore(cancelFunc context.CancelFunc, dataChan c
 		}
 
 		// check ip score, send the malicious IPs to the blacklistWriterChan channel and the unmalicious IPs to the whitelistWriterChan channel
-		if ipData.Data.Score >= a.abuseIPDB.Score {
+		if (ipData.Data.Score >= a.abuseIPDB.Score) || (a.abuseIPDB.BlockTor && ipData.Data.Tor) {
 			ipData.ipVersion = ipVersion
 			ipData.destinationChannel = blacklistWriterChan
 			a.abuseIPDB.processIPClassification("malicious", ipData)
@@ -391,7 +393,7 @@ func (a *abuseIPDBClient) CheckIPScore(cancelFunc context.CancelFunc, dataChan c
 
 // processIPClassification - print the desired message based on the message type and passing the ip to the desired channel
 // Args:[
-// msgType: {`malicious`,`unmalicious`,`domainExclusion`,`crawlersExclusion`,`networkExclusion`},
+// msgType: {`malicious`,`unmalicious`,`domainExclusion`,`crawlersExclusion`,`networkExclusion`,`disable`},
 // ipData: abuseipdb response,
 // c: channel to pass the ip to
 // ]
@@ -436,8 +438,10 @@ func (a AbuseIPDB) processIPClassification(msgType string, ipData abuseIPDBRespo
 // err: error that occurred
 // ]
 func (a AbuseIPDB) processError(ip string, err error) {
+	// reformat the error
 	errUserFormat := strings.Join(strings.Split(err.Error(), "-")[3:], "-")
 	message := fmt.Sprintf("Error occurred while trying to check the ip: %s - %s", ip, errUserFormat)
 	helpers.ColorPrint(message, "error")
+	// get the caller function details anf log the error
 	a.Logger.WithOptions(zap.AddCallerSkip(1)).Error(message)
 }

@@ -39,15 +39,14 @@ func New(s Sophos) *sophosClient {
 	sc.endpoint = make(map[string]string)
 	sc.endpoint["version"] = fmt.Sprintf("%s/status/version", sc.sophosURL)
 
-	auth := helpers.BasicAuth{
-		User:     s.User,
-		Password: s.Password,
-	}
 	httpClient := helpers.HttpClient{
 		Headers: map[string]string{
 			"content-type": "application/json",
 		},
-		Auth: auth,
+		Auth: helpers.BasicAuth{
+			User:     s.User,
+			Password: s.Password,
+		},
 	}
 
 	sc.client = httpClient.NewHttpClient()

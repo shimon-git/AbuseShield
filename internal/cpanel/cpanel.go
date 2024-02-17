@@ -43,14 +43,16 @@ type AccountList struct {
 // Args: [Cpanel]
 // Return: [*cpClient]
 func New(c Cpanel, validation bool) *cpClient {
+	// setting different log level for cpanel validation
 	if validation {
 		c.Logger.Debug("initializing new cpanel module")
 	} else {
 		c.Logger.Info("initializing new cpanel module")
 	}
-	var cp cpClient
-	cp.cpanel = c
-	return &cp
+	// return cpanel client
+	return &cpClient{
+		cpanel: c,
+	}
 }
 
 // IsCpanelUsersExists - check if cpanel.Users exist on cpanel

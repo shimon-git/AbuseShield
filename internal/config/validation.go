@@ -257,20 +257,8 @@ func (c Config) isCsfValid() error {
 		return e.MakeErr(e.CSF_FILE_NOT_FOUND, nil)
 	}
 
-	// create new cpanel client
-	csfClient := csf.New(c.CSF)
-
-	// check cpanel service is active
-	if err := csfClient.IsCsfServiceActive(); err != nil {
-		return err
-	}
-
-	// check if the provided csf backup file path is valid
-	csfBackupFile, err := os.OpenFile(c.CSF.Backup, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
-	if err != nil {
-		return err
-	}
-	defer csfBackupFile.Close()
+	// create new cpanel client - for csf validation is occurred on init
+	csf.New(c.CSF)
 
 	return nil
 }

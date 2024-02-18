@@ -87,6 +87,9 @@ csf:
   enable: false # Set to 'true' to enable CSF integration, 'false' to disable.
   csf_file: "/etc/csf/csf.deny" # Specify the path to the CSF deny file.
   backup_file: "/tmp/csf.deny.back" # Specify the path for backing up the CSF file.
+  csf_conf_file: "/etc/csf/csf.conf" # Specify the path for the cpanel configuration
+  csf_conf_file_back: "/tmp/csf.conf.back" # Specify the path for backing up the CSF conf file.
+  csf_ip_limit: -1 # Set to 0 in case you don't want to change the csf ip limit, -1 in case you want to block ip's without any ip limit number, any other number to set limit number for ip blocks in csf.deny
 
 # cPanel settings.
 cpanel:

@@ -29,7 +29,7 @@ const (
 	COMMAND_EXECUTE_ERR                 = "An error occurred while trying to execute the command"
 	CPANEL_USER_NOT_FOUND               = "Cpanel user not found"
 	REMOVE_FILE_ERR                     = "Failed to delete the file"
-	INACTIVE_SERVICE                    = "the service is inactive"
+	INACTIVE_CSF_SERVICE                = "the csf service is inactive"
 	MISSING_API_KEYS                    = "Missing API keys, API keys must be set"
 	INVALID_API_KEY                     = "Invalid api key detected"
 	EMPTY_REMAINING_CHECKS_HEADER       = "X-Ratelimit-Remaining header is empty, This may be occurred if the api key is not valid"
@@ -47,10 +47,11 @@ const (
 	INVALID_IP_OR_NETWORK               = "Invalid ip/network"
 	UNRESOLVABLE_DOMAIN                 = "Failed to resolve the domain"
 	IPV6_AND_IPV4_NOT_ENABLED           = "IPv4 and IPv6 are not enabled, you must enable at least one ip version"
+	UNKNOWN_CSF_IP_LIMIT                = "CSF ip limit is unknown and cannot be fined in csf configurations file"
 )
 
 type SharedError struct {
-	err error
+	err []error
 	mu  sync.RWMutex
 }
 
@@ -58,7 +59,7 @@ func NewSharedError() *SharedError {
 	return &SharedError{}
 }
 
-func (s *SharedError) GetError() error {
+func (s *SharedError) GetErrors() []error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	return s.err
@@ -67,7 +68,7 @@ func (s *SharedError) GetError() error {
 func (s *SharedError) SetError(e error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	s.err = e
+	s.err = append(s.err, e)
 }
 
 // MakeErr - return formatted error message with caller information

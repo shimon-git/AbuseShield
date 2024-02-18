@@ -61,9 +61,12 @@ func main() {
 		conf.AbuseIPDB.Logger = logger
 		logger.Info("using abuseipdb to check ips score")
 		// call abuseipdb checker to check for abuse
-		if err := abuseIPDBChecker(conf.AbuseIPDB, conf.Global.IPsFiles, conf.Global.MaxThreads); err != nil {
-			conf.AbuseIPDB.Logger.Error(err.Error())
-			log.Fatal(err)
+		errs := abuseIPDBChecker(conf.AbuseIPDB, conf.Global.IPsFiles, conf.Global.MaxThreads)
+		if len(errs) > 0 {
+			for _, err := range errs {
+				conf.AbuseIPDB.Logger.Error(err.Error())
+			}
+			log.Fatal(errs)
 		}
 	}
 }
@@ -100,7 +103,7 @@ func cpanelAbuseChecker(cp cpanel.Cpanel) (string, error) {
 // abuseIPDBChecker evaluates IPs against abuseipdb, segregating them into 'whitelist' and 'blacklist' files.
 // Args: [abuseIPDB: Abuseipdb configurations, ipFiles: Paths to files with IPs for checking, maxThreads: number of max concurrence goroutines]
 // Returns an error if the checking process encounters issues.
-func abuseIPDBChecker(abuseIPDB abuseipdb.AbuseIPDB, ipFiles []string, maxThreads int) error {
+func abuseIPDBChecker(abuseIPDB abuseipdb.AbuseIPDB, ipFiles []string, maxThreads int) []error {
 	var wgAbuseIPDB sync.WaitGroup
 	var wgWriter sync.WaitGroup
 	var writerErr *e.SharedError
@@ -110,7 +113,7 @@ func abuseIPDBChecker(abuseIPDB abuseipdb.AbuseIPDB, ipFiles []string, maxThread
 	if abuseIPDB.Limit == 0 {
 		ipsNum, err := helpers.FilesLinesCounter(ipFiles)
 		if err != nil {
-			return err
+			return []error{err}
 		}
 		abuseIPDB.Limit = ipsNum
 	}
@@ -123,7 +126,7 @@ func abuseIPDBChecker(abuseIPDB abuseipdb.AbuseIPDB, ipFiles []string, maxThread
 	abuseIPDB.Logger.Debug("creating new abuseipdb client")
 	abuseIPDBClient, err := abuseipdb.New(abuseIPDB, false)
 	if err != nil {
-		return err
+		return []error{err}
 	}
 
 	// create context to pass the goroutines
@@ -184,5 +187,5 @@ func abuseIPDBChecker(abuseIPDB abuseipdb.AbuseIPDB, ipFiles []string, maxThread
 	wgWriter.Wait()
 
 	// check and return any errors that occurred during writing.
-	return writerErr.GetError()
+	return writerErr.GetErrors()
 }

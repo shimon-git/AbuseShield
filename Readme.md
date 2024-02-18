@@ -130,3 +130,12 @@ build gui with electron and grpc
 109.207.76.148
 root
 C*D@jtTT#JK84!shW&F6
+
+
+create flag for this to
+ csf_conf_file: "/etc/csf/csf.conf" # Specify the path for the cpanel configuration
+ csf_conf_file_back
+ csf_ip_limit
+ change csf file to csf_deny_file
+ change backup to csf_deny_back
+ 

@@ -6,12 +6,14 @@ import (
 	"context"
 	"crypto/tls"
 	"fmt"
+	"io"
 	"log"
 	"math/rand"
 	"net"
 	"net/http"
 	"os"
 	"os/exec"
+	"regexp"
 	"strconv"
 	"strings"
 	"sync"
@@ -235,7 +237,7 @@ func FilesLinesCounter(files []string) (int, error) {
 		}
 	}
 	// return nil error and lines number minus length of files slice because EOF is also calculated as line
-	return lines - len(files), nil
+	return lines, nil
 }
 
 func IsDomainExclude(domain string, excludedDomains []string) bool {
@@ -350,4 +352,160 @@ func FindTextFiles(dir string) ([]string, error) {
 	}
 
 	return textFiles, nil
+}
+
+func CopyFile(source, destination string) error {
+	if _, err := os.Stat(source); err != nil {
+		return err
+	}
+	sFile, err := os.Open(source)
+	if err != nil {
+		return e.MakeErr(e.OPEN_FILE_ERR, err)
+	}
+	defer sFile.Close()
+
+	dFile, err := os.Create(destination)
+	if err != nil {
+		return err
+	}
+	defer dFile.Close()
+
+	if _, err := io.Copy(dFile, sFile); err != nil {
+		return err
+	}
+
+	return dFile.Sync()
+}
+
+func SearchAndReplace(file, search, replace string) error {
+	f, err := os.Open(file)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	tempFile, err := os.CreateTemp("/tmp", ".abuse-shield")
+	if err != nil {
+		return err
+	}
+	defer os.Remove(tempFile.Name())
+	defer tempFile.Close()
+
+	scanner := bufio.NewScanner(f)
+	writer := bufio.NewWriter(tempFile)
+
+	for scanner.Scan() {
+		line := scanner.Text()
+		if strings.Contains(strings.ReplaceAll(line, "\x20", ""), strings.ReplaceAll(search, "\x20", "")) {
+			line = replace
+		}
+
+		if _, err := writer.WriteString(line + "\n"); err != nil {
+			return err
+		}
+	}
+
+	if err := scanner.Err(); err != nil {
+		return err
+	}
+
+	if err := writer.Flush(); err != nil {
+		return err
+	}
+
+	// Close the files before renaming.
+	f.Close()
+	tempFile.Close()
+
+	return CopyFile(tempFile.Name(), file)
+}
+
+func SearchRegex(file, regex string) (string, error) {
+	f, err := os.Open(file)
+	if err != nil {
+		return "", err
+	}
+	defer f.Close()
+
+	scanner := bufio.NewScanner(f)
+	re := regexp.MustCompile(regex)
+	for scanner.Scan() {
+		line := scanner.Text()
+		if re.MatchString(line) {
+			matches := re.FindStringSubmatch(line)
+			if len(matches) > 1 {
+				return matches[1], nil
+			}
+		}
+	}
+	return "", nil
+}
+
+// FileAppend appends text to a file, optionally ensuring that the text starts on a new line if the file
+// does not end with a newline character and the `newline` parameter is true.
+func FileAppend(file, text string, newline bool) error {
+	// Open the file with both read and write permissions in append mode.
+	f, err := os.OpenFile(file, os.O_APPEND|os.O_RDWR, 0)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	if newline {
+		fi, err := f.Stat()
+		if err != nil {
+			return err
+		}
+		if fi.Size() > 0 {
+			// Use a separate file descriptor for reading to avoid disrupting the write descriptor.
+			fr, err := os.Open(file)
+			if err != nil {
+				return err
+			}
+			defer fr.Close()
+
+			lastChar := make([]byte, 1)
+			if _, err := fr.ReadAt(lastChar, fi.Size()-1); err != nil {
+				return err
+			}
+			if lastChar[0] != '\n' {
+				text = "\n" + text
+			}
+		}
+	}
+
+	// Append the text, ensuring it ends with a newline.
+	_, err = f.WriteString(text + "\n")
+	return err
+}
+
+// CountNonCommentLines reads a file and returns the count of lines that do not start with '#'.
+func CountNonCommentLines(filePath string) (int, error) {
+	// Open the file for reading.
+	file, err := os.Open(filePath)
+	if err != nil {
+		return 0, err
+	}
+	defer file.Close()
+
+	// Use a scanner to read the file line by line.
+	scanner := bufio.NewScanner(file)
+
+	// Line count for lines not starting with '#'.
+	count := 0
+
+	for scanner.Scan() {
+		line := scanner.Text()
+		// Check if the line is not empty and does not start with '#'.
+		if len(line) > 0 && line[0] != '#' {
+			count++
+		}
+	}
+
+	// Check for errors during scanning.
+	if err := scanner.Err(); err != nil {
+		return 0, err
+	}
+
+	return count, nil
 }

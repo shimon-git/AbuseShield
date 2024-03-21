@@ -54,12 +54,27 @@ func New(csfConf CSF) *csfClient {
 	return &client
 }
 
+// IsCsfInstalled - check if csf service is installed
+func (c csfClient) IsCsfInstalled() (bool, error) {
+	output, _, err := helpers.ExecuteCommand(true, "systemctl", "status", "csf.service")
+	if err != nil {
+		return false, e.MakeErr("error ocurred while running the command: systemctl status csf.service ", err)
+	}
+	if strings.Contains(output, "could not be found") {
+		return false, nil
+	}
+	return true, nil
+}
+
 // CsfBackup - create csf backup file
 func (c csfClient) CsfBackup() error {
 	if err := helpers.CopyFile(c.csf.CSFConfFile, c.csf.ConfFileBackup); err != nil {
-		return err
+		return e.MakeErr(e.CSF_DENY_BACKUP_ERR, err)
 	}
-	return helpers.CopyFile(c.csf.CSFFile, c.csf.Backup)
+	if err := helpers.CopyFile(c.csf.CSFFile, c.csf.Backup); err != nil {
+		return e.MakeErr(e.CSF_DENY_BACKUP_ERR, err)
+	}
+	return nil
 }
 
 // IsCsfServiceActive - check if the csf service is active
@@ -153,6 +168,9 @@ func (c *csfClient) CsfHandler(csfDenyChan chan string, errWriter *e.SharedError
 		err = c.setNewCsfIpLimit(csfDenyLength)
 	} else if c.csf.CsfIpLimit != 0 && c.csf.CsfIpLimit != -1 {
 		err = c.setNewCsfIpLimit(c.csf.CsfIpLimit)
+	}
+	if err != nil {
+		errWriter.SetError(err)
 	}
 
 	if err := c.setCurrentCsfIpLimit(); err != nil {

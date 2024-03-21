@@ -4,24 +4,9 @@ import (
 	"fmt"
 	"os"
 
-	abuseipdb "github.com/shimon-git/AbuseShield/internal/abuse-IP-DB"
-	"github.com/shimon-git/AbuseShield/internal/cpanel"
-	"github.com/shimon-git/AbuseShield/internal/csf"
 	e "github.com/shimon-git/AbuseShield/internal/errors"
-	"github.com/shimon-git/AbuseShield/internal/logger"
-	"github.com/shimon-git/AbuseShield/internal/sophos"
 	"gopkg.in/yaml.v3"
 )
-
-// configurations - store the configurations for the app
-type configurations struct {
-	Global    globalConfigurations `yaml:"global"`
-	AbuseIPDB abuseipdb.AbuseIPDB  `yaml:"abuse_ip_db"`
-	Cpanel    cpanel.Cpanel        `yaml:"cpanel"`
-	CSF       csf.CSF              `yaml:"csf"`
-	Sophos    sophos.Sophos        `yaml:"sophos"`
-	Logs      logger.Log           `yaml:"logger"`
-}
 
 // globalConfigurations - store the global configurations
 type globalConfigurations struct {

@@ -8,12 +8,12 @@ global:
   # Specify the paths to the IP files to check.
   ip_files:
     # - "C:\\Users\\shimony\\Desktop\\scripts\\AbuseShield\\ip.txt"
-    - "/Users/shimonyaniv/Desktop/github_projects/AbuseShield/ip.txt"
-    - "/Users/shimonyaniv/Desktop/github_projects/AbuseShield/ip.txt"
-    - "/Users/shimonyaniv/Desktop/github_projects/AbuseShield/ip.txt"
-    - "/Users/shimonyaniv/Desktop/github_projects/AbuseShield/ip.txt"
-    - "/Users/shimonyaniv/Desktop/github_projects/AbuseShield/ip.txt"
-    - "/Users/shimonyaniv/Desktop/github_projects/AbuseShield/ip.txt"
+    #- "/Users/shimonyaniv/Desktop/github_projects/AbuseShield/ip.txt"
+    #- "/Users/shimonyaniv/Desktop/github_projects/AbuseShield/ip.txt"
+    #- "/Users/shimonyaniv/Desktop/github_projects/AbuseShield/ip.txt"
+    #- "/Users/shimonyaniv/Desktop/github_projects/AbuseShield/ip.txt"
+    #- "/Users/shimonyaniv/Desktop/github_projects/AbuseShield/ip.txt"
+    #- "/Users/shimonyaniv/Desktop/github_projects/AbuseShield/ip.txt"
 
   # Time to wait between API requests in seconds - minimum is 1 seconde.
   interval: 3
@@ -28,12 +28,12 @@ logger:
   log_file: "AbuseShieldResults/abuseShield.log" # Specify the path for the log file.
   log_level: "info" # info || debug || error
   max_log_size: 10 # Maximum log file size in megabytes.
-  json_log_format: true # comment this in case you want standard log format
+  json_log_format: false # comment this in case you want standard log format
 
 # Abuse IP DB settings.
 abuse_ip_db:
   enable: true # Set to 'true' to enable Abuse IP DB integration, 'false' to disable.
-  limit: 0 # Limit the number of IPs to check.
+  limit: 100 # Limit the number of IPs to check.
   blacklist_file: "AbuseShieldResults/blacklist.txt" # Specify the path for the blacklist file.
   whitelist_file: "AbuseShieldResults/whitelist.txt" # Specify the path for the whitelist file.
   
@@ -84,7 +84,7 @@ sophos:
 
 # CSF (ConfigServer Security & Firewall) settings.
 csf:
-  enable: false # Set to 'true' to enable CSF integration, 'false' to disable.
+  enable: true # Set to 'true' to enable CSF integration, 'false' to disable.
   csf_file: "/etc/csf/csf.deny" # Specify the path to the CSF deny file.
   backup_file: "/tmp/csf.deny.back" # Specify the path for backing up the CSF file.
   csf_conf_file: "/etc/csf/csf.conf" # Specify the path for the cpanel configuration
@@ -93,11 +93,11 @@ csf:
 
 # cPanel settings.
 cpanel:
-  enable: false # Set to 'true' to enable cPanel integration, 'false' to disable.
-  checkAllUsers: true # Set to 'true' to check all users, 'false' to check specific users.
-
+  enable: true # Set to 'true' to enable cPanel integration, 'false' to disable.
+  checkAllUsers: false # Set to 'true' to check all users, 'false' to check specific users.
+  
   # List of users to check (ignored if checkAllUsers is set to 'true').
   users:
-    - "username1"
-    - "username2"
-    - "username3"
+    - "abandk"
+    - "abandk2"
+    - "academizco"

@@ -211,10 +211,9 @@ func ColorPrint(message string, color string) {
 		fmt.Print(Yellow, message, Reset)
 	case "disable":
 		fmt.Print(GRAY, message, Reset)
-	case "error":
+	case "error", "warning":
 		fmt.Print(RedBackground + Yellow + message + Reset + "\n")
 	}
-
 }
 
 func FilesLinesCounter(files []string) (int, error) {
@@ -242,7 +241,7 @@ func FilesLinesCounter(files []string) (int, error) {
 
 func IsDomainExclude(domain string, excludedDomains []string) bool {
 	for _, d := range excludedDomains {
-		if strings.ToLower(domain) == strings.ToLower(d) {
+		if strings.EqualFold(domain, d) {
 			return true
 		}
 	}
@@ -337,9 +336,6 @@ func FindTextFiles(dir string) ([]string, error) {
 	for _, file := range files {
 		if !file.IsDir() {
 			logFilePath := dir + "/" + file.Name()
-			if err != nil {
-				return textFiles, err
-			}
 			output, _, err := ExecuteCommand(true, "file", logFilePath)
 			if err != nil {
 				return textFiles, err
@@ -508,4 +504,17 @@ func CountNonCommentLines(filePath string) (int, error) {
 	}
 
 	return count, nil
+}
+
+func BroadcastChannel[T any](inputChan chan T, outputChans []chan T) {
+	for data := range inputChan {
+		for _, outChan := range outputChans {
+			go func(c chan T, data T) {
+				c <- data
+			}(outChan, data)
+		}
+	}
+	for _, outChan := range outputChans {
+		close(outChan)
+	}
 }

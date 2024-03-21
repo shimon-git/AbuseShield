@@ -48,6 +48,7 @@ const (
 	UNRESOLVABLE_DOMAIN                 = "Failed to resolve the domain"
 	IPV6_AND_IPV4_NOT_ENABLED           = "IPv4 and IPv6 are not enabled, you must enable at least one ip version"
 	UNKNOWN_CSF_IP_LIMIT                = "CSF ip limit is unknown and cannot be fined in csf configurations file"
+	CSF_DENY_BACKUP_ERR                 = "failed to create csf.deny backup file"
 )
 
 type SharedError struct {

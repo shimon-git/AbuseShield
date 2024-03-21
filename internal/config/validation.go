@@ -24,12 +24,12 @@ func (c *Config) isValidIPFile(ipFiles string) error {
 	var wg sync.WaitGroup
 	var err error
 
-	if len(c.Global.IPsFiles) == 0 && tempIPFiles == "" {
+	if len(c.Global.IPsFiles) == 0 && ipFiles == "" {
 		return nil
 	}
 
 	if len(c.Global.IPsFiles) == 0 {
-		c.Global.IPsFiles = strings.Split(strings.TrimSpace(tempIPFiles), ",")
+		c.Global.IPsFiles = strings.Split(strings.TrimSpace(ipFiles), ",")
 	}
 
 	// loop over the ip files and validate them
@@ -232,8 +232,10 @@ func (c *Config) isCpanelValid(cpanelUsers string) error {
 		// we don't need to check if cpanel users exist because we want to collect and check access log for all users
 		return nil
 	}
+	if len(c.Cpanel.Users) == 0 {
+		c.Cpanel.Users = strings.Split(strings.TrimSpace(cpanelUsers), ",")
+	}
 
-	c.Cpanel.Users = strings.Split(strings.TrimSpace(cpanelUsers), ",")
 	if len(c.Cpanel.Users) == 0 {
 		return e.MakeErr(e.MISSING_CPANEL_USERS, nil)
 	}

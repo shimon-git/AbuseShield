@@ -72,7 +72,7 @@ func (c *cpClient) IsCpanelUsersExists() error {
 
 		// checking the command response to find if the user exist or not
 		if strings.Contains(output, CPANEL_ACCOUNT_NOT_EXIST_MESSAGE_PART) {
-			tmpLogger.Warn(fmt.Sprintf("cpanel user is not exist"))
+			tmpLogger.Warn(fmt.Sprintf("cpanel user is not exist - username: %s", user))
 			return e.MakeErr(fmt.Sprintf("%s: %s", e.CPANEL_USER_NOT_FOUND, user), nil)
 		}
 	}
@@ -163,6 +163,7 @@ func (c *cpClient) SetAllUsers() error {
 func (c *cpClient) SetLogFiles() error {
 	// iterating trough the cpanel users
 	c.cpanel.Logger.Info("finding cpanel users log files")
+	fmt.Println(c.cpanel.Users)
 	for _, user := range c.cpanel.Users {
 		// the log folder path
 		logsFolder := fmt.Sprintf("/home/%s/access-logs", user)

@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
 	"strings"
 	"sync"
 	"time"
@@ -11,6 +12,7 @@ import (
 	abuseipdb "github.com/shimon-git/AbuseShield/internal/abuse-IP-DB"
 	"github.com/shimon-git/AbuseShield/internal/config"
 	"github.com/shimon-git/AbuseShield/internal/cpanel"
+	"github.com/shimon-git/AbuseShield/internal/csf"
 	e "github.com/shimon-git/AbuseShield/internal/errors"
 	"github.com/shimon-git/AbuseShield/internal/helpers"
 	"github.com/shimon-git/AbuseShield/internal/logger"
@@ -18,7 +20,8 @@ import (
 )
 
 var (
-	errWg sync.WaitGroup
+	broadcastChannelsGroup = []chan string{}
+	globalWg               sync.WaitGroup
 )
 
 func main() {
@@ -53,6 +56,24 @@ func main() {
 		conf.Global.IPsFiles = append(conf.Global.IPsFiles, ipFile)
 	}
 
+	if conf.CSF.Enable {
+		helpers.PrintHeader("csf")
+		logger.Info("loading csf module")
+		conf.CSF.Logger = logger
+		csfDenyChan := make(chan string, 50)
+		broadcastChannelsGroup = append(broadcastChannelsGroup, csfDenyChan)
+		globalWg.Add(1)
+		go func(c csf.CSF, ch chan string, wg *sync.WaitGroup) {
+			defer wg.Done()
+			if errs := csfHandler(c, ch); len(errs) > 0 {
+				for _, err := range errs {
+					log.Println(err)
+					os.Exit(1)
+				}
+			}
+		}(conf.CSF, csfDenyChan, &globalWg)
+	}
+
 	// abuseDBIP checker
 	if conf.AbuseIPDB.Enable {
 		// print the abuseipdb header
@@ -61,7 +82,7 @@ func main() {
 		conf.AbuseIPDB.Logger = logger
 		logger.Info("using abuseipdb to check ips score")
 		// call abuseipdb checker to check for abuse
-		errs := abuseIPDBChecker(conf.AbuseIPDB, conf.Global.IPsFiles, conf.Global.MaxThreads)
+		errs := abuseIPDBChecker(conf.AbuseIPDB, broadcastChannelsGroup, conf.Global.IPsFiles, conf.Global.MaxThreads)
 		if len(errs) > 0 {
 			for _, err := range errs {
 				conf.AbuseIPDB.Logger.Error(err.Error())
@@ -69,6 +90,42 @@ func main() {
 			log.Fatal(errs)
 		}
 	}
+
+	globalWg.Wait()
+}
+
+// csfHandler function - handle will block malicious IP addresses
+func csfHandler(csfConf csf.CSF, csfDenyChan chan string) []error {
+	csfErr := e.NewSharedError()
+
+	// initialize new csf client
+	csfClient := csf.New(csfConf)
+
+	// check if csf service is installed
+	isCsfInstalled, err := csfClient.IsCsfInstalled()
+	if err != nil {
+		csfErr.SetError(err)
+		return csfErr.GetErrors()
+	}
+
+	if !isCsfInstalled {
+		helpers.ColorPrint("csf is not installed - ignoring csf module\n", "warning")
+		return csfErr.GetErrors()
+	}
+
+	if err := csfClient.IsCsfServiceActive(); err != nil {
+		helpers.ColorPrint("csf service is not running - ignoring csf module\n", "warning")
+		return csfErr.GetErrors()
+	}
+
+	if err := csfClient.CsfBackup(); err != nil {
+		csfErr.SetError(err)
+		return csfErr.GetErrors()
+	}
+
+	csfClient.CsfHandler(csfDenyChan, csfErr)
+
+	return csfErr.GetErrors()
 }
 
 // cpanelAbuseChecker consolidates cPanel access logs into a single file for abuse detection.
@@ -103,7 +160,7 @@ func cpanelAbuseChecker(cp cpanel.Cpanel) (string, error) {
 // abuseIPDBChecker evaluates IPs against abuseipdb, segregating them into 'whitelist' and 'blacklist' files.
 // Args: [abuseIPDB: Abuseipdb configurations, ipFiles: Paths to files with IPs for checking, maxThreads: number of max concurrence goroutines]
 // Returns an error if the checking process encounters issues.
-func abuseIPDBChecker(abuseIPDB abuseipdb.AbuseIPDB, ipFiles []string, maxThreads int) []error {
+func abuseIPDBChecker(abuseIPDB abuseipdb.AbuseIPDB, broadcastChannels []chan string, ipFiles []string, maxThreads int) []error {
 	var wgAbuseIPDB sync.WaitGroup
 	var wgWriter sync.WaitGroup
 	var writerErr *e.SharedError
@@ -134,8 +191,13 @@ func abuseIPDBChecker(abuseIPDB abuseipdb.AbuseIPDB, ipFiles []string, maxThread
 	defer cancel()
 
 	// set up channels for IP categorization
+	blacklistBroadCastChan := make(chan string, 50)
 	blacklistWriterChan := make(chan string, 50)
 	whitelistWriterChan := make(chan string, 50)
+
+	broadcastChannels = append(broadcastChannels, blacklistWriterChan)
+	// make broadcast channels group to get also the malicious IP's
+	go helpers.BroadcastChannel(blacklistBroadCastChan, broadcastChannels)
 
 	// launch writer goroutines for handling output
 	abuseIPDB.Logger.Info("creating blacklist file writer", zap.String("blacklistFilePath", abuseIPDB.BlackListFile))
@@ -170,7 +232,7 @@ func abuseIPDBChecker(abuseIPDB abuseipdb.AbuseIPDB, ipFiles []string, maxThread
 
 		// start a goroutine for checking IP scores against abuseipdb
 		tmpLogger.Info("checking ips score")
-		go abuseIPDBClient.CheckIPScore(cancel, dataChannels[len(dataChannels)-1], blacklistWriterChan, whitelistWriterChan, &goRoutinesCounter, &wgAbuseIPDB)
+		go abuseIPDBClient.CheckIPScore(cancel, dataChannels[len(dataChannels)-1], blacklistBroadCastChan, whitelistWriterChan, &goRoutinesCounter, &wgAbuseIPDB)
 	}
 
 	// wait for all IP checking goroutines to complete
@@ -179,7 +241,7 @@ func abuseIPDBChecker(abuseIPDB abuseipdb.AbuseIPDB, ipFiles []string, maxThread
 
 	// close all writer channels after use
 	abuseIPDB.Logger.Debug("closing blacklist and whitelist channels")
-	close(blacklistWriterChan)
+	close(blacklistBroadCastChan)
 	close(whitelistWriterChan)
 
 	// wait for all writer goroutines to finish

@@ -119,8 +119,6 @@ adding logger package
 crate log flags under global configuration
 
 
-YASHIMO9
-ShimonTest2024@!
 
 
 build gui with electron and grpc
